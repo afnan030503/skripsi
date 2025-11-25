@@ -8,21 +8,18 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('menus', function (Blueprint $table) {
+        Schema::create('subcategories', function (Blueprint $table) {
             $table->id();
             $table->foreignId('category_id')->constrained()->onDelete('cascade');
-            $table->foreignId('subcategory_id')->constrained()->onDelete('cascade');
             $table->string('name');
-            $table->text('description')->nullable();
-            $table->decimal('price', 10, 2);
-            $table->string('image')->nullable();
-            $table->boolean('is_available')->default(true);
+            $table->string('slug')->unique();
+            $table->integer('order');
             $table->timestamps();
         });
     }
 
     public function down()
     {
-        Schema::dropIfExists('menus');
+        Schema::dropIfExists('subcategories');
     }
 };

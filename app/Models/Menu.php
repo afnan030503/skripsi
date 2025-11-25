@@ -11,6 +11,7 @@ class Menu extends Model
 
     protected $fillable = [
         'category_id',
+        'subcategory_id', // penting ditambahkan
         'name',
         'description',
         'price',
@@ -26,5 +27,10 @@ class Menu extends Model
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function subcategory()
+    {
+        return $this->belongsTo(Subcategory::class);
     }
 }

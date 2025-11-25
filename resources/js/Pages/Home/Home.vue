@@ -2,8 +2,7 @@
   <div class="min-h-screen bg-stone-50 flex flex-col">
     <nav :class="[
         'fixed w-full z-50 transition-all duration-300',
-        // Perubahan: py-4 saat scrolled diganti py-6 untuk memberi ruang bagi logo yang lebih besar
-        scrolled ? 'bg-white shadow-md py-1' : 'bg-transparent py-8' // py-8 juga ditingkatkan sedikit
+        scrolled ? 'bg-white shadow-md py-1' : 'bg-transparent py-8'
     ]">
     <div class="max-w-7xl mx-auto px-6 flex items-center justify-between">
       <Link href="/" class="flex items-center gap-3">
@@ -14,413 +13,233 @@
                 'h-20 transition-opacity', scrolled ? 'opacity-100' : 'opacity-90' 
             ]"
         />
+      </Link>
+
+      <ul :class="[
+        'hidden md:flex items-center gap-8 font-medium transition-colors',
+        scrolled ? 'text-gray-700' : 'text-white'
+      ]">
+        <li><a href="#home" class="hover:text-emerald-600 transition">Home</a></li>
+        <li><a href="#menu" class="hover:text-emerald-600 transition">Menu</a></li>
+        <li><a href="#tetangga" class="hover:text-emerald-600 transition">Community</a></li>
+        <li><a href="#about" class="hover:text-emerald-600 transition">About Us</a></li>
+        <li><a href="#blog" class="hover:text-emerald-600 transition">Blog</a></li>
+        <li><a href="#contact" class="hover:text-emerald-600 transition">Contact Us</a></li>
+        <li><a href="#location" class="hover:text-emerald-600 transition">Location</a></li>
+      </ul>
+
+      <div class="flex gap-3">
+        <Link href="/login" class="bg-blue-500 text-white px-5 py-2 rounded-full hover:bg-blue-600 transition font-medium">
+          Login
         </Link>
-
-        <ul :class="[
-          'hidden md:flex items-center gap-8 font-medium transition-colors',
-          scrolled ? 'text-gray-700' : 'text-white'
-        ]">
-          <li><a href="#home" class="hover:text-emerald-600 transition">Home</a></li>
-          <li><a href="#menu" class="hover:text-emerald-600 transition">Menu</a></li>
-          <li><a href="#promo" :class="[
-            'transition',
-            scrolled ? 'text-gray-700 hover:text-emerald-600' : 'text-white hover:text-emerald-600'
-          ]">Promo & Loyalty</a></li>
-          <li><a href="#about" class="hover:text-emerald-600 transition">About</a></li>
-          <li><a href="#location" class="hover:text-emerald-600 transition">Location</a></li>
-        </ul>
-
-        <div class="flex gap-3">
-          <Link href="/login" class="bg-blue-500 text-white px-5 py-2 rounded-full hover:bg-blue-600 transition font-medium">
-            Login
-          </Link>
-          <button class="bg-emerald-600 text-white px-5 py-2 rounded-full hover:bg-emerald-700 transition font-medium">
-            Order Now
-          </button>
-        </div>
+        <button class="bg-emerald-600 text-white px-5 py-2 rounded-full hover:bg-emerald-700 transition font-medium">
+          Order Now
+        </button>
       </div>
+    </div>
     </nav>
 
-    <section id="home" class="relative h-screen overflow-hidden">
-      <div
+    <section id="home" class="relative h-[500px] overflow-hidden">
+      <div 
+        class="absolute inset-0 overflow-hidden flex items-center justify-start banner-scroll select-none"
         ref="bannerScroll"
-        class="flex h-full overflow-x-auto snap-x snap-mandatory scroll-smooth"
-        style="scrollbar-width: none; -ms-overflow-style: none;"
-        @scroll="handleBannerScroll"
+        :class="{ 'cursor-grabbing': isDragging, 'cursor-grab': !isDragging }"
+        @pointerdown="onScrollDragStart"
+        @pointermove="onScrollDragMove"
+        @pointerup="onScrollDragEnd"
+        @pointerleave="onScrollDragEnd"
+        @wheel.prevent="onBannerWheel"
       >
-        <div class="min-w-full h-full snap-center relative flex-shrink-0">
-          <img
-            src="/public/Banner1.jpg"
-            alt="Banner 1"
-            class="w-full h-full object-cover"
-          />
-          <div class="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/60" />
-          <div class="absolute inset-0 flex items-center justify-center text-center text-white px-6">
-            <div class="max-w-4xl">
-              <h1 class="text-6xl md:text-7xl font-bold mb-6">
-                Welcome to Utara
-              </h1>
-              <p class="text-xl md:text-2xl mb-8">
-                Experience the Perfect Blend
-              </p>
-              <button class="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-4 rounded-full text-lg font-semibold transition transform hover:scale-105">
-                Explore Menu
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div class="min-w-full h-full snap-center relative flex-shrink-0">
-          <img
-            src="/public/Banner2.jpg"
-            alt="Banner 2"
-            class="w-full h-full object-cover"
-          />
-          <div class="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/60" />
-          <div class="absolute inset-0 flex items-center justify-center text-center text-white px-6">
-            <div class="max-w-4xl">
-              <h1 class="text-6xl md:text-7xl font-bold mb-6">
-                Artisan Coffee
-              </h1>
-              <p class="text-xl md:text-2xl mb-8">
-                Crafted with Passion
-              </p>
-              <button class="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-4 rounded-full text-lg font-semibold transition transform hover:scale-105">
-                Order Now
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div class="min-w-full h-full snap-center relative flex-shrink-0">
-          <img
-            src="/public/Banner3.jpg"
-            alt="Banner 3"
-            class="w-full h-full object-cover"
-          />
-          <div class="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/60" />
-          <div class="absolute inset-0 flex items-center justify-center text-center text-white px-6">
-            <div class="max-w-4xl">
-              <h1 class="text-6xl md:text-7xl font-bold mb-6">
-                Cozy Atmosphere
-              </h1>
-              <p class="text-xl md:text-2xl mb-8">
-                Your Second Home
-              </p>
-              <button class="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-4 rounded-full text-lg font-semibold transition transform hover:scale-105">
-                Visit Us
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <button
-        @click="scrollToPrev"
-        class="absolute left-6 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/40 backdrop-blur-sm text-white p-3 rounded-full transition z-10"
-      >
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-        </svg>
-      </button>
-      <button
-        @click="scrollToNext"
-        class="absolute right-6 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/40 backdrop-blur-sm text-white p-3 rounded-full transition z-10"
-      >
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-        </svg>
-      </button>
-
-      <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2 z-10">
-        <button
-          v-for="index in 3"
-          :key="index"
-          @click="scrollToSlide(index - 1)"
-          :class="[
-            'h-2 rounded-full transition-all',
-            currentBannerIndex === index - 1 ? 'bg-white w-8' : 'bg-white/50 w-2'
-          ]"
-        />
-      </div>
-    </section>
-    
-    <section id="menu" class="py-0 pt-0 bg-white flex flex-col min-h-screen">
-      
-      <div class="flex-1 grid md:grid-cols-2 gap-0 w-full">
-        
         <div 
-          class="flex flex-col h-full overflow-y-auto px-8 py-6 bg-blue-500 text-white border-r border-blue-600"
+          class="flex items-center"
+          :style="{ gap: `${bannerGapPx}px` }"
         >
-          
-          <div class="flex space-x-3 border-b border-white/50 pb-4 mb-4 overflow-x-auto whitespace-nowrap">
-            <button
-              v-for="cat in categories"
+          <div 
+            v-for="(img, idx) in bannerImages"
+            :key="img + idx"
+            class="relative shrink-0 overflow-hidden shadow-2xl"
+            :style="slideStyle(idx)"
+          >
+            <img 
+              :src="img" 
+              :style="{ height: `${bannerHeight}px` }" 
+              class="w-full object-cover pointer-events-none" 
+              draggable="false"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="relative h-full"></div>
+    </section>
+
+    <section id="menu" class="w-full bg-black">
+      <!-- FULL 2×2 GRID (BESAR) -->
+      <div class="grid grid-cols-1 md:grid-cols-2 w-full">
+
+        <!-- LEFT TOP – FOOD IMAGE -->
+        <div class="relative w-full h-[540px]">
+          <img 
+            :src="selectedFoodImage || '/public/food1.jpg'"
+            class="w-full h-full object-contain p-8 bg-gray-50"
+          >
+
+          <div class="absolute bottom-6 left-6 right-6 bg-white/90 backdrop-blur-md p-6 rounded-2xl shadow-xl border border-white/50 transition-all duration-300">
+            <div class="flex justify-between items-start gap-4">
+              <div>
+                <h3 class="text-2xl font-bold text-gray-800 mb-1">{{ selectedFoodMenu?.name || 'Pilih Menu' }}</h3>
+                <p class="text-gray-600 leading-relaxed">
+                  {{ selectedFoodMenu?.description || 'Silakan pilih menu di samping untuk melihat detail.' }}
+                </p>
+              </div>
+              <span class="bg-gradient-to-r from-blue-500 to-sky-400 text-white px-5 py-2 rounded-full font-bold text-xl shadow-lg whitespace-nowrap">
+                {{ selectedFoodMenu ? formatPrice(selectedFoodMenu.price) : 'Rp 0' }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT TOP – FOOD CATEGORY BOX -->
+        <div class="p-10 md:p-14 bg-gradient-to-br from-sky-400 to-blue-500 text-white">
+          <!-- CATEGORY BUTTONS (BESAR) -->
+          <div class="flex flex-wrap gap-4 mb-10">
+            <button 
+              v-for="cat in foodCategory.subcategories"
               :key="cat.id"
-              @click="selectCategory(cat.id)"
+              @click="selectFoodSubcategory(cat.id)"
               :class="[
-                'flex-shrink-0 px-5 py-2 rounded-lg font-semibold transition text-base',
-                // Warna disesuaikan untuk latar belakang biru gelap
-                selectedCategory === cat.id
-                  ? 'bg-blue-300 text-blue-900 shadow'
-                  : 'text-white/80 hover:bg-white/30'
+                'px-6 py-2 rounded-full font-bold transition-all duration-300 shadow-sm border-2',
+                selectedFoodSubcategory === cat.id 
+                  ? 'bg-white text-blue-600 border-white scale-105 shadow-lg'
+                  : 'bg-transparent text-white border-white/30 hover:bg-white/10'
               ]"
             >
               {{ cat.name }}
             </button>
           </div>
 
-          <div class="flex space-x-3 border-b border-white/50 pb-4 mb-4 overflow-x-auto whitespace-nowrap">
+          <!-- FOOD LIST (BESAR) -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div 
+              v-for="menu in foodMenus"
+              :key="menu.id"
+              @click="selectFoodMenu(menu)"
+              class="group bg-white/10 backdrop-blur-sm border border-white/20 p-5 rounded-2xl cursor-pointer hover:bg-white hover:text-blue-900 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+            >
+              <div class="flex justify-between items-start mb-2">
+                <h4 class="font-bold text-lg leading-tight">{{ menu.name }}</h4>
+                <span class="bg-white/20 group-hover:bg-blue-100 group-hover:text-blue-600 px-2 py-1 rounded-lg text-sm font-bold whitespace-nowrap transition-colors">
+                  {{ formatPrice(menu.price) }}
+                </span>
+              </div>
+              <p class="text-sm opacity-80 line-clamp-2 group-hover:opacity-100">
+                {{ menu.description || 'Delicious food choice' }}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- LEFT BOTTOM – DRINK SUBCATEGORIES -->
+        <div class="p-10 md:p-14 bg-gradient-to-br from-emerald-300 to-teal-500 text-white">
+          <!-- SUBCATEGORY BUTTONS (BESAR) -->
+          <div class="flex flex-wrap gap-4 mb-10">
             <button
-              v-for="sub in selectedCategoryData.subcategories"
+              v-for="sub in drinkCategory.subcategories"
               :key="sub.id"
-              @click="selectSubcategory(sub.id)"
+              @click="selectDrinkSubcategory(sub.id)"
               :class="[
-                'flex-shrink-0 px-4 py-1 rounded-md text-base font-semibold transition',
-                // Warna disesuaikan untuk latar belakang biru gelap
-                selectedSubcategory === sub.id
-                  ? 'bg-white text-blue-800 shadow' 
-                  : 'text-white/80 hover:bg-white/30'
+                'px-6 py-2 rounded-full font-bold transition-all duration-300 shadow-sm border-2',
+                selectedDrinkSubcategory === sub.id 
+                  ? 'bg-white text-teal-700 border-white scale-105 shadow-lg' 
+                  : 'bg-transparent text-white border-white/30 hover:bg-white/10'
               ]"
             >
               {{ sub.name }}
             </button>
           </div>
-          
-          <div class="flex-1">
-            <div v-if="filteredMenus.length === 0" class="text-center text-white/70 mt-8">
-              No menu available.
-            </div>
-            <div v-else class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2">
-              <div
-                v-for="menu in filteredMenus"
-                :key="menu.id"
-                @click="selectMenu(menu)"
-                :class="[
-                  'py-3 px-2 cursor-pointer rounded transition font-medium flex items-center justify-between',
-                  // Item aktif
-                  selectedMenu?.id === menu.id
-                    ? 'bg-blue-300 text-blue-900 font-semibold shadow border-l-4 border-blue-600'
-                    : 'hover:bg-blue-400 text-white'
-                ]"
-              >
-                <span class="truncate">{{ menu.name }}</span>
-                <span class="text-sm font-bold text-white">{{ formatPrice(menu.price) }}</span>
+
+          <!-- DRINK LIST (BESAR) -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div 
+              v-for="menu in drinkMenus"
+              :key="menu.id"
+              @click="selectDrinkMenu(menu)"
+              class="group bg-white/10 backdrop-blur-sm border border-white/20 p-5 rounded-2xl cursor-pointer hover:bg-white hover:text-teal-900 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+            >
+              <div class="flex justify-between items-start mb-2">
+                <h4 class="font-bold text-lg leading-tight">{{ menu.name }}</h4>
+                <span class="bg-white/20 group-hover:bg-teal-100 group-hover:text-teal-600 px-2 py-1 rounded-lg text-sm font-bold whitespace-nowrap transition-colors">
+                  {{ formatPrice(menu.price) }}
+                </span>
               </div>
+              <p class="text-sm opacity-80 line-clamp-2 group-hover:opacity-100">
+                {{ menu.description || 'Refreshing drink choice' }}
+              </p>
             </div>
           </div>
         </div>
 
-        <div class="relative bg-white flex items-start justify-center overflow-hidden">
-          <div class="w-full pt-[100%] relative">
-            <template v-if="selectedMenu">
-              <img
-                v-if="selectedMenu.image"
-                :src="selectedMenu.image"
-                :alt="selectedMenu.name"
-                class="object-cover w-full h-full absolute top-0 left-0"
-                style="max-width:none;"
-                loading="lazy"
-              />
-              <div v-else class="flex items-center justify-center w-full h-full bg-blue-100 absolute top-0 left-0">
-                <svg class="w-40 h-40 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-1-5a1 1 0 100-2 1 1 0 000 2z" />
-                </svg>
-              </div>
-
-              <div
-                class="absolute bottom-8 left-8 bg-black bg-opacity-60 text-white px-6 py-3 rounded-lg max-w-xs transition-opacity duration-300"
-                style="backdrop-filter: blur(6px);"
-              >
-                <div class="text-2xl font-bold">{{ formatPrice(selectedMenu.price) }}</div>
-                <div class="text-lg font-medium mt-1">{{ selectedMenu.name }}</div>
-                <div class="text-sm mt-1">{{ selectedMenu.description }}</div>
-              </div>
-            </template>
-            <template v-else>
-              <div class="text-gray-400 text-xl text-center italic p-12 absolute top-0 left-0 w-full h-full flex items-center justify-center">
-                Select a menu to see the detail & image
-              </div>
-            </template>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="promo" class="pt-20 pb-16 bg-gradient-to-br from-red-600 to-orange-600 text-white">
-      <div class="max-w-7xl mx-auto px-6 text-center">
-        <h1 class="text-5xl md:text-6xl font-bold mb-4">Promotions & Loyalty</h1>
-        <p class="text-xl text-orange-100">Grab the latest deals and rewards!</p>
-      </div>
-    </section>
-
-    <section class="py-16 bg-stone-50">
-      <div class="max-w-7xl mx-auto px-6">
-        <h2 class="text-4xl font-bold text-gray-900 mb-8 text-center">Active Promotions</h2>
-
-        <div v-if="promos.length > 0" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <div
-            v-for="promo in promos"
-            :key="promo.id"
-            class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
+        <!-- RIGHT BOTTOM – DRINK IMAGE -->
+        <div class="relative w-full h-[540px]">
+          <img 
+            :src="selectedDrinkImage || '/public/drink1.jpg'"
+            class="w-full h-full object-contain p-8 bg-gray-50"
           >
-            <div class="relative h-64 bg-gradient-to-br from-red-500 to-orange-500 overflow-hidden">
-              <img
-                v-if="promo.image"
-                :src="promo.image"
-                :alt="promo.title"
-                class="w-full h-full object-cover"
-              />
-              <div class="absolute top-4 right-4 bg-yellow-400 text-gray-900 px-4 py-2 rounded-full font-bold text-sm">
-                LIMITED!
-              </div>
-            </div>
 
-            <div class="p-6">
-              <h3 class="text-2xl font-bold text-gray-900 mb-3">{{ promo.title }}</h3>
-              <p class="text-gray-600 mb-4">{{ promo.description }}</p>
-
-              <div class="flex items-center justify-between text-sm text-gray-500 mb-4">
-                <span>Valid until: {{ formatDate(promo.end_date) }}</span>
+          <div class="absolute bottom-6 left-6 right-6 bg-white/90 backdrop-blur-md p-6 rounded-2xl shadow-xl border border-white/50 transition-all duration-300">
+            <div class="flex justify-between items-start gap-4">
+              <div>
+                <h3 class="text-2xl font-bold text-gray-800 mb-1">{{ selectedDrinkMenu?.name || 'Pilih Menu' }}</h3>
+                <p class="text-gray-600 leading-relaxed">
+                  {{ selectedDrinkMenu?.description || 'Silakan pilih menu di samping untuk melihat detail.' }}
+                </p>
               </div>
-
-              <button class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-lg font-semibold transition">
-                Claim Now
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div v-else class="text-center py-16">
-          <svg class="w-24 h-24 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
-          </svg>
-          <h3 class="text-2xl font-bold text-gray-900 mb-2">No Active Promotions</h3>
-          <p class="text-gray-600">Check back soon for exciting deals!</p>
-        </div>
-      </div>
-    </section>
-    <section class="py-16 bg-gray-900 text-white">
-      <div class="max-w-7xl mx-auto px-6 text-center">
-        <h2 class="text-4xl font-bold mb-8">Order Online & Get Discount!</h2>
-        <div class="flex flex-wrap justify-center gap-8 items-center">
-          <div class="bg-white rounded-xl p-6 hover:shadow-2xl transition transform hover:scale-105">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/9/9f/Gofood_logo.png" alt="GoFood" class="h-12" />
-            <p class="text-gray-900 font-bold mt-2">Diskon s.d 110K</p>
-          </div>
-          <div class="bg-white rounded-xl p-6 hover:shadow-2xl transition transform hover:scale-105">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/GrabFood_logo.svg/2560px-GrabFood_logo.svg.png" alt="GrabFood" class="h-12" />
-            <p class="text-gray-900 font-bold mt-2">Cashback 50%</p>
-          </div>
-          <div class="bg-white rounded-xl p-6 hover:shadow-2xl transition transform hover:scale-105">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/6/6f/ShopeeFood_logo.png" alt="ShopeeFood" class="h-12" />
-            <p class="text-gray-900 font-bold mt-2">Gratis Ongkir</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="about" class="py-20 bg-emerald-50">
-      <div class="max-w-7xl mx-auto px-6">
-        <div class="grid md:grid-cols-2 gap-12 items-center">
-          <div class="grid grid-cols-2 gap-4">
-            <img
-              src="https://images.unsplash.com/photo-1511920170033-f8396924c348?w=600&h=600&fit=crop"
-              alt="Coffee"
-              class="rounded-2xl shadow-lg w-full h-64 object-cover"
-            />
-            <img
-              src="https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=600&h=600&fit=crop"
-              alt="Brewing"
-              class="rounded-2xl shadow-lg w-full h-64 object-cover mt-8"
-            />
-          </div>
-          <div>
-            <h2 class="text-5xl font-bold text-gray-900 mb-6">
-              From Customer to Friend
-            </h2>
-            <p class="text-gray-600 text-lg mb-4 leading-relaxed">
-              Utara is more than just a coffee shop. We are a community space where coffee lovers gather to enjoy premium Indonesian coffee, crafted with passion and precision.
-            </p>
-            <p class="text-gray-600 text-lg mb-6 leading-relaxed">
-              Our beans are carefully sourced from the finest coffee plantations across Indonesia, roasted to perfection, and brewed by our expert baristas.
-            </p>
-            <Link href="/about" class="inline-block bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3 rounded-full font-semibold transition">
-              Learn More About Us
-            </Link>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="py-20 bg-white">
-      <div class="max-w-7xl mx-auto px-6">
-        <div class="text-center mb-12">
-          <h2 class="text-5xl font-bold text-gray-900 mb-4">Galeri Komunitas</h2>
-          <p class="text-gray-600 text-lg">Meet our wonderful community members</p>
-        </div>
-
-        <div class="mb-16">
-          <h3 class="text-3xl font-bold text-gray-900 mb-8">Sambat</h3>
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <div class="bg-sky-400 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition transform hover:scale-105">
-              <img src="https://images.unsplash.com/photo-1595152772835-219674b2a8a6?w=400&h=400&fit=crop" alt="Community" class="w-full h-64 object-cover" />
-              <div class="p-4 bg-white">
-                <p class="font-semibold text-gray-900">#Skripshit</p>
-              </div>
-            </div>
-            <div class="bg-sky-500 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition transform hover:scale-105">
-              <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=400&fit=crop" alt="Community" class="w-full h-64 object-cover" />
-              <div class="p-4 bg-white">
-                <p class="font-semibold text-gray-900">#CintaKandas</p>
-              </div>
-            </div>
-            <div class="bg-green-400 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition transform hover:scale-105">
-              <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=400&fit=crop" alt="Community" class="w-full h-64 object-cover" />
-              <div class="p-4 bg-white">
-                <p class="font-semibold text-gray-900">#Sambat</p>
-              </div>
-            </div>
-            <div class="bg-sky-400 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition transform hover:scale-105">
-              <img src="https://images.unsplash.com/photo-1607746882042-944635dfe10e?w=400&h=400&fit=crop" alt="Community" class="w-full h-64 object-cover" />
-              <div class="p-4 bg-white">
-                <p class="font-semibold text-gray-900">#ganteng-gantengGay</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div>
-          <h3 class="text-3xl font-bold text-gray-900 mb-8">Romansa</h3>
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <div class="bg-sky-400 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition transform hover:scale-105">
-              <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop" alt="Community" class="w-full h-64 object-cover" />
-              <div class="p-4 bg-white">
-                <p class="font-semibold text-gray-900">#Skripshit</p>
-              </div>
-            </div>
-            <div class="bg-sky-500 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition transform hover:scale-105">
-              <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop" alt="Community" class="w-full h-64 object-cover" />
-              <div class="p-4 bg-white">
-                <p class="font-semibold text-gray-900">#CintaKandas</p>
-              </div>
-            </div>
-            <div class="bg-green-400 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition transform hover:scale-105">
-              <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=400&fit=crop" alt="Community" class="w-full h-64 object-cover" />
-              <div class="p-4 bg-white">
-                <p class="font-semibold text-gray-900">#Sambat</p>
-              </div>
-            </div>
-            <div class="bg-sky-400 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition transform hover:scale-105">
-              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop" alt="Community" class="w-full h-64 object-cover" />
-              <div class="p-4 bg-white">
-                <p class="font-semibold text-gray-900">#ganteng-gantengGay</p>
-              </div>
+              <span class="bg-gradient-to-r from-emerald-500 to-teal-400 text-white px-5 py-2 rounded-full font-bold text-xl shadow-lg whitespace-nowrap">
+                {{ selectedDrinkMenu ? formatPrice(selectedDrinkMenu.price) : 'Rp 0' }}
+              </span>
             </div>
           </div>
         </div>
       </div>
+
+      <div class="text-center py-14 bg-black">
+        <p class="text-white mb-8 tracking-widest uppercase text-sm">
+          Online ordering available at
+        </p>
+
+        <div class="flex justify-center gap-8">
+          <!-- GOFOOD -->
+          <a 
+            href="https://YOUR_GOFOOD_LINK" 
+            target="_blank"
+            class="bg-white px-6 py-3 rounded-xl border-2 border-red-500 shadow-lg hover:shadow-red-500/40 transition"
+          >
+            <img src="/public/gofood-logo.png" class="h-12">
+          </a>
+
+          <!-- GRABFOOD -->
+          <a 
+            href="https://YOUR_GRABFOOD_LINK" 
+            target="_blank"
+            class="bg-white px-6 py-3 rounded-xl border-2 border-green-500 shadow-lg hover:shadow-green-500/40 transition"
+          >
+            <img src="/public/grabfood-logo.png" class="h-12">
+          </a>
+
+          <!-- SHOPEEFOOD -->
+          <a 
+            href="https://YOUR_SHOPEEFOOD_LINK" 
+            target="_blank"
+            class="bg-white px-6 py-3 rounded-xl border-2 border-orange-500 shadow-lg hover:shadow-orange-500/40 transition"
+          >
+            <img src="/public/shopeefood-logo.png" class="h-12">
+          </a>
+        </div>
+      </div>
     </section>
+
+    <CommunitySection />
+    <CustomerReviewSection />
 
     <section id="location" class="py-20 bg-white">
       <div class="max-w-7xl mx-auto px-6">
@@ -516,6 +335,7 @@
             <ul class="space-y-2 text-gray-400">
               <li><a href="#home" class="hover:text-emerald-400 transition">Home</a></li>
               <li><a href="#menu" class="hover:text-emerald-400 transition">Menu</a></li>
+              <li><a href="#tetangga" class="hover:text-emerald-400 transition">Community</a></li>
               <li><a href="#promo" class="hover:text-emerald-400 transition">Promo & Loyalty</a></li>
               <li><a href="#about" class="hover:text-emerald-400 transition">About</a></li>
               <li><a href="#location" class="hover:text-emerald-400 transition">Contact</a></li>
@@ -555,167 +375,223 @@
   </div>
 </template>
 
--<script>
+<script>
 import { Link } from '@inertiajs/vue3';
+import CommunitySection from '@/Pages/Home/components/CommunitySection.vue';
+import CustomerReviewSection from '@/Pages/Home/components/CustomerReviewSection.vue';
 
 export default {
-  name: 'HomeWithMenu',
-  components: { Link },
+  name: 'Home',
+  components: {
+    Link,
+    CommunitySection,
+    CustomerReviewSection,
+  },
 
   props: {
-    promos: {
+    categories: {
       type: Array,
-      default: () => [
-        // Data Promos
-        { id: 1, title: 'Diskon 50% untuk Kopi Baru', description: 'Nikmati kopi spesial terbaru kami dengan setengah harga di hari kerja pertama Anda.', image: 'https://images.unsplash.com/photo-1541167760496-1628856ab22d?w=400&h=400&fit=crop', end_date: '2025-12-31' },
-        { id: 2, title: 'Beli 1 Gratis 1 Makanan Ringan', description: 'Setiap pembelian hidangan utama, dapatkan satu makanan ringan gratis. Sempurna untuk berbagi!', image: 'https://images.unsplash.com/photo-1543362174-8903061266e7?w=400&h=400&fit=crop', end_date: '2025-11-30' },
-        { id: 3, title: 'Happy Hour: Diskon 20%', description: 'Diskon 20% untuk semua minuman dari jam 3 sore sampai 5 sore.', image: 'https://images.unsplash.com/photo-1549488330-8d5916053f3e?w=400&h=400&fit=crop', end_date: '2025-12-15' },
-      ]
+      default: () => []
+    },
+    banners: {
+      type: Array,
+      default: () => []
     }
   },
 
   data() {
     return {
       scrolled: false,
-      currentBannerIndex: 0,
-      
-      // PERBAIKAN: Struktur Data Menu disesuaikan menjadi Foods & Drinks.
-      categories: [
-        {
-          id: 10, name: 'Foods', subcategories: [ // Category Utama: Foods
-            { id: 11, name: 'Burger', menus: [ // Subcategory: Burger (sebelumnya 'All')
-              { id: 101, name: 'Ocean Burger', price: 28000, description: 'Crispy fish fillet with sauce and fresh veggies on a soft bun', image: 'burger.jpg' },
-              { id: 102, name: 'Firebird Burger', price: 24000, description: 'Fried chicken, coleslaw, and smoked mayo in a bold, fiery burger', image: 'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?w=600' },
-              { id: 103, name: 'Northern Burger', price: 32000, description: 'Grilled beef patty, fresh coleslaw, and smoked mayo in a bold, fiery burger', image: 'https://images.unsplash.com/photo-1543779508-211fa9e2a43b?w=600' },
-            ] },
-            { id: 12, name: 'Super Big', menus: [ // Subcategory: Super Big
-               // PERBAIKAN ID: Diperlukan ID unik
-               { id: 104, name: 'Ocean Burger Double Party', price: 36000, description: 'Double fish patty, double the flavor—stacked with sauce and greens' },
-               { id: 105, name: 'Northern Burger Double Party', price: 44000 },
-               { id: 106, name: 'Firebird Burger Double Party', price: 30000 },
-            ] },
-            { id: 13, name: 'Snacks & Sides', menus: [ // Subcategory: Snacks & Sides
-               // PERBAIKAN ID: Diperlukan ID unik
-               { id: 107, name: 'Wedge Wonders', price: 18000 },
-               { id: 108, name: 'Crunchy Rings', price: 18000 },
-               { id: 109, name: 'Golden Corn', price: 16000 },
-            ] }
-          ]
-        },
-        {
-          id: 20, name: 'Drinks', subcategories: [ // Category Utama: Drinks
-            { id: 21, name: 'Kopi Susu', menus: [ // Subcategory
-              { id: 201, name: 'Kopi Susu Gula Aren', price: 28000, description: 'Coffee with palm sugar and fresh milk.', image: 'https://images.unsplash.com/photo-1511920170033-f8396924c348?w=600' },
-              { id: 202, name: 'Kopi Susu Salted Caramel', price: 32000, description: 'Coffee with caramel and a hint of salt.', image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600' },
-              { id: 203, name: 'Kopi Susu Butterscotch', price: 32000, description: 'Coffee with butterscotch and milk.', image: 'https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=600' },
-              { id: 204, name: 'Kopi Susu Almond', price: 32000, description: 'Coffee with almond and fresh milk.', image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=600' },
-              { id: 205, name: 'Kopi Susu Caramel', price: 28000, description: 'Caramel coffee with milk.', image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=600' }
-            ] },
-            { id: 31, name: 'Espresso Based', menus: [ // Subcategory
-              { id: 300, name: 'Cappuccino', price: 25000, description: 'Classic hot cappuccino with rich espresso and steamed milk.' },
-              { id: 301, name: 'Latte', price: 25000, description: 'Smooth and milky hot latte.' },
-              { id: 302, name: 'Dirty Latte', price: 25000, description: 'Cold latte with a shot of espresso on top.' },
-              { id: 303, name: 'Spanish Latte', price: 28000, description: 'Iced latte sweetened with condensed milk.' }
-            ] },
-             { id: 41, name: 'Americano Series', menus: [ /* Tambahkan menu Americano dari seeder */ ] }, // Subcategory
-             { id: 51, name: 'Non-Coffee', menus: [ /* Tambahkan menu Non-Coffee dari seeder */ ] } // Subcategory
-          ]
-        },
-      ],
-      selectedCategory: null,
-      selectedSubcategory: null,
-      selectedMenu: null,
+      showWelcome: false,
+      // Gunakan banners dari prop jika ada, jika tidak gunakan default dummy
+      bannerImages: this.banners.length > 0 
+        ? this.banners.map(b => b.image) 
+        : ['/Banner1.jpg', '/Banner2.jpg', '/Banner3.jpg'],
+      bannerHeight: 500,
+      bannerGapPx: 0,
+      isDragging: false,
+      dragStartX: 0,
+      dragDelta: 0,
+      dragStartScroll: 0,
+      viewportWidth: typeof window !== 'undefined' ? window.innerWidth : 1440,
+      bannerScroll: null,
+      selectedFoodSubcategory: null,
+      selectedDrinkSubcategory: null,
+      selectedFoodMenu: null,
+      selectedDrinkMenu: null,
     };
   },
 
   computed: {
-    selectedCategoryData() {
-      return this.categories.find(cat => cat.id === this.selectedCategory) || { subcategories: [] };
+    foodCategory() {
+      return this.categories.find(cat => cat.id === 1) || { subcategories: [] };
     },
-    // PERBAIKAN: Fungsi ini sudah benar, mencari subcategory dari category yang aktif.
-    selectedSubcategoryData() {
-      return this.selectedCategoryData.subcategories.find(sub => sub.id === this.selectedSubcategory) || { menus: [] };
+    drinkCategory() {
+      return this.categories.find(cat => cat.id === 2) || { subcategories: [] };
     },
-    filteredMenus() {
-      return this.selectedSubcategoryData.menus;
+    foodSubcategory() {
+      return this.foodCategory.subcategories.find(sub => sub.id === this.selectedFoodSubcategory) || { menus: [] };
+    },
+    drinkSubcategory() {
+      return this.drinkCategory.subcategories.find(sub => sub.id === this.selectedDrinkSubcategory) || { menus: [] };
+    },
+    foodMenus() {
+      return this.foodSubcategory.menus || [];
+    },
+    drinkMenus() {
+      return this.drinkSubcategory.menus || [];
+    },
+    selectedFoodImage() {
+      return this.selectedFoodMenu?.image || '/public/food1.jpg';
+    },
+    selectedDrinkImage() {
+      return this.selectedDrinkMenu?.image || '/public/drink1.jpg';
+    },
+    currentBannerImage() {
+      return this.bannerImages[this.activeBannerIndex] || this.bannerImages[0];
+    },
+    sliderOffset() {
+      const widths = this.bannerImages.map((_, idx) => this.getBannerWidth(idx));
+      const gap = this.bannerGapPx;
+      const before = widths.slice(0, this.activeBannerIndex).reduce((a, b) => a + b, 0) + gap * this.activeBannerIndex;
+      const current = widths[this.activeBannerIndex] || widths[0] || 0;
+      const container = this.viewportWidth || 0;
+      const centerOffset = (container - current) / 2;
+      return centerOffset - before;
+    },
+    dragTransform() {
+      return `translateX(${this.sliderOffset + this.dragDelta}px)`;
     }
   },
 
   mounted() {
     window.addEventListener('scroll', this.handleScroll);
-    
-    // PERBAIKAN INISIALISASI: Memastikan data ada sebelum memanggil selectCategory.
-    if (this.categories.length) {
-      this.selectCategory(this.categories[0].id);
-    }
+    window.addEventListener('resize', this.handleResize);
+    this.handleResize();
+    this.initializeSelections();
+    this.bannerScroll = this.$refs.bannerScroll;
+    this.$nextTick(() => this.scrollToActive(false));
   },
 
   beforeUnmount() {
     window.removeEventListener('scroll', this.handleScroll);
+    window.removeEventListener('resize', this.handleResize);
   },
 
   methods: {
     handleScroll() {
       this.scrolled = window.scrollY > 50;
     },
-
-    formatDate(date) {
-      return new Date(date).toLocaleDateString('id-ID', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      });
-    },
-
-    // Metode Banner Carousel (Dibiarkan sama)
-    handleBannerScroll() {
-        // ... (Logika handleBannerScroll Anda)
-    },
-    scrollToSlide() {
-        // ... (Logika scrollToSlide Anda)
-    },
-    scrollToNext() {
-        // ... (Logika scrollToNext Anda)
-    },
-    scrollToPrev() {
-        // ... (Logika scrollToPrev Anda)
-    },
-
-
-    // Metode untuk Menu Interaktif
-    selectCategory(id) {
-      this.selectedCategory = id;
-      const subs = this.selectedCategoryData.subcategories || [];
-      
-      // PENTING: Jika category berubah, pilih subcategory pertama dari category baru.
-      this.selectedSubcategory = subs[0]?.id || null;
-      
-      // Pilih menu pertama dari subcategory yang baru dipilih.
-      const selectedSubcatData = this.selectedCategoryData.subcategories.find(sub => sub.id === this.selectedSubcategory) || { menus: [] };
-      this.selectedMenu = selectedSubcatData.menus[0] || null;
-    },
-
-    selectSubcategory(id) {
-      this.selectedSubcategory = id;
-      // Pilih menu pertama dari subcategory baru
-      this.selectedMenu = this.filteredMenus[0] || null;
-    },
-
-    selectMenu(menu) {
-      this.selectedMenu = menu;
-    },
-
-    // PERBAIKAN: Menggunakan toLocaleString untuk format Rupiah standar
-    formatPrice(price) {
-      if (typeof price === 'number' && price > 0) {
-        return price.toLocaleString('id-ID', {
-          style: 'currency',
-          currency: 'IDR',
-          minimumFractionDigits: 0,
-        });
+    initializeSelections() {
+      if (this.foodCategory.subcategories.length) {
+        const firstFood = this.foodCategory.subcategories[0];
+        this.selectedFoodSubcategory = firstFood.id;
+        this.selectedFoodMenu = firstFood.menus[0] || null;
       }
-      return 'N/A';
+      if (this.drinkCategory.subcategories.length) {
+        const firstDrink = this.drinkCategory.subcategories[0];
+        this.selectedDrinkSubcategory = firstDrink.id;
+        this.selectedDrinkMenu = firstDrink.menus[0] || null;
+      }
     },
-  }
+    selectFoodSubcategory(id) {
+      this.selectedFoodSubcategory = id;
+      const sub = this.foodCategory.subcategories.find(item => item.id === id);
+      this.selectedFoodMenu = sub?.menus?.[0] || null;
+    },
+    selectDrinkSubcategory(id) {
+      this.selectedDrinkSubcategory = id;
+      const sub = this.drinkCategory.subcategories.find(item => item.id === id);
+      this.selectedDrinkMenu = sub?.menus?.[0] || null;
+    },
+    selectFoodMenu(menu) {
+      this.selectedFoodMenu = menu;
+    },
+    selectDrinkMenu(menu) {
+      this.selectedDrinkMenu = menu;
+    },
+    scrollToActive(animate = true) {
+      // Removed auto-centering logic to allow free scrolling
+    },
+    onScrollDragStart(e) {
+      if (!this.bannerScroll) return;
+      this.isDragging = true;
+      this.dragStartX = e.clientX;
+      this.dragStartScroll = this.bannerScroll.scrollLeft;
+      if (e.target.setPointerCapture) {
+        e.target.setPointerCapture(e.pointerId);
+      }
+    },
+    onScrollDragMove(e) {
+      if (!this.isDragging || !this.bannerScroll) return;
+      const delta = e.clientX - this.dragStartX;
+      this.bannerScroll.scrollLeft = this.dragStartScroll - delta;
+    },
+    onScrollDragEnd(e) {
+      if (!this.isDragging) return;
+      this.isDragging = false;
+      if (e && e.target && e.target.releasePointerCapture) {
+        e.target.releasePointerCapture(e.pointerId);
+      }
+    },
+    onBannerWheel(e) {
+      if (!this.bannerScroll) return;
+      const delta = e.deltaY || e.deltaX;
+      this.bannerScroll.scrollLeft += delta;
+    },
+    slideStyle(idx) {
+      // Lebar tetap untuk semua gambar agar scrolling lancar
+      const width = 800; 
+      return {
+        width: `${width}px`,
+        minWidth: `${width}px`,
+        maxWidth: `${width}px`,
+        height: `${this.bannerHeight}px`,
+        transform: 'scale(1)',
+        opacity: 1,
+      };
+    },
+    handleResize() {
+      this.viewportWidth = window.innerWidth;
+    },
+    formatPrice(price) {
+      if (typeof price !== 'number') return 'N/A'
+      
+      // Format shorthand: 10k, 20k, 150k, 1.5M
+      if (price >= 1000000) {
+        return 'Rp ' + (price / 1000000).toFixed(1).replace(/\.0$/, '') + 'M'
+      }
+      
+      if (price >= 1000) {
+        return (price / 1000).toFixed(0) + 'k'
+      }
+      
+      return 'Rp ' + price
+    },
+  },
 };
 </script>
+
+<style scoped>
+.hero-kenburns {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.banner-scroll {
+  touch-action: pan-x;
+  -ms-overflow-style: none;
+  scrollbar-width: none; /* Firefox */
+}
+.banner-scroll::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+</style>

@@ -28,6 +28,9 @@ const submit = () => {
     <div class="w-full max-w-md bg-white rounded-2xl shadow-lg p-8">
       <h2 class="text-3xl font-bold text-gray-900 mb-6 text-center">Welcome Back</h2>
 
+    <div v-if="$page.props.errors.error" class="mb-4 text-red-600 text-center font-semibold">
+      {{ $page.props.errors.error }}
+    </div>
       <form @submit.prevent="submit" class="space-y-6">
         <div>
           <label for="email" class="block text-gray-700 font-semibold mb-1">Email</label>
