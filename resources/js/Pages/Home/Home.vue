@@ -10,6 +10,7 @@
           <a href="#home" class="text-emerald-700 border-b-2 border-emerald-700 pb-1">Home</a>
           <a href="#menu" class="hover:text-emerald-700 transition">Menu</a>
           <a href="#tetangga" class="hover:text-emerald-700 transition">Community</a>
+          <Link href="/promo-loyalty" class="hover:text-emerald-700 transition">Promo & Loyalty</Link>
           <Link href="/about" class="hover:text-emerald-700 transition">About Us</Link>
           <a href="#blog" class="hover:text-emerald-700 transition">Blog</a>
           <a href="#contact" class="hover:text-emerald-700 transition">Contact Us</a>

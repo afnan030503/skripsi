@@ -19,10 +19,21 @@ const submit = () => {
     <Head title="Log in" />
     
     <!-- Logo Utara -->
-    <div class="flex items-center gap-3 mb-12 cursor-pointer select-none">
+    <div class="flex items-center gap-3 mb-8 cursor-pointer select-none">
       <span class="text-4xl font-bold border-2 rounded px-3 py-1 text-emerald-700">北</span>
       <span class="text-4xl font-bold text-emerald-700 tracking-widest">UTARA</span>
     </div>
+
+    <!-- Back Button -->
+    <a 
+      href="http://127.0.0.1:8000/" 
+      class="mb-6 inline-flex items-center gap-2 text-emerald-700 hover:text-emerald-800 font-semibold transition"
+    >
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+      </svg>
+      Back to Home
+    </a>
 
     <!-- Login Box -->
     <div class="w-full max-w-md bg-white rounded-2xl shadow-lg p-8">

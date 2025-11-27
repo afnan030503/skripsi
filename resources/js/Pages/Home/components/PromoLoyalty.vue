@@ -1,41 +1,27 @@
 <template>
   <div class="min-h-screen bg-stone-50 flex flex-col">
     <!-- Navbar sama seperti Home -->
-    <nav class="fixed w-full z-50 bg-white shadow-md py-1">
-      <div class="max-w-7xl mx-auto px-6 flex items-center justify-between">
-        <Link href="/" class="flex items-center gap-3">
-          <img 
-            src="/public/utara.jpg" 
-            alt="Logo Utara" 
-            class="h-20 opacity-100"
-          />
+    <header class="fixed top-0 inset-x-0 z-40 bg-white/90 backdrop-blur shadow-sm border-b border-gray-100">
+      <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+        <Link href="/" class="flex items-center justify-center gap-3 py-4 px-4">
+          <img src="/public/utara.jpg" alt="Utara" class="h-12 w-auto rounded-xl shadow" />
+          <span class="text-2xl font-black text-emerald-700 tracking-wide">UTARA</span>
         </Link>
-
-        <ul class="hidden md:flex items-center gap-8 font-medium text-gray-700">
-          <li><Link href="/" class="hover:text-emerald-600 transition">Home</Link></li>
-          <li><a href="/#menu" class="hover:text-emerald-600 transition">Menu</a></li>
-          <li>
-            <Link href="/promo-loyalty" class="text-emerald-700 border-b-2 border-emerald-600 pb-1">
-              Promo &amp; Loyalty
-            </Link>
-          </li>
-          <li><a href="/#tetangga" class="hover:text-emerald-600 transition">Community</a></li>
-          <li><a href="/#about" class="hover:text-emerald-600 transition">About Us</a></li>
-          <li><a href="/#blog" class="hover:text-emerald-600 transition">Blog</a></li>
-          <li><a href="/#contact" class="hover:text-emerald-600 transition">Contact Us</a></li>
-          <li><a href="/#location" class="hover:text-emerald-600 transition">Location</a></li>
-        </ul>
-
-        <div class="flex gap-3">
-          <Link href="/login" class="bg-blue-500 text-white px-5 py-2 rounded-full hover:bg-blue-600 transition font-medium">
-            Login
-          </Link>
-          <button class="bg-emerald-600 text-white px-5 py-2 rounded-full hover:bg-emerald-700 transition font-medium">
-            Order Now
-          </button>
+        <nav class="hidden md:flex items-center gap-6 text-sm font-semibold text-gray-700">
+          <Link href="/" class="hover:text-emerald-700 transition">Home</Link>
+          <a href="/#menu" class="hover:text-emerald-700 transition">Menu</a>
+          <a href="/#tetangga" class="hover:text-emerald-700 transition">Community</a>
+          <Link href="/promo-loyalty" class="text-emerald-700 border-b-2 border-emerald-700 pb-1">Promo & Loyalty</Link>
+          <Link href="/about" class="hover:text-emerald-700 transition">About Us</Link>
+          <a href="/#blog" class="hover:text-emerald-700 transition">Blog</a>
+          <a href="/#contact" class="hover:text-emerald-700 transition">Contact Us</a>
+        </nav>
+        <div class="flex items-center justify-center gap-3 py-4 px-4">
+          <Link href="/login" class="hidden sm:inline-block px-4 py-2 rounded-full border border-gray-200 text-sm font-semibold hover:border-emerald-600 hover:text-emerald-700 transition">Login</Link>
+          <a href="https://wa.me/6281215246678?text=Halo%20Kopi%20Utara" target="_blank" class="px-5 py-2 rounded-full bg-emerald-600 text-white font-semibold shadow hover:bg-emerald-700 transition">Reservasi</a>
         </div>
       </div>
-    </nav>
+    </header>
 
     <!-- Spacer untuk navbar fixed -->
     <div class="h-24"></div>
