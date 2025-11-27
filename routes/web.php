@@ -42,6 +42,7 @@ Route::post('/posts', [PostController::class, 'store']);
 // REVIEWS (public)
 Route::get('/reviews', [ReviewController::class, 'index']);
 Route::post('/reviews', [ReviewController::class, 'store']);
+Route::get('/reviews/google', [ReviewController::class, 'google']);
 
 // ======================
 // LOGIN

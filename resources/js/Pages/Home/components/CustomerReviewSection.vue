@@ -410,6 +410,21 @@ const submitForm = async () => {
 
 const fetchReviews = async () => {
   try {
+    // Try Google reviews first
+    const googleRes = await fetch('/reviews/google');
+    if (googleRes.ok) {
+      const googleData = await googleRes.json();
+      if (Array.isArray(googleData) && googleData.length) {
+        reviews.value = googleData;
+        return;
+      }
+    }
+  } catch (error) {
+    console.warn('Failed to fetch Google reviews, fallback to local reviews', error);
+  }
+
+  // Fallback to local reviews
+  try {
     const response = await fetch('/reviews');
     if (response.ok) {
       reviews.value = await response.json();
