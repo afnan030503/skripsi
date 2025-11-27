@@ -29,6 +29,7 @@ Route::get('/about', [AboutController::class, 'index'])->name('about');
 Route::get('/blog', [BlogController::class, 'index'])->name('blog');
 Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.show');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
+Route::get('/promo-loyalty', fn () => Inertia::render('Home/components/PromoLoyalty'))->name('promo-loyalty');
 
 // CSRF token endpoint for frontend fetch fallback
 Route::get('/csrf-token', fn () => response()->json([

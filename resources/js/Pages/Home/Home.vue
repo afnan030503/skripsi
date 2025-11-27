@@ -21,6 +21,11 @@
       ]">
         <li><a href="#home" class="hover:text-emerald-600 transition">Home</a></li>
         <li><a href="#menu" class="hover:text-emerald-600 transition">Menu</a></li>
+        <li>
+          <Link href="/promo-loyalty" class="hover:text-emerald-600 transition">
+            Promo &amp; Loyalty
+          </Link>
+        </li>
         <li><a href="#tetangga" class="hover:text-emerald-600 transition">Community</a></li>
         <li><a href="#about" class="hover:text-emerald-600 transition">About Us</a></li>
         <li><a href="#blog" class="hover:text-emerald-600 transition">Blog</a></li>
@@ -336,7 +341,11 @@
               <li><a href="#home" class="hover:text-emerald-400 transition">Home</a></li>
               <li><a href="#menu" class="hover:text-emerald-400 transition">Menu</a></li>
               <li><a href="#tetangga" class="hover:text-emerald-400 transition">Community</a></li>
-              <li><a href="#promo" class="hover:text-emerald-400 transition">Promo & Loyalty</a></li>
+              <li>
+                <Link href="/promo-loyalty" class="hover:text-emerald-400 transition">
+                  Promo &amp; Loyalty
+                </Link>
+              </li>
               <li><a href="#about" class="hover:text-emerald-400 transition">About</a></li>
               <li><a href="#location" class="hover:text-emerald-400 transition">Contact</a></li>
             </ul>
