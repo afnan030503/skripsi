@@ -56,6 +56,7 @@ class ReviewController extends Controller
 
     /**
      * Get reviews from Google Maps Place Details API.
+     * Uses caching to reduce API costs - only fetches from Google every 24 hours.
      */
     public function google(): JsonResponse
     {
@@ -68,6 +69,17 @@ class ReviewController extends Controller
             ], 500);
         }
 
+        // Check if we have cached data that's still fresh (less than 24 hours old)
+        $cache = \App\Models\GoogleReviewCache::where('place_id', $placeId)
+            ->where('fetched_at', '>', now()->subHours(24))
+            ->first();
+
+        if ($cache) {
+            // Return cached data - NO API CALL TO GOOGLE!
+            return response()->json($cache->reviews_data);
+        }
+
+        // Cache is old or doesn't exist, fetch fresh data from Google
         $response = Http::get('https://maps.googleapis.com/maps/api/place/details/json', [
             'place_id' => $placeId,
             'fields' => 'name,rating,user_ratings_total,reviews',
@@ -92,6 +104,7 @@ class ReviewController extends Controller
             ], 502);
         }
 
+        // Transform reviews to our format
         $reviews = collect($payload['result']['reviews'] ?? [])->map(function ($review) {
             return [
                 'id' => $review['author_url'] ?? $review['author_name'] ?? null,
@@ -101,7 +114,16 @@ class ReviewController extends Controller
                 'message' => $review['text'] ?? '',
                 'avatar_url' => $review['profile_photo_url'] ?? null,
             ];
-        });
+        })->toArray();
+
+        // Save to cache for next 24 hours
+        \App\Models\GoogleReviewCache::updateOrCreate(
+            ['place_id' => $placeId],
+            [
+                'reviews_data' => $reviews,
+                'fetched_at' => now(),
+            ]
+        );
 
         return response()->json($reviews);
     }

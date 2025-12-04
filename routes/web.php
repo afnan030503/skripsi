@@ -119,6 +119,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/admin/banners', [\App\Http\Controllers\Admin\BannerController::class, 'index'])->name('admin.banners.index');
     Route::post('/admin/banners', [\App\Http\Controllers\Admin\BannerController::class, 'store'])->name('admin.banners.store');
     Route::delete('/admin/banners/{banner}', [\App\Http\Controllers\Admin\BannerController::class, 'destroy'])->name('admin.banners.destroy');
+
+    // Posts Management
+    Route::get('/admin/posts', [PostController::class, 'getPending'])->name('admin.posts.index');
+    Route::post('/admin/posts/{id}/approve', [PostController::class, 'approve'])->name('admin.posts.approve');
+    Route::post('/admin/posts/{id}/reject', [PostController::class, 'reject'])->name('admin.posts.reject');
 });
 
     // Community Posts

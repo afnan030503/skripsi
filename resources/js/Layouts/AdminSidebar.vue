@@ -1,99 +1,127 @@
 <template>
-  <aside class="w-64 bg-white shadow-lg flex flex-col">
+  <aside class="w-64 bg-white text-slate-600 flex flex-col h-screen font-sans border-r border-slate-200">
     <!-- HEADER -->
-    <div class="p-4 flex items-center gap-3 border-b">
-      <img
-        src="https://placehold.co/48x48/10b981/ffffff?text=Logo"
-        alt="Logo Admin"
-        class="w-12 h-12 object-cover rounded-full"
-      />
-      <h1 class="text-xl font-extrabold text-gray-800">Admin Panel</h1>
+    <div class="p-6 flex items-center gap-3 border-b border-slate-100">
+      <div class="w-10 h-10 rounded-lg bg-indigo-600 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-indigo-200">
+        U
+      </div>
+      <div>
+        <h1 class="text-lg font-bold text-slate-800 tracking-tight">Admin Panel</h1>
+        <p class="text-xs text-slate-500 font-medium">Utara Coffee</p>
+      </div>
     </div>
 
     <!-- NAVIGATION -->
-    <nav class="mt-4 flex-1">
-      <ul class="space-y-6">
+    <nav class="mt-6 flex-1 px-3 overflow-y-auto custom-scrollbar">
+      <ul class="space-y-1">
 
         <!-- DASHBOARD -->
         <li>
           <Link
             href="/admin"
-            class="w-full text-left px-4 py-3 rounded-r-full font-semibold transition duration-150"
+            class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group"
             :class="currentRoute === '/admin'
-              ? 'bg-indigo-600 text-white shadow-md'
-              : 'text-gray-700 hover:bg-gray-200'"
+              ? 'bg-indigo-50 text-indigo-700 font-bold'
+              : 'hover:bg-slate-50 hover:text-slate-900'"
           >
-            Dashboard
+            <svg class="w-5 h-5 transition-colors" :class="currentRoute === '/admin' ? 'text-indigo-600' : 'text-slate-400 group-hover:text-slate-600'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+            <span class="text-sm">Dashboard</span>
           </Link>
+        </li>
+
+        <!-- SECTION LABEL -->
+        <li class="px-3 pt-5 pb-2 text-xs font-bold text-slate-400 uppercase tracking-wider">
+          Master Data
         </li>
 
         <!-- Kelola Kategori -->
         <li>
           <Link
             href="/admin/subcategory"
-            class="w-full text-left px-4 py-3 rounded-r-full font-semibold transition duration-150"
+            class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group"
             :class="currentRoute.startsWith('/admin/subcategory')
-              ? 'bg-indigo-600 text-white shadow-md'
-              : 'text-gray-700 hover:bg-gray-200'"
+              ? 'bg-indigo-50 text-indigo-700 font-bold'
+              : 'hover:bg-slate-50 hover:text-slate-900'"
           >
-            Kelola Kategori
+            <svg class="w-5 h-5 transition-colors" :class="currentRoute.startsWith('/admin/subcategory') ? 'text-indigo-600' : 'text-slate-400 group-hover:text-slate-600'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path></svg>
+            <span class="text-sm">Kategori Menu</span>
           </Link>
         </li>
 
-        <!-- Kelola Menu -->
+        <!-- Kelola Menu (Dropdown) -->
         <li>
           <button
             @click="menuOpen = !menuOpen"
-            class="w-full text-left px-4 py-3 font-semibold flex justify-between items-center rounded-r-full transition duration-150"
+            class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg transition-all duration-200 group"
             :class="currentRoute.includes('/admin/menu')
-              ? 'bg-indigo-600 text-white shadow-md'
-              : 'text-gray-700 hover:bg-gray-200'"
+              ? 'bg-indigo-50 text-indigo-700 font-bold'
+              : 'hover:bg-slate-50 hover:text-slate-900'"
           >
-            Kelola Menu
-            <svg :class="['w-4 h-4 transform transition-transform duration-300', {'rotate-180': menuOpen}]"
-              fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M19 9l-7 7-7-7"></path>
+            <div class="flex items-center gap-3">
+              <svg class="w-5 h-5 transition-colors" :class="currentRoute.includes('/admin/menu') ? 'text-indigo-600' : 'text-slate-400 group-hover:text-slate-600'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+              <span class="text-sm">Daftar Menu</span>
+            </div>
+            <svg 
+              class="w-4 h-4 transition-transform duration-200"
+              :class="{'rotate-180': menuOpen, 'text-indigo-600': currentRoute.includes('/admin/menu'), 'text-slate-400': !currentRoute.includes('/admin/menu')}"
+              fill="none" stroke="currentColor" viewBox="0 0 24 24"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
             </svg>
           </button>
-        </li>
 
-        <!-- SUBMENU -->
-        <ul
-          v-if="menuOpen"
-          class="ml-4 pl-2 border-l border-gray-300 space-y-1"
-        >
-          <li>
+          <!-- SUBMENU -->
+          <div 
+            v-show="menuOpen"
+            class="mt-1 ml-4 pl-4 border-l border-slate-200 space-y-1 overflow-hidden transition-all duration-300"
+          >
             <Link
               href="/admin/menu?tab=foods"
-              class="block px-3 py-2 w-full text-left transition duration-150 rounded text-gray-600 hover:bg-gray-100"
-              :class="tab === 'foods' ? 'bg-emerald-100 text-emerald-700 font-semibold' : ''"
+              class="block px-3 py-2 rounded-lg text-sm transition-colors"
+              :class="tab === 'foods' ? 'text-indigo-600 font-bold bg-indigo-50/50' : 'text-slate-500 hover:text-slate-800 hover:bg-slate-50'"
             >
               Foods
             </Link>
-          </li>
-
-          <li>
             <Link
               href="/admin/menu?tab=drinks"
-              class="block px-3 py-2 w-full text-left transition duration-150 rounded text-gray-600 hover:bg-gray-100"
-              :class="tab === 'drinks' ? 'bg-blue-100 text-blue-700 font-semibold' : ''"
+              class="block px-3 py-2 rounded-lg text-sm transition-colors"
+              :class="tab === 'drinks' ? 'text-indigo-600 font-bold bg-indigo-50/50' : 'text-slate-500 hover:text-slate-800 hover:bg-slate-50'"
             >
               Drinks
             </Link>
-          </li>
-        </ul>
+          </div>
+        </li>
+
+        <!-- SECTION LABEL -->
+        <li class="px-3 pt-5 pb-2 text-xs font-bold text-slate-400 uppercase tracking-wider">
+          Content & Users
+        </li>
 
         <!-- Kelola Banner -->
         <li>
           <Link
             href="/admin/banners"
-            class="w-full text-left px-4 py-3 rounded-r-full font-semibold transition duration-150"
+            class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group"
             :class="currentRoute.includes('/admin/banners')
-              ? 'bg-indigo-600 text-white shadow-md'
-              : 'text-gray-700 hover:bg-gray-200'"
+              ? 'bg-indigo-50 text-indigo-700 font-bold'
+              : 'hover:bg-slate-50 hover:text-slate-900'"
           >
-            Kelola Banner
+            <svg class="w-5 h-5 transition-colors" :class="currentRoute.includes('/admin/banners') ? 'text-indigo-600' : 'text-slate-400 group-hover:text-slate-600'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+            <span class="text-sm">Banner Slider</span>
+          </Link>
+        </li>
+
+        <!-- Moderasi Postingan -->
+        <li>
+          <Link
+            href="/admin/posts"
+            class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group"
+            :class="currentRoute.includes('/admin/posts')
+              ? 'bg-indigo-50 text-indigo-700 font-bold'
+              : 'hover:bg-slate-50 hover:text-slate-900'"
+          >
+            <svg class="w-5 h-5 transition-colors" :class="currentRoute.includes('/admin/posts') ? 'text-indigo-600' : 'text-slate-400 group-hover:text-slate-600'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"></path></svg>
+            <span class="text-sm">Moderasi Post</span>
           </Link>
         </li>
 
@@ -101,12 +129,13 @@
         <li>
           <Link
             href="/admin/users"
-            class="w-full text-left px-4 py-3 rounded-r-full font-semibold transition duration-150"
+            class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group"
             :class="currentRoute === '/admin/users'
-              ? 'bg-indigo-600 text-white shadow-md'
-              : 'text-gray-700 hover:bg-gray-200'"
+              ? 'bg-indigo-50 text-indigo-700 font-bold'
+              : 'hover:bg-slate-50 hover:text-slate-900'"
           >
-            Kelola Pengguna
+            <svg class="w-5 h-5 transition-colors" :class="currentRoute === '/admin/users' ? 'text-indigo-600' : 'text-slate-400 group-hover:text-slate-600'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+            <span class="text-sm">Users</span>
           </Link>
         </li>
 
@@ -114,12 +143,13 @@
     </nav>
 
     <!-- LOGOUT -->
-    <div class="p-4 border-t">
+    <div class="p-4 border-t border-slate-200 bg-slate-50">
       <form @submit.prevent="logout" class="w-full">
         <button
           type="submit"
-          class="w-full text-center px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
+          class="w-full flex items-center justify-center gap-2 px-4 py-2 bg-white text-red-500 hover:bg-red-50 hover:text-red-600 rounded-lg transition-all duration-200 text-sm font-bold border border-slate-200 shadow-sm hover:shadow"
         >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
           Logout
         </button>
       </form>
@@ -132,14 +162,25 @@ import { ref } from "vue";
 import { Link, router } from "@inertiajs/vue3";
 import { usePage } from "@inertiajs/vue3";
 
-const menuOpen = ref(false);
-
 const page = usePage();
-
-// Detect route
 const currentRoute = page.url;
 const tab = new URLSearchParams(window.location.search).get("tab");
 
-// Logout function
+// Auto-open menu if current route is related to menu
+const menuOpen = ref(currentRoute.includes('/admin/menu'));
+
 const logout = () => router.post("/logout");
 </script>
+
+<style scoped>
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1;
+  border-radius: 20px;
+}
+</style>

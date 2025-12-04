@@ -92,94 +92,93 @@
       </div>
     </section>
 
-    <!-- Contact / Map -->
-    <section id="location" class="bg-[#e9f3ff] border-t border-[#cbd7e8] py-16">
-      <div class="w-full px-4 sm:px-8">
-        <div class="flex flex-col lg:flex-row gap-6 w-full">
-          <div
-            class="w-full lg:w-1/2 bg-white rounded-3xl shadow-[0_12px_30px_rgba(17,24,39,0.12)] p-8 border border-black"
-          >
-            <div class="flex items-center gap-4 mb-6">
-              <img src="/public/logo.png" alt="Logo Utara" class="h-16" />
-              <h3 class="text-4xl font-extrabold tracking-wide text-[#00553d]">UTARA</h3>
+    <section id="location" class="py-20 bg-white">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="grid md:grid-cols-2 gap-12 items-start">
+          <!-- LEFT SIDE: UTARA LOGO & BUTTONS -->
+          <div class="space-y-4">
+            <!-- UTARA Logo Image -->
+            <div class="flex items-start justify-start">
+              <img 
+                src="/public/utara.jpg" 
+                alt="UTARA Logo" 
+                class="w-auto h-24 object-contain"
+                style="max-width: 450px;"
+              />
             </div>
-            <p class="text-lg text-gray-800 leading-relaxed">
-              Tempatnya cerita, tawa, dan kopi yang diseduh dengan hati. Kami hadir di belakang kampus
-              untuk menemani tugas, obrolan, dan pagi yang hangat.
+
+            <!-- Tagline -->
+            <p class="text-gray-700 text-sm leading-relaxed" style="max-width: 450px;">
+              Tempatnya cerita, tawa, dan kopi yang diseduh dengan hati.<br />
+              Kami hadir di belakang kampus untuk menemani tugas, obrolan, dan pagi yang hangat.
             </p>
-            <div class="mt-8 grid gap-4 sm:grid-cols-2">
-              <button
-                class="rounded-2xl border-2 border-black shadow-[0_8px_0_rgba(0,0,0,0.25)] overflow-hidden text-left bg-white"
-                @click="openWhatsApp"
-              >
-                <div class="bg-[#6dc5ff] px-5 py-3">
-                  <p class="font-semibold text-sm uppercase tracking-wide text-black">
-                    Kontak Whatsapp / Reservasi
-                  </p>
+
+            <!-- Buttons -->
+            <div class="flex gap-3" style="max-width: 450px;">
+              <!-- WhatsApp / Reservasi Button with Phone Number -->
+              <div class="flex-1 border-2 border-black rounded-lg overflow-hidden shadow-md">
+                <a 
+                  href="https://wa.me/6281215246678?text=Halo%20Kopi%20Utara" 
+                  target="_blank"
+                  class="block bg-sky-400 text-white font-bold text-center py-2.5 text-sm hover:bg-sky-500 transition-all"
+                >
+                  Kontak Whatsapp / Reservasi
+                </a>
+                <div class="bg-white text-gray-900 font-bold text-center py-2.5 border-t-2 border-black text-sm">
+                  081215246678
                 </div>
-                <div class="px-5 py-5">
-                  <p class="text-3xl font-extrabold tracking-widest text-black text-center">
-                    0812 1524 6678
-                  </p>
+              </div>
+
+              <!-- Social Media Button with Usernames -->
+              <div class="flex-1 border-2 border-black rounded-lg overflow-hidden shadow-md">
+                <div class="bg-emerald-500 text-white font-bold text-center py-2.5 text-sm">
+                  Sosial Media
                 </div>
-              </button>
-              <div
-                class="rounded-2xl border-2 border-black shadow-[0_8px_0_rgba(0,0,0,0.25)] overflow-hidden bg-white"
-              >
-                <div class="bg-[#aaf1c6] px-5 py-3">
-                  <p class="font-semibold text-sm uppercase tracking-wide text-black text-center">
-                    Sosial Media
-                  </p>
-                </div>
-                <div class="px-5 py-4 flex items-center justify-center gap-6">
-                  <button
-                    class="flex items-center gap-2 text-black font-semibold"
-                    @click="openInstagram"
+                <div class="bg-white py-2 px-2 border-t-2 border-black flex items-center justify-center gap-2">
+                  <a 
+                    href="https://instagram.com/utara.yk" 
+                    target="_blank" 
+                    class="flex items-center gap-1.5 hover:scale-105 transition-transform"
                   >
-                    <img src="/public/instagram.png" alt="Instagram" class="h-6 w-6 object-contain" />
-                    <span>@Utara.yk</span>
-                  </button>
-                  <button
-                    class="flex items-center gap-2 text-black font-semibold"
-                    @click="openTiktok"
+                    <div class="bg-pink-500 p-1.5 rounded">
+                      <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zM12 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                      </svg>
+                    </div>
+                    <span class="font-semibold text-gray-900 text-xs">Utara.yk</span>
+                  </a>
+                  <a 
+                    href="https://tiktok.com/@utara.yk" 
+                    target="_blank" 
+                    class="flex items-center gap-1.5 hover:scale-105 transition-transform"
                   >
-                    <span class="text-xl font-bold">TikTok</span>
-                    <span>Utara.yk</span>
-                  </button>
+                    <div class="bg-gray-900 p-1.5 rounded">
+                      <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/>
+                      </svg>
+                    </div>
+                    <span class="font-semibold text-gray-900 text-xs">Utara.yk</span>
+                  </a>
                 </div>
               </div>
             </div>
-            <button
-              class="mt-6 inline-flex items-center gap-2 text-[#00553d] font-semibold underline decoration-dotted"
-              @click="openMaps"
-            >
-              Lihat di Google Maps
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
           </div>
 
-          <div
-            class="w-full lg:w-1/2 bg-white rounded-3xl border-2 border-black shadow-[0_12px_30px_rgba(17,24,39,0.12)] overflow-hidden flex flex-col"
-          >
-            <div class="px-6 py-4 border-b border-black flex items-center gap-3">
-              <span class="text-xl font-semibold">Map</span>
-              <p class="text-sm text-gray-900 font-semibold">
-                Jl. Kemuning, Tlogo, Tamantirto <span class="font-bold">(Belakang Unires Putra UMY)</span>
-              </p>
+          <!-- RIGHT SIDE: MAP -->
+          <div class="bg-white rounded-xl overflow-hidden shadow-lg border-2 border-black">
+            <div class="bg-gray-50 px-4 py-2 border-b-2 border-black">
+              <h3 class="text-gray-800 font-bold text-center text-sm">
+                📍 Jl. Kenurising, Tlogo, Tamantirto (Belakang Unires Putra UMY)
+              </h3>
             </div>
-            <div class="relative flex-1 cursor-pointer" @click="openMaps">
-              <iframe
-                class="w-full h-full pointer-events-none"
-                :src="mapsEmbedUrl"
-                style="border:0;"
-                allowfullscreen=""
-                loading="lazy"
-                referrerpolicy="no-referrer-when-downgrade"
-              ></iframe>
-              <div class="absolute inset-0 border-t-4 border-[#0a2240] pointer-events-none"></div>
-            </div>
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.666666666666!2d106.816666!3d-6.200000!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNsKwMTInMDAuMCJTIDEwNsKwNDknMDAuMCJF!5e0!3m2!1sen!2sid!4v1234567890"
+              width="100%"
+              height="350"
+              style="border:0;"
+              allowfullscreen=""
+              loading="lazy"
+            />
           </div>
         </div>
       </div>

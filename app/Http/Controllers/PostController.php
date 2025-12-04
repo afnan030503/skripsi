@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class PostController extends Controller
 {
@@ -14,7 +15,8 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::latest()->get();
+        // Public view: Only show APPROVED posts
+        $posts = Post::approved()->latest()->get();
 
         // Tambahkan full URL gambar supaya gampang dipakai di frontend
         $posts->transform(function ($post) {
@@ -60,5 +62,69 @@ class PostController extends Controller
         }
 
         return redirect()->back()->with('status', 'Post created.');
+    }
+
+    /**
+     * GET /admin/posts
+     * Get all posts for admin with filtering
+     */
+    public function getPending(Request $request)
+    {
+        // Fetch all posts for client-side filtering or server-side if needed
+        $query = Post::query()->latest();
+
+        // Filter by status if provided (optional, if we want server-side filtering)
+        if ($request->has('status') && $request->status !== 'all') {
+            $query->where('status', $request->status);
+        }
+
+        // Filter by category if provided
+        if ($request->has('category') && $request->category !== 'all') {
+            $query->byCategory($request->category);
+        }
+
+        $posts = $query->get();
+
+        // Add image URL
+        $posts->transform(function ($post) {
+            $post->image_url = asset('storage/' . $post->image);
+            return $post;
+        });
+
+        return Inertia::render('Admin/AdminPosts', [
+            'posts' => $posts
+        ]);
+    }
+
+    /**
+     * POST /admin/posts/{id}/approve
+     * Approve a post
+     */
+    public function approve($id)
+    {
+        $post = Post::findOrFail($id);
+        $post->status = Post::STATUS_APPROVED;
+        $post->save();
+
+        return response()->json([
+            'message' => 'Post approved successfully.',
+            'post' => $post,
+        ]);
+    }
+
+    /**
+     * POST /admin/posts/{id}/reject
+     * Reject a post
+     */
+    public function reject($id)
+    {
+        $post = Post::findOrFail($id);
+        $post->status = Post::STATUS_REJECTED;
+        $post->save();
+
+        return response()->json([
+            'message' => 'Post rejected successfully.',
+            'post' => $post,
+        ]);
     }
 }
