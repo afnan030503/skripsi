@@ -168,9 +168,15 @@
                     <circle cx="15" cy="25" r="8" :fill="currentStamps >= 10 ? '#10b981' : '#0f3d2e'"/>
                   </svg>
                 </div>
-                <!-- Logo Text -->
-                <div class="relative z-10 text-white font-black text-2xl" :class="{'animate-pulse scale-125': currentStamps >= 10}">
-                  {{ currentStamps >= 10 ? '🎁' : '北' }}
+                <!-- Logo Text and Extra Points -->
+                <div class="relative z-10 text-white font-black text-center" :class="currentStamps >= 10 ? 'animate-pulse scale-110' : 'text-2xl'">
+                  <div v-if="searchResult && searchResult.points > 9" class="flex flex-col items-center">
+                    <span class="text-xl">🎁</span>
+                    <span class="text-xs -mt-1">+{{ searchResult.points - 9 }}</span>
+                  </div>
+                  <span v-else>
+                    {{ currentStamps >= 10 ? '🎁' : '北' }}
+                  </span>
                 </div>
               </div>
             </div>
