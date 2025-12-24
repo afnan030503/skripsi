@@ -3,7 +3,7 @@
     <header class="fixed top-0 inset-x-0 z-50 bg-white/90 backdrop-blur shadow-sm border-b border-gray-100">
       <div class="max-w-7xl mx-auto px-4 md:px-6 h-20 flex items-center justify-between">
         <Link href="/" class="flex items-center gap-2 md:gap-3">
-          <img src="/utara.jpg" alt="Utara" class="h-10 md:h-12 w-auto rounded-xl shadow" />
+          <img src="/public/utara.jpg" alt="Utara" class="h-10 md:h-12 w-auto rounded-xl shadow" />
         </Link>
         
         <!-- Desktop Nav -->
