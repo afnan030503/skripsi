@@ -45,9 +45,7 @@
         </li>
 
         <!-- SECTION LABEL -->
-        <li class="px-3 pt-5 pb-2 text-xs font-bold text-slate-400 uppercase tracking-wider">
-          Master Data
-        </li>
+
 
         <!-- Kelola Kategori -->
         <li>
@@ -108,9 +106,7 @@
         </li>
 
         <!-- SECTION LABEL -->
-        <li class="px-3 pt-5 pb-2 text-xs font-bold text-slate-400 uppercase tracking-wider">
-          Content & Users
-        </li>
+
 
         <!-- Kelola Banner -->
         <li>
@@ -169,18 +165,7 @@
         </li>
 
         <!-- Kelola Pengguna -->
-        <li>
-          <Link
-            href="/admin/users"
-            class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group"
-            :class="currentRoute === '/admin/users'
-              ? 'bg-indigo-50 text-indigo-700 font-bold'
-              : 'hover:bg-slate-50 hover:text-slate-900'"
-          >
-            <svg class="w-5 h-5 transition-colors" :class="currentRoute === '/admin/users' ? 'text-indigo-600' : 'text-slate-400 group-hover:text-slate-600'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-            <span class="text-sm">Users</span>
-          </Link>
-        </li>
+
 
         <!-- Kelola Member -->
         <li>

@@ -1,5 +1,5 @@
 <template>
-  <div class="flex min-h-screen bg-gray-100 font-sans">
+  <div class="flex h-screen bg-gray-100 font-sans overflow-hidden">
 
     <!-- SIDEBAR -->
     <AdminSidebar :isOpen="isSidebarOpen" @close="isSidebarOpen = false" />

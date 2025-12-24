@@ -1,5 +1,5 @@
 <template>
-  <div class="flex min-h-screen bg-gray-50 font-sans">
+  <div class="flex h-screen bg-gray-50 font-sans overflow-hidden">
     <AdminSidebar :isOpen="isSidebarOpen" @close="isSidebarOpen = false" />
 
     <main class="flex-1 min-w-0 overflow-y-auto">
@@ -83,7 +83,7 @@
                        <button @click="openAdjustModal(member)" class="p-2 text-indigo-600 hover:bg-indigo-50 rounded-lg transition" title="Adjust Points">
                          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
                        </button>
-                       <button v-if="member.points >= 9" @click="openRedeemModal(member)" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold transition shadow-sm" title="Redeem Free Menu">
+                       <button v-if="member.points >= 9" @click="openRedeemModal(member)" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold transition shadow-sm" title="Redeem Minuman Gratis">
                          🎁 Redeem
                        </button>
                        <button @click="openEditModal(member)" class="p-2 text-gray-400 hover:text-indigo-600 hover:bg-gray-100 rounded-lg transition">
@@ -171,11 +171,11 @@
       <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden transform transition-all">
         <div class="p-6 text-center space-y-4">
            <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full mx-auto flex items-center justify-center text-3xl mb-2">🎁</div>
-           <h3 class="text-xl font-black text-gray-900 leading-tight">Redeem Menu Gratis?</h3>
+           <h3 class="text-xl font-black text-gray-900 leading-tight">Redeem Minuman Gratis?</h3>
            <p class="text-sm text-gray-500">Member <b>{{ currentMember?.name }}</b> memiliki {{ currentMember?.points }} poin.</p>
            
            <div class="bg-gray-50 p-4 rounded-xl space-y-3">
-              <label class="block text-xs font-bold text-gray-400 uppercase">Jumlah Menu Gratis</label>
+              <label class="block text-xs font-bold text-gray-400 uppercase">Jumlah Minuman Gratis</label>
               <div class="flex items-center justify-center gap-4">
                  <button @click="redeemCount = Math.max(1, redeemCount - 1)" class="w-10 h-10 bg-white border border-gray-200 rounded-lg shadow-sm font-bold text-gray-600">-</button>
                  <span class="text-2xl font-black text-gray-800">{{ redeemCount }}</span>
@@ -310,7 +310,7 @@ const confirmRedeem = async () => {
     const idx = localMembers.value.findIndex(m => m.id === currentMember.value.id);
     if (idx !== -1) localMembers.value[idx] = resp.data.member;
     showRedeemModal.value = false;
-    alert(`Berhasil redeem ${redeemCount.value} menu gratis!`);
+    alert(`Berhasil redeem ${redeemCount.value} minuman gratis!`);
   } catch (err) {
     alert(err.response?.data?.message || 'Gagal redeem poin');
   } finally {

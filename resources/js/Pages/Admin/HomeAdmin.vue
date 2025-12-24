@@ -1,5 +1,5 @@
 <template>
-  <div class="flex min-h-screen bg-slate-50 font-sans">
+  <div class="flex h-screen bg-slate-50 font-sans overflow-hidden">
     <!-- SIDEBAR -->
     <AdminSidebar :isOpen="isSidebarOpen" @close="isSidebarOpen = false" />
     
@@ -111,32 +111,80 @@
 
         </div>
 
-        <!-- QUICK ACTIONS / RECENT ACTIVITY PLACEHOLDER -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div class="lg:col-span-2 bg-white rounded-xl border border-slate-200 shadow-sm p-6">
-            <h3 class="font-bold text-slate-800 mb-4">Aktivitas Terbaru</h3>
-            <div class="space-y-4">
-              <div class="flex items-center gap-4 p-3 bg-slate-50 rounded-lg">
-                <div class="w-2 h-2 rounded-full bg-green-500"></div>
-                <p class="text-sm text-slate-600">System admin panel updated successfully.</p>
-                <span class="ml-auto text-xs text-slate-400">Baru saja</span>
+        <!-- NAVIGATION CARDS -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <!-- Banner Slider Card -->
+          <div 
+            @click="navigateTo('/admin/banners')"
+            class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-all cursor-pointer group"
+          >
+            <div class="flex justify-between items-start mb-4">
+              <div class="p-3 bg-purple-50 rounded-lg text-purple-600 group-hover:bg-purple-600 group-hover:text-white transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
               </div>
-              <!-- More items can be added here -->
+              <span class="text-xs font-bold px-2 py-1 bg-slate-100 text-slate-600 rounded-full">Content</span>
             </div>
+            <h3 class="text-3xl font-bold text-slate-800 mb-1">Banner</h3>
+            <p class="text-sm text-slate-500 font-medium">Kelola Banner Slider</p>
           </div>
-          
-          <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
-            <h3 class="font-bold text-slate-800 mb-4">Quick Links</h3>
-            <div class="space-y-2">
-              <button @click="navigateTo('/admin/banners')" class="w-full text-left px-4 py-3 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-700 text-sm font-medium transition-colors flex justify-between items-center">
-                Manage Banners
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-              </button>
-              <button @click="navigateTo('/admin/users')" class="w-full text-left px-4 py-3 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-700 text-sm font-medium transition-colors flex justify-between items-center">
-                Manage Users
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-              </button>
+
+          <!-- Community Card -->
+          <div 
+            @click="navigateTo('/admin/community')"
+            class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-all cursor-pointer group"
+          >
+            <div class="flex justify-between items-start mb-4">
+              <div class="p-3 bg-orange-50 rounded-lg text-orange-600 group-hover:bg-orange-600 group-hover:text-white transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+              </div>
+              <span class="text-xs font-bold px-2 py-1 bg-slate-100 text-slate-600 rounded-full">Community</span>
             </div>
+            <h3 class="text-3xl font-bold text-slate-800 mb-1">Tetangga</h3>
+            <p class="text-sm text-slate-500 font-medium">Kelola Foto Komunitas</p>
+          </div>
+
+          <!-- Crew Card -->
+          <div 
+            @click="navigateTo('/admin/crews')"
+            class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-all cursor-pointer group"
+          >
+            <div class="flex justify-between items-start mb-4">
+              <div class="p-3 bg-cyan-50 rounded-lg text-cyan-600 group-hover:bg-cyan-600 group-hover:text-white transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+              </div>
+              <span class="text-xs font-bold px-2 py-1 bg-slate-100 text-slate-600 rounded-full">Crew</span>
+            </div>
+            <h3 class="text-3xl font-bold text-slate-800 mb-1">Crew</h3>
+            <p class="text-sm text-slate-500 font-medium">Kelola Data Pegawai</p>
+          </div>
+
+          <!-- Member/Loyalty Card -->
+          <div 
+            @click="navigateTo('/admin/members')"
+            class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-all cursor-pointer group"
+          >
+            <div class="flex justify-between items-start mb-4">
+              <div class="p-3 bg-rose-50 rounded-lg text-rose-600 group-hover:bg-rose-600 group-hover:text-white transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+              </div>
+              <span class="text-xs font-bold px-2 py-1 bg-slate-100 text-slate-600 rounded-full">Loyalty</span>
+            </div>
+            <h3 class="text-3xl font-bold text-slate-800 mb-1">Member</h3>
+            <p class="text-sm text-slate-500 font-medium">Kelola Poin & Member</p>
+          </div>
+
+        </div>
+
+        <!-- RECENT ACTIVITY (Full Width now) -->
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6 mb-8">
+          <h3 class="font-bold text-slate-800 mb-4">Aktivitas Terbaru</h3>
+          <div class="space-y-4">
+            <div class="flex items-center gap-4 p-3 bg-slate-50 rounded-lg">
+              <div class="w-2 h-2 rounded-full bg-green-500"></div>
+              <p class="text-sm text-slate-600">System admin panel updated.</p>
+              <span class="ml-auto text-xs text-slate-400">Baru saja</span>
+            </div>
+            <!-- More items can be added here -->
           </div>
         </div>
 

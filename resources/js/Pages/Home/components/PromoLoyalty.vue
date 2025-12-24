@@ -114,7 +114,7 @@
                 </h4>
                 
                 <p v-if="searchResult.points >= 9" class="text-gray-700 font-bold text-sm md:text-base leading-relaxed">
-                  Wah keren! Kamu punya <span class="text-emerald-600 font-black">{{ Math.floor(searchResult.points / 9) }}</span> menu gratis siap ditukar. 
+                  Wah keren! Kamu punya <span class="text-emerald-600 font-black">{{ Math.floor(searchResult.points / 9) }}</span> minuman gratis siap ditukar. 
                   Tunjukin ke barista ya! 
                 </p>
                 <p v-else class="text-gray-700 font-bold text-sm md:text-base leading-relaxed">
@@ -147,53 +147,27 @@
                 <span v-if="currentStamps >= n" class="text-white font-black text-xl md:text-3xl">北</span>
               </div>
               
-              <!-- 10th Badge with Logo -->
-              <div class="relative h-20 w-20 md:h-24 md:w-24 flex items-center justify-center">
-                <!-- Badge Background with Scalloped Edge Effect -->
-                <div 
-                  class="absolute inset-0 rounded-full transition-colors duration-500"
-                  :class="currentStamps >= 10 ? 'bg-[#0f3d2e]' : 'bg-pink-300 border-2 border-pink-400/70 shadow-inner'"
-                ></div>
-                <div class="absolute inset-0 flex items-center justify-center">
-                  <svg class="w-full h-full" viewBox="0 0 100 100" v-if="currentStamps >= 10">
-                    <circle cx="50" cy="50" r="48" fill="#0f3d2e"/>
-                    <!-- Scalloped edges -->
-                    <circle cx="50" cy="5" r="8" fill="#0f3d2e"/>
-                    <circle cx="85" cy="25" r="8" fill="#0f3d2e"/>
-                    <circle cx="95" cy="50" r="8" fill="#0f3d2e"/>
-                    <circle cx="85" cy="75" r="8" fill="#0f3d2e"/>
-                    <circle cx="50" cy="95" r="8" fill="#0f3d2e"/>
-                    <circle cx="15" cy="75" r="8" fill="#0f3d2e"/>
-                    <circle cx="5" cy="50" r="8" fill="#0f3d2e"/>
-                    <circle cx="15" cy="25" r="8" fill="#0f3d2e"/>
-                  </svg>
-                  <svg class="w-full h-full" viewBox="0 0 100 100" v-else>
-                    <circle cx="50" cy="50" r="48" fill="#f9a8d466"/>
-                    <circle cx="50" cy="5" r="8" fill="#f9a8d466"/>
-                    <circle cx="85" cy="25" r="8" fill="#f9a8d466"/>
-                    <circle cx="95" cy="50" r="8" fill="#f9a8d466"/>
-                    <circle cx="85" cy="75" r="8" fill="#f9a8d466"/>
-                    <circle cx="50" cy="95" r="8" fill="#f9a8d466"/>
-                    <circle cx="15" cy="75" r="8" fill="#f9a8d466"/>
-                    <circle cx="5" cy="50" r="8" fill="#f9a8d466"/>
-                    <circle cx="15" cy="25" r="8" fill="#f9a8d466"/>
-                  </svg>
+              <!-- 10th Badge with Logo (Standardized Size) -->
+              <div
+                class="h-10 w-10 sm:h-16 sm:w-16 md:h-20 md:w-20 rounded-full shadow-inner border-2 transition-all duration-500 overflow-hidden flex items-center justify-center"
+                :class="currentStamps >= 10 ? 'bg-[#0f3d2e] border-black' : 'bg-pink-300 border-pink-400/70'"
+              >
+                <!-- Logo and Extra Points (Standard Style) -->
+                <div class="flex flex-col items-center justify-center text-white" v-if="currentStamps >= 10">
+                  <span v-if="searchResult && searchResult.points > 9" class="font-black text-lg sm:text-2xl md:text-3xl leading-none">
+                    +{{ searchResult.points - 9 }}
+                  </span>
+                  <span v-else class="font-black text-lg sm:text-2xl md:text-3xl leading-none">北</span>
                 </div>
-                <!-- Logo Text and Extra Points (No animation, no gift icon) -->
-                <div class="relative z-10 font-black text-center text-2xl" :class="currentStamps >= 10 ? 'text-white' : 'text-[#0f3d2e]/40'">
-                  <div v-if="searchResult && searchResult.points > 9" class="flex flex-col items-center">
-                    <span class="text-xl leading-none">北</span>
-                    <span class="text-[10px] mt-0.5 tracking-tighter opacity-90">+{{ searchResult.points - 9 }}</span>
-                  </div>
-                  <span v-else>北</span>
-                </div>
+                <!-- Default Logo if not full -->
+                <span v-else class="text-[#0f3d2e]/40 font-black text-xl md:text-3xl">北</span>
               </div>
             </div>
           </div>
 
           <div class="border-t-[3px] border-black px-8 py-6 text-center">
             <p v-if="currentStamps >= 10" class="text-base md:text-lg text-[#0f3d2e] font-black animate-bounce">
-              YEAY! Kamu punya {{ Math.floor(currentStamps / 10) }} free menu! Tunjukkan ke Barista.
+              YEAY! Kamu punya {{ Math.floor(currentStamps / 10) }} free menu minuman! Tunjukkan ke Barista.
             </p>
             <p v-else class="text-base md:text-lg text-[#0f3d2e] font-medium">
               Collect 9 coffee stamps, and your next brew is on us
