@@ -115,7 +115,7 @@
                 
                 <p v-if="searchResult.points >= 9" class="text-gray-700 font-bold text-sm md:text-base leading-relaxed">
                   Wah keren! Kamu punya <span class="text-emerald-600 font-black">{{ Math.floor(searchResult.points / 9) }}</span> menu gratis siap ditukar. 
-                  Tunjukin ke barista ya! 🎁
+                  Tunjukin ke barista ya! 
                 </p>
                 <p v-else class="text-gray-700 font-bold text-sm md:text-base leading-relaxed">
                   Semangat! Kamu butuh <span class="text-pink-500 font-black text-lg">{{ 9 - searchResult.points }}</span> poin lagi buat dapetin <span class="italic text-black underline decoration-pink-300 decoration-4">Kopi Gratis</span> pertama kamu. ☕
@@ -144,7 +144,7 @@
                 :class="currentStamps >= n ? 'bg-[#0f3d2e] border-black' : 'bg-pink-300 border-pink-400/70'"
               >
                 <!-- Stamp Logo inside if filled -->
-                <span v-if="currentStamps >= n" class="text-white font-black text-xl md:text-3xl animate-bounce-in">北</span>
+                <span v-if="currentStamps >= n" class="text-white font-black text-xl md:text-3xl">北</span>
               </div>
               
               <!-- 10th Badge with Logo -->
@@ -152,31 +152,40 @@
                 <!-- Badge Background with Scalloped Edge Effect -->
                 <div 
                   class="absolute inset-0 rounded-full transition-colors duration-500"
-                  :class="currentStamps >= 10 ? 'bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.5)]' : 'bg-[#0f3d2e]'"
+                  :class="currentStamps >= 10 ? 'bg-[#0f3d2e]' : 'bg-pink-300 border-2 border-pink-400/70 shadow-inner'"
                 ></div>
                 <div class="absolute inset-0 flex items-center justify-center">
-                  <svg class="w-full h-full" viewBox="0 0 100 100">
-                    <circle cx="50" cy="50" r="48" :fill="currentStamps >= 10 ? '#10b981' : '#0f3d2e'"/>
+                  <svg class="w-full h-full" viewBox="0 0 100 100" v-if="currentStamps >= 10">
+                    <circle cx="50" cy="50" r="48" fill="#0f3d2e"/>
                     <!-- Scalloped edges -->
-                    <circle cx="50" cy="5" r="8" :fill="currentStamps >= 10 ? '#10b981' : '#0f3d2e'"/>
-                    <circle cx="85" cy="25" r="8" :fill="currentStamps >= 10 ? '#10b981' : '#0f3d2e'"/>
-                    <circle cx="95" cy="50" r="8" :fill="currentStamps >= 10 ? '#10b981' : '#0f3d2e'"/>
-                    <circle cx="85" cy="75" r="8" :fill="currentStamps >= 10 ? '#10b981' : '#0f3d2e'"/>
-                    <circle cx="50" cy="95" r="8" :fill="currentStamps >= 10 ? '#10b981' : '#0f3d2e'"/>
-                    <circle cx="15" cy="75" r="8" :fill="currentStamps >= 10 ? '#10b981' : '#0f3d2e'"/>
-                    <circle cx="5" cy="50" r="8" :fill="currentStamps >= 10 ? '#10b981' : '#0f3d2e'"/>
-                    <circle cx="15" cy="25" r="8" :fill="currentStamps >= 10 ? '#10b981' : '#0f3d2e'"/>
+                    <circle cx="50" cy="5" r="8" fill="#0f3d2e"/>
+                    <circle cx="85" cy="25" r="8" fill="#0f3d2e"/>
+                    <circle cx="95" cy="50" r="8" fill="#0f3d2e"/>
+                    <circle cx="85" cy="75" r="8" fill="#0f3d2e"/>
+                    <circle cx="50" cy="95" r="8" fill="#0f3d2e"/>
+                    <circle cx="15" cy="75" r="8" fill="#0f3d2e"/>
+                    <circle cx="5" cy="50" r="8" fill="#0f3d2e"/>
+                    <circle cx="15" cy="25" r="8" fill="#0f3d2e"/>
+                  </svg>
+                  <svg class="w-full h-full" viewBox="0 0 100 100" v-else>
+                    <circle cx="50" cy="50" r="48" fill="#f9a8d466"/>
+                    <circle cx="50" cy="5" r="8" fill="#f9a8d466"/>
+                    <circle cx="85" cy="25" r="8" fill="#f9a8d466"/>
+                    <circle cx="95" cy="50" r="8" fill="#f9a8d466"/>
+                    <circle cx="85" cy="75" r="8" fill="#f9a8d466"/>
+                    <circle cx="50" cy="95" r="8" fill="#f9a8d466"/>
+                    <circle cx="15" cy="75" r="8" fill="#f9a8d466"/>
+                    <circle cx="5" cy="50" r="8" fill="#f9a8d466"/>
+                    <circle cx="15" cy="25" r="8" fill="#f9a8d466"/>
                   </svg>
                 </div>
-                <!-- Logo Text and Extra Points -->
-                <div class="relative z-10 text-white font-black text-center" :class="currentStamps >= 10 ? 'animate-pulse scale-110' : 'text-2xl'">
+                <!-- Logo Text and Extra Points (No animation, no gift icon) -->
+                <div class="relative z-10 font-black text-center text-2xl" :class="currentStamps >= 10 ? 'text-white' : 'text-[#0f3d2e]/40'">
                   <div v-if="searchResult && searchResult.points > 9" class="flex flex-col items-center">
-                    <span class="text-xl">🎁</span>
-                    <span class="text-xs -mt-1">+{{ searchResult.points - 9 }}</span>
+                    <span class="text-xl leading-none">北</span>
+                    <span class="text-[10px] mt-0.5 tracking-tighter opacity-90">+{{ searchResult.points - 9 }}</span>
                   </div>
-                  <span v-else>
-                    {{ currentStamps >= 10 ? '🎁' : '北' }}
-                  </span>
+                  <span v-else>北</span>
                 </div>
               </div>
             </div>
