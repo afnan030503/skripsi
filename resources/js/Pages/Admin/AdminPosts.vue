@@ -79,6 +79,20 @@
               class="w-full h-full object-contain p-2"
               :style="{ backgroundColor: post.color || '#f3f4f6' }"
             />
+            
+            <!-- Download Button (Overlay) -->
+            <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all flex items-center justify-center pointer-events-none">
+              <a 
+                :href="post.image_url" 
+                download 
+                target="_blank"
+                class="pointer-events-auto opacity-0 group-hover:opacity-100 bg-white/90 hover:bg-white text-gray-800 p-2 rounded-full shadow-lg transition-all transform translate-y-2 group-hover:translate-y-0"
+                title="Download Foto"
+              >
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+              </a>
+            </div>
+
             <div class="absolute top-2 right-2">
               <span 
                 class="px-2 py-1 rounded text-xs font-bold uppercase tracking-wider shadow-sm border"
@@ -201,8 +215,8 @@
             </select>
           </div>
 
-          <!-- Tag/Tagar -->
-          <div class="mb-6">
+           <!-- Tag/Tagar -->
+          <div class="mb-4">
             <label class="block text-sm font-semibold text-gray-700 mb-2">
               Tagar (tanpa #)
             </label>
@@ -212,6 +226,22 @@
               class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               placeholder="contoh: utara"
             />
+          </div>
+
+          <!-- RE-UPLOAD PHOTO -->
+          <div class="mb-6">
+            <label class="block text-sm font-semibold text-gray-700 mb-2">
+              Ganti Foto (Opsional)
+            </label>
+            <input 
+              type="file"
+              @change="handleFileSelect"
+              accept="image/*"
+              class="w-full border border-gray-300 rounded-lg p-2 text-sm"
+            />
+            <div v-if="editPreview" class="mt-4 bg-gray-50 rounded-lg p-2 flex justify-center border border-dashed border-gray-300">
+               <img :src="editPreview" class="h-32 w-auto object-contain rounded shadow-sm"/>
+            </div>
           </div>
 
           <!-- Action Buttons -->
@@ -267,9 +297,21 @@ const editingPost = ref(null);
 const editForm = ref({
   title: '',
   tag: '',
-  category: ''
+  category: '',
+  image: null
 });
+const editPreview = ref(null);
 const saving = ref(false);
+
+const handleFileSelect = (event) => {
+  const file = event.target.files[0];
+  if (file) {
+    editForm.value.image = file;
+    const reader = new FileReader();
+    reader.onload = (e) => editPreview.value = e.target.result;
+    reader.readAsDataURL(file);
+  }
+};
 
 // Client-side filtering
 const filteredPosts = computed(() => {
@@ -326,15 +368,18 @@ const openEditModal = (post) => {
   editForm.value = {
     title: post.title,
     tag: post.tag || '',
-    category: post.category
+    category: post.category,
+    image: null
   };
+  editPreview.value = post.image_url;
   showEditModal.value = true;
 };
 
 const closeEditModal = () => {
   showEditModal.value = false;
   editingPost.value = null;
-  editForm.value = { title: '', tag: '', category: '' };
+  editForm.value = { title: '', tag: '', category: '', image: null };
+  editPreview.value = null;
 };
 
 const saveEdit = async () => {
@@ -342,7 +387,18 @@ const saveEdit = async () => {
   
   saving.value = true;
   try {
-    const response = await axios.put(`/admin/posts/${editingPost.value.id}`, editForm.value);
+    const formData = new FormData();
+    formData.append('_method', 'PUT'); // For Laravel with FormData
+    formData.append('title', editForm.value.title);
+    formData.append('tag', editForm.value.tag);
+    formData.append('category', editForm.value.category);
+    if (editForm.value.image) {
+      formData.append('image', editForm.value.image);
+    }
+
+    const response = await axios.post(`/admin/posts/${editingPost.value.id}`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    });
     
     // Update local state
     const index = localPosts.value.findIndex(p => p.id === editingPost.value.id);
@@ -350,6 +406,10 @@ const saveEdit = async () => {
       localPosts.value[index].title = editForm.value.title;
       localPosts.value[index].tag = editForm.value.tag;
       localPosts.value[index].category = editForm.value.category;
+      if (response.data.post.image_url) {
+        localPosts.value[index].image_url = response.data.post.image_url;
+        localPosts.value[index].image = response.data.post.image;
+      }
     }
     
     closeEditModal();

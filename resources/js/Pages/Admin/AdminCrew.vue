@@ -83,14 +83,14 @@
           class="bg-white rounded-xl overflow-hidden shadow-md border border-gray-200 flex flex-col group hover:shadow-xl transition-all"
         >
           <!-- Image -->
-          <div class="relative h-48 bg-[#fcf6e5] cursor-pointer flex items-center justify-center overflow-hidden" @click="openPreview(crew)">
+          <div class="h-48 bg-gray-100 relative group cursor-pointer" @click="openPreview(crew)">
             <img 
               :src="crew.image_url" 
-              class="max-h-full w-auto object-contain transition-transform duration-300 group-hover:scale-110"
+              class="w-full h-full object-contain p-2 transition-transform duration-300 group-hover:scale-105"
               :alt="crew.name || 'Crew member'"
             />
-            <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all flex items-center justify-center">
-              <svg class="w-12 h-12 text-white opacity-0 group-hover:opacity-100 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+            <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all flex items-center justify-center">
+              <svg class="w-10 h-10 text-white opacity-0 group-hover:opacity-100 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
             </div>
             
             <!-- Status Badge -->
@@ -293,6 +293,22 @@
             />
           </div>
 
+          <!-- RE-UPLOAD PHOTO -->
+          <div class="mb-6">
+            <label class="block text-sm font-semibold text-gray-700 mb-2">
+              Ganti Foto (Opsional)
+            </label>
+            <input 
+              type="file"
+              @change="handleEditFileSelect"
+              accept="image/*"
+              class="w-full border border-gray-300 rounded-lg p-2 text-sm"
+            />
+            <div v-if="editPreview" class="mt-4 bg-gray-50 rounded-lg p-2 flex justify-center border border-dashed border-gray-300">
+               <img :src="editPreview" class="h-32 w-auto object-contain rounded shadow-sm"/>
+            </div>
+          </div>
+
           <!-- Action Buttons -->
           <div class="flex gap-3">
             <button 
@@ -376,8 +392,10 @@ const showEditModal = ref(false);
 const editingCrew = ref(null);
 const editForm = ref({
   name: '',
-  position: ''
+  position: '',
+  image: null
 });
+const editPreview = ref(null);
 const saving = ref(false);
 
 // Preview modal state
@@ -403,6 +421,16 @@ const handleFileSelect = (event) => {
     uploadForm.value.image = file;
     const reader = new FileReader();
     reader.onload = (e) => uploadPreview.value = e.target.result;
+    reader.readAsDataURL(file);
+  }
+};
+
+const handleEditFileSelect = (event) => {
+  const file = event.target.files[0];
+  if (file) {
+    editForm.value.image = file;
+    const reader = new FileReader();
+    reader.onload = (e) => editPreview.value = e.target.result;
     reader.readAsDataURL(file);
   }
 };
@@ -438,28 +466,45 @@ const closeUploadModal = () => {
 
 // Edit functions
 const openEditModal = (crew) => {
-  editingCrew.value = crew;
   editForm.value = {
     name: crew.name || '',
-    position: crew.position || ''
+    position: crew.position || '',
+    image: null
   };
+  editPreview.value = crew.image_url;
   showEditModal.value = true;
 };
 
 const closeEditModal = () => {
   showEditModal.value = false;
   editingCrew.value = null;
+  editPreview.value = null;
 };
 
 const saveEdit = async () => {
   if (!editingCrew.value) return;
   saving.value = true;
   try {
-    await axios.put(`/admin/crews/${editingCrew.value.id}`, editForm.value);
+    const formData = new FormData();
+    formData.append('_method', 'PUT');
+    formData.append('name', editForm.value.name);
+    formData.append('position', editForm.value.position);
+    if (editForm.value.image) {
+      formData.append('image', editForm.value.image);
+    }
+
+    const response = await axios.post(`/admin/crews/${editingCrew.value.id}`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    });
+
     const index = localCrews.value.findIndex(c => c.id === editingCrew.value.id);
     if (index !== -1) {
       localCrews.value[index].name = editForm.value.name;
       localCrews.value[index].position = editForm.value.position;
+      if (response.data.crew && response.data.crew.image_url) {
+        localCrews.value[index].image_url = response.data.crew.image_url;
+        localCrews.value[index].image = response.data.crew.image;
+      }
     }
     closeEditModal();
     alert('Data crew berhasil diupdate!');

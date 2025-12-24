@@ -108,9 +108,23 @@ class PostController extends Controller
             'title' => ['required', 'string', 'max:255'],
             'tag'   => ['nullable', 'string', 'max:255'],
             'category' => ['required', 'string', 'max:50'],
+            'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png', 'max:4096'],
         ]);
 
+        if ($request->hasFile('image')) {
+            // Delete old image if exists
+            if ($post->image && \Storage::disk('public')->exists($post->image)) {
+                \Storage::disk('public')->delete($post->image);
+            }
+            
+            $path = $request->file('image')->store('posts', 'public');
+            $validated['image'] = $path;
+        }
+
         $post->update($validated);
+        
+        // Add full URL to the response
+        $post->image_url = asset('storage/' . $post->image);
 
         return response()->json([
             'message' => 'Post updated successfully.',

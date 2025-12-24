@@ -66,9 +66,22 @@ class CommunityPhotoController extends Controller
             'caption' => ['nullable', 'string', 'max:255'],
             'order' => ['nullable', 'integer'],
             'is_active' => ['nullable', 'boolean'],
+            'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
         ]);
 
+        if ($request->hasFile('image')) {
+            // Delete old image
+            if ($photo->image && Storage::disk('public')->exists($photo->image)) {
+                Storage::disk('public')->delete($photo->image);
+            }
+            
+            $path = $request->file('image')->store('community', 'public');
+            $validated['image'] = $path;
+        }
+
         $photo->update($validated);
+        
+        $photo->image_url = asset('storage/' . $photo->image);
 
         return response()->json([
             'message' => 'Photo updated successfully.',

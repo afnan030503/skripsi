@@ -54,11 +54,27 @@ class CrewController extends Controller
             'name' => ['nullable', 'string', 'max:255'],
             'position' => ['nullable', 'string', 'max:255'],
             'is_active' => ['nullable', 'boolean'],
+            'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
         ]);
 
-        $crew->update($validated);
+        if ($request->hasFile('image')) {
+            // Delete old image if exists
+            if ($crew->image && Storage::disk('public')->exists($crew->image)) {
+                Storage::disk('public')->delete($crew->image);
+            }
+            
+            $path = $request->file('image')->store('crews', 'public');
+            $validated['image'] = $path;
+        }
 
-        return response()->json(['success' => true]);
+        $crew->update($validated);
+        
+        $crew->image_url = asset('storage/' . $crew->image);
+
+        return response()->json([
+            'success' => true,
+            'crew' => $crew
+        ]);
     }
 
     public function destroy($id)
