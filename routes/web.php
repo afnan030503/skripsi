@@ -7,6 +7,7 @@ use App\Http\Controllers\CommunityPhotoController;
 use App\Http\Controllers\CrewController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\MemberController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ReviewController;
@@ -50,6 +51,7 @@ Route::get('/reviews/google', [ReviewController::class, 'google']);
 // COMMUNITY PHOTOS (public)
 Route::get('/community/photos', [CommunityPhotoController::class, 'getActive']);
 Route::get('/crew/photos', [CrewController::class, 'getActive']);
+Route::post('/members/search', [MemberController::class, 'search'])->name('members.search');
 
 // ======================
 // LOGIN
@@ -143,6 +145,13 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/admin/crews', [CrewController::class, 'store'])->name('admin.crew.store');
     Route::put('/admin/crews/{id}', [CrewController::class, 'update'])->name('admin.crew.update');
     Route::delete('/admin/crews/{id}', [CrewController::class, 'destroy'])->name('admin.crew.destroy');
+
+    // Member Management
+    Route::get('/admin/members', [MemberController::class, 'index'])->name('admin.members.index');
+    Route::post('/admin/members', [MemberController::class, 'store'])->name('admin.members.store');
+    Route::put('/admin/members/{id}', [MemberController::class, 'update'])->name('admin.members.update');
+    Route::post('/admin/members/{id}/redeem', [MemberController::class, 'redeem'])->name('admin.members.redeem');
+    Route::delete('/admin/members/{id}', [MemberController::class, 'destroy'])->name('admin.members.destroy');
 });
 
     // Community Posts

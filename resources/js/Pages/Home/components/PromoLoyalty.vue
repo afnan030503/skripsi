@@ -78,17 +78,27 @@
           </button>
           <div class="flex items-center bg-black/80 text-white rounded-md shadow overflow-hidden w-full md:w-auto">
             <input
+              v-model="searchPhone"
               type="tel"
               placeholder="Masukkan Nomor handphone"
               class="flex-1 bg-transparent placeholder-gray-400 px-4 py-3 outline-none text-xs md:text-sm md:min-w-[340px]"
+              @keyup.enter="searchMember"
             />
-            <button class="bg-white text-black px-4 py-3 flex items-center justify-center hover:bg-gray-200 transition">
-              <span class="sr-only">Cari</span>
-              🔍
+            <button 
+              @click="searchMember"
+              :disabled="searching"
+              class="bg-white text-black px-4 py-3 flex items-center justify-center hover:bg-gray-200 transition disabled:opacity-50"
+            >
+              <span v-if="searching" class="animate-spin mr-1">⌛</span>
+              <span v-else>🔍</span>
             </button>
           </div>
         </div>
 
+        <div v-if="searchResult" class="bg-emerald-800/50 backdrop-blur-sm border border-emerald-400/30 rounded-lg p-4 mb-6 inline-block mx-auto animate-fade-in">
+           <p class="text-emerald-100 font-bold">Halo, {{ searchResult.name }}! 👋</p>
+           <p class="text-xs text-emerald-200/80">Kamu memiliki <span class="text-white font-black text-base">{{ searchResult.points }}</span> poin.</p>
+        </div>
 
         <!-- Stamp Card -->
         <div class="max-w-5xl mx-auto bg-pink-200 border-[3px] border-black rounded-lg shadow-xl">
@@ -105,37 +115,47 @@
               <div
                 v-for="n in 9"
                 :key="n"
-                class="h-10 w-10 sm:h-16 sm:w-16 md:h-20 md:w-20 rounded-full bg-pink-300 shadow-inner border-2 border-pink-400/70"
-              ></div>
+                class="h-10 w-10 sm:h-16 sm:w-16 md:h-20 md:w-20 rounded-full shadow-inner border-2 transition-all duration-500 overflow-hidden flex items-center justify-center"
+                :class="currentStamps >= n ? 'bg-[#0f3d2e] border-black' : 'bg-pink-300 border-pink-400/70'"
+              >
+                <!-- Stamp Logo inside if filled -->
+                <span v-if="currentStamps >= n" class="text-white font-black text-xl md:text-3xl animate-bounce-in">北</span>
+              </div>
               
               <!-- 10th Badge with Logo -->
               <div class="relative h-20 w-20 md:h-24 md:w-24 flex items-center justify-center">
                 <!-- Badge Background with Scalloped Edge Effect -->
-                <div class="absolute inset-0 bg-[#0f3d2e] rounded-full"></div>
+                <div 
+                  class="absolute inset-0 rounded-full transition-colors duration-500"
+                  :class="currentStamps >= 10 ? 'bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.5)]' : 'bg-[#0f3d2e]'"
+                ></div>
                 <div class="absolute inset-0 flex items-center justify-center">
                   <svg class="w-full h-full" viewBox="0 0 100 100">
-                    <circle cx="50" cy="50" r="48" fill="#0f3d2e"/>
+                    <circle cx="50" cy="50" r="48" :fill="currentStamps >= 10 ? '#10b981' : '#0f3d2e'"/>
                     <!-- Scalloped edges -->
-                    <circle cx="50" cy="5" r="8" fill="#0f3d2e"/>
-                    <circle cx="85" cy="25" r="8" fill="#0f3d2e"/>
-                    <circle cx="95" cy="50" r="8" fill="#0f3d2e"/>
-                    <circle cx="85" cy="75" r="8" fill="#0f3d2e"/>
-                    <circle cx="50" cy="95" r="8" fill="#0f3d2e"/>
-                    <circle cx="15" cy="75" r="8" fill="#0f3d2e"/>
-                    <circle cx="5" cy="50" r="8" fill="#0f3d2e"/>
-                    <circle cx="15" cy="25" r="8" fill="#0f3d2e"/>
+                    <circle cx="50" cy="5" r="8" :fill="currentStamps >= 10 ? '#10b981' : '#0f3d2e'"/>
+                    <circle cx="85" cy="25" r="8" :fill="currentStamps >= 10 ? '#10b981' : '#0f3d2e'"/>
+                    <circle cx="95" cy="50" r="8" :fill="currentStamps >= 10 ? '#10b981' : '#0f3d2e'"/>
+                    <circle cx="85" cy="75" r="8" :fill="currentStamps >= 10 ? '#10b981' : '#0f3d2e'"/>
+                    <circle cx="50" cy="95" r="8" :fill="currentStamps >= 10 ? '#10b981' : '#0f3d2e'"/>
+                    <circle cx="15" cy="75" r="8" :fill="currentStamps >= 10 ? '#10b981' : '#0f3d2e'"/>
+                    <circle cx="5" cy="50" r="8" :fill="currentStamps >= 10 ? '#10b981' : '#0f3d2e'"/>
+                    <circle cx="15" cy="25" r="8" :fill="currentStamps >= 10 ? '#10b981' : '#0f3d2e'"/>
                   </svg>
                 </div>
                 <!-- Logo Text -->
-                <div class="relative z-10 text-white font-black text-2xl">
-                  北
+                <div class="relative z-10 text-white font-black text-2xl" :class="{'animate-pulse scale-125': currentStamps >= 10}">
+                  {{ currentStamps >= 10 ? '🎁' : '北' }}
                 </div>
               </div>
             </div>
           </div>
 
           <div class="border-t-[3px] border-black px-8 py-6 text-center">
-            <p class="text-base md:text-lg text-[#0f3d2e] font-medium">
+            <p v-if="currentStamps >= 10" class="text-base md:text-lg text-[#0f3d2e] font-black animate-bounce">
+              YEAY! Kamu punya {{ Math.floor(currentStamps / 10) }} free menu! Tunjukkan ke Barista.
+            </p>
+            <p v-else class="text-base md:text-lg text-[#0f3d2e] font-medium">
               Collect 9 coffee stamps, and your next brew is on us
             </p>
           </div>
@@ -301,8 +321,9 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { Link } from '@inertiajs/vue3';
+import axios from 'axios';
 
 // Asset paths
 const utaraJpg = '/utara.jpg';
@@ -313,10 +334,54 @@ const masAzizPng = '/Masaziz.png';
 const showModal = ref(false);
 const isMobileMenuOpen = ref(false);
 
-// Data untuk maps
-const mapsEmbedUrl = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3953.123456789!2d110.123456!3d-7.123456!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zN8KwMDcnMjQuNSJTIDExMMKwMDcnMjQuNSJF!5e0!3m2!1sen!2sid!4v1234567890";
+// State untuk pencarian
+const searchPhone = ref('');
+const searching = ref(false);
+const searchResult = ref(null);
+
+// Menghitung jumlah stempel yang harus diisi (maks 10 untuk free menu)
+const currentStamps = computed(() => {
+  if (!searchResult.value) return 0;
+  // Jika poin 32, stamps = 32 % 10 = 2? 
+  // Atau sisa dari 9? 
+  // Sesuai permintaan: "jika sudah melakukan pembelian 9 kali, dia akan mendapatkan free 1 menu"
+  // Jadi beli ke-10 free. Stempel 1-9 adalah pembelian. Ke-10 adalah free.
+  // Poin di backend adalah jumlah pembelian. 
+  // Jika poin 9, berarti sudah beli 9 kali. Maka stempel 1-9 terisi.
+  // Jika poin 10, stempel 1-9 terisi + stempel ke-10 (hadiah) terisi.
+  const points = searchResult.value.points;
+  // Kita visualisasikan siklus 10.
+  // Jika poin 12, berarti 1 kali free sudah lewat, sekarang di stempel ke-2 untuk siklus berikutnya.
+  // Namun user bilang "jika sudah 32 point... redem satu kali, maka dia akan mengurangi 9".
+  // Ini berarti poin bertindak sebagai "currency". 
+  // Untuk visualisasi stempel, kita tunjukkan progres menuju 9 poin. 
+  // Jika poin >= 9, maka tunjukkan stempel 1-9 penuh + ke-10 penuh.
+  if (points >= 9) return 10;
+  return points;
+});
 
 // Methods
+const searchMember = async () => {
+  if (!searchPhone.value) return;
+  searching.value = true;
+  searchResult.value = null;
+  
+  try {
+    const response = await axios.post('/members/search', { phone: searchPhone.value });
+    if (response.data.success) {
+      searchResult.value = response.data.member;
+    }
+  } catch (error) {
+    if (error.response?.status === 404) {
+      alert('Nomor HP tidak terdaftar sebagai member.');
+    } else {
+      alert('Terjadi kesalahan saat mencari member.');
+    }
+  } finally {
+    searching.value = false;
+  }
+};
+
 const openWhatsApp = () => {
   window.open('https://wa.me/6281215246678', '_blank');
 };

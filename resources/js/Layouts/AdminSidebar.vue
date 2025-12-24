@@ -182,6 +182,20 @@
           </Link>
         </li>
 
+        <!-- Kelola Member -->
+        <li>
+          <Link
+            href="/admin/members"
+            class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group"
+            :class="currentRoute === '/admin/members'
+              ? 'bg-indigo-50 text-indigo-700 font-bold'
+              : 'hover:bg-slate-50 hover:text-slate-900'"
+          >
+            <svg class="w-5 h-5 transition-colors" :class="currentRoute === '/admin/members' ? 'text-indigo-600' : 'text-slate-400 group-hover:text-slate-600'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-2.33 0-7 1.17-7 3.5V16h14v-2.5c0-2.33-4.67-3.5-7-3.5z"></path></svg>
+            <span class="text-sm">Kelola Member</span>
+          </Link>
+        </li>
+
       </ul>
     </nav>
 
