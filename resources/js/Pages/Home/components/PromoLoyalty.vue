@@ -4,7 +4,7 @@
     <header class="fixed top-0 inset-x-0 z-50 bg-white/90 backdrop-blur shadow-sm border-b border-gray-100">
       <div class="max-w-7xl mx-auto px-4 md:px-6 h-20 flex items-center justify-between">
         <Link href="/" class="flex items-center gap-2 md:gap-3">
-          <img src="/public/utara.jpg" alt="Utara" class="h-10 md:h-12 w-auto rounded-xl shadow" />
+          <img src="/utara.jpg" alt="Utara" class="h-10 md:h-12 w-auto rounded-xl shadow" />
           <span class="text-xl md:text-2xl font-black text-emerald-700 tracking-wide">UTARA</span>
         </Link>
         
@@ -271,7 +271,7 @@
             <div class="mb-6 flex justify-center relative">
               <div class="absolute inset-0 bg-gradient-to-br from-blue-100 to-emerald-100 rounded-full blur-3xl opacity-30 scale-75"></div>
               <img 
-                src="/public/Masaziz.png" 
+                src="/Masaziz.png" 
                 alt="Mas Aziz" 
                 class="w-56 h-auto object-contain relative z-10 drop-shadow-2xl"
               />
