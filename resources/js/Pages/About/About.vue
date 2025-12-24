@@ -3,7 +3,7 @@
     <header class="fixed top-0 inset-x-0 z-50 bg-white/90 backdrop-blur shadow-sm border-b border-gray-100">
       <div class="max-w-7xl mx-auto px-4 md:px-6 h-20 flex items-center justify-between">
         <Link href="/" class="flex items-center gap-2 md:gap-3">
-          <img src="/public/utara.jpg" alt="Utara" class="h-10 md:h-12 w-auto rounded-xl shadow" />
+          <img src="/utara.jpg" alt="Utara" class="h-10 md:h-12 w-auto rounded-xl shadow" />
         </Link>
         
         <!-- Desktop Nav -->
@@ -202,14 +202,19 @@
                 v-for="crew in crewPhotos.slice(0, 4)"
                 :key="crew.id"
                 class="relative group transition-transform hover:scale-105 md:hover:scale-110 hover:z-10 duration-300 flex flex-col items-center w-[40%] sm:w-auto"
+                @click="toggleCrew(crew.id)"
               >
                 <img
                   :src="crew.image_url"
                   :alt="crew.name || 'Crew'"
                   class="h-32 sm:h-48 md:h-64 w-auto object-contain transition-all duration-500 mb-2 crew-photo-outline"
+                  :class="{ 'scale-105 md:scale-110 z-10': activeCrewId === crew.id }"
                   draggable="false"
                 />
-                <div class="mt-1 md:mt-2 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-center">
+                <div 
+                  class="mt-1 md:mt-2 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-center"
+                  :class="{ 'md:opacity-100': activeCrewId === crew.id }"
+                >
                   <p class="text-[10px] md:text-sm font-black text-black uppercase tracking-wider">{{ crew.name }}</p>
                   <p class="text-[8px] md:text-[10px] font-bold text-gray-600 uppercase">{{ crew.position }}</p>
                 </div>
@@ -222,15 +227,19 @@
                 v-for="crew in crewPhotos.slice(4, 6)"
                 :key="crew.id"
                 class="relative group transition-transform hover:scale-105 md:hover:scale-110 hover:z-10 duration-300 flex flex-col items-center w-[40%] sm:w-auto"
+                @click="toggleCrew(crew.id)"
               >
                 <img
                   :src="crew.image_url"
                   :alt="crew.name || 'Crew'"
-                  class="h-32 sm:h-48 md:h-64 w-auto object-contain transition-all duration-500 mb-2"
-                  style="filter: drop-shadow(3px 3px 0 white) drop-shadow(-3px -3px 0 white) drop-shadow(3px -3px 0 white) drop-shadow(-3px 3px 0 white);"
+                  class="h-32 sm:h-48 md:h-64 w-auto object-contain transition-all duration-500 mb-2 crew-photo-outline"
+                  :class="{ 'scale-105 md:scale-110 z-10': activeCrewId === crew.id }"
                   draggable="false"
                 />
-                <div class="mt-1 md:mt-2 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-center">
+                <div 
+                  class="mt-1 md:mt-2 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-center"
+                  :class="{ 'md:opacity-100': activeCrewId === crew.id }"
+                >
                   <p class="text-[10px] md:text-sm font-black text-black uppercase tracking-wider">{{ crew.name }}</p>
                   <p class="text-[8px] md:text-[10px] font-bold text-gray-600 uppercase">{{ crew.position }}</p>
                 </div>
@@ -243,15 +252,19 @@
                 v-for="crew in crewPhotos.slice(6, 9)"
                 :key="crew.id"
                 class="relative group transition-transform hover:scale-105 md:hover:scale-110 hover:z-10 duration-300 flex flex-col items-center w-[40%] sm:w-auto"
+                @click="toggleCrew(crew.id)"
               >
                 <img
                   :src="crew.image_url"
                   :alt="crew.name || 'Crew'"
-                  class="h-32 sm:h-48 md:h-64 w-auto object-contain transition-all duration-500 mb-2"
-                  style="filter: drop-shadow(3px 3px 0 white) drop-shadow(-3px -3px 0 white) drop-shadow(3px -3px 0 white) drop-shadow(-3px 3px 0 white);"
+                  class="h-32 sm:h-48 md:h-64 w-auto object-contain transition-all duration-500 mb-2 crew-photo-outline"
+                  :class="{ 'scale-105 md:scale-110 z-10': activeCrewId === crew.id }"
                   draggable="false"
                 />
-                <div class="mt-1 md:mt-2 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-center">
+                <div 
+                  class="mt-1 md:mt-2 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-center"
+                  :class="{ 'md:opacity-100': activeCrewId === crew.id }"
+                >
                   <p class="text-[10px] md:text-sm font-black text-black uppercase tracking-wider">{{ crew.name }}</p>
                   <p class="text-[8px] md:text-[10px] font-bold text-gray-600 uppercase">{{ crew.position }}</p>
                 </div>
@@ -264,15 +277,19 @@
                 v-for="crew in crewPhotos.slice(9)"
                 :key="crew.id"
                 class="relative group transition-transform hover:scale-105 md:hover:scale-110 hover:z-10 duration-300 flex flex-col items-center w-[40%] sm:w-auto"
+                @click="toggleCrew(crew.id)"
               >
                 <img
                   :src="crew.image_url"
                   :alt="crew.name || 'Crew'"
-                  class="h-32 sm:h-48 md:h-64 w-auto object-contain transition-all duration-500 mb-2"
-                  style="filter: drop-shadow(3px 3px 0 white) drop-shadow(-3px -3px 0 white) drop-shadow(3px -3px 0 white) drop-shadow(-3px 3px 0 white);"
+                  class="h-32 sm:h-48 md:h-64 w-auto object-contain transition-all duration-500 mb-2 crew-photo-outline"
+                  :class="{ 'scale-105 md:scale-110 z-10': activeCrewId === crew.id }"
                   draggable="false"
                 />
-                <div class="mt-1 md:mt-2 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-center">
+                <div 
+                  class="mt-1 md:mt-2 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-center"
+                  :class="{ 'md:opacity-100': activeCrewId === crew.id }"
+                >
                   <p class="text-[10px] md:text-sm font-black text-black uppercase tracking-wider">{{ crew.name }}</p>
                   <p class="text-[8px] md:text-[10px] font-bold text-gray-600 uppercase">{{ crew.position }}</p>
                 </div>
@@ -362,6 +379,7 @@ export default {
     return {
       isMobileMenuOpen: false,
       crewPhotos: [],
+      activeCrewId: null,
 
 
       mosaicBlocks: [
@@ -417,6 +435,13 @@ export default {
         }
       } catch (error) {
         console.error('Failed to fetch crew photos:', error);
+      }
+    },
+    toggleCrew(id) {
+      if (this.activeCrewId === id) {
+        this.activeCrewId = null;
+      } else {
+        this.activeCrewId = id;
       }
     },
     resolvePhoto(emp, idx) {
