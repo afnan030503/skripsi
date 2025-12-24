@@ -95,10 +95,35 @@
           </div>
         </div>
 
-        <div v-if="searchResult" class="bg-emerald-800/50 backdrop-blur-sm border border-emerald-400/30 rounded-lg p-4 mb-6 inline-block mx-auto animate-fade-in">
-           <p class="text-emerald-100 font-bold">Halo, {{ searchResult.name }}! 👋</p>
-           <p class="text-xs text-emerald-200/80">Kamu memiliki <span class="text-white font-black text-base">{{ searchResult.points }}</span> poin.</p>
-        </div>
+        <!-- Poin Notification (Better UI) -->
+        <transition name="fade">
+          <div v-if="searchResult" class="max-w-xl mx-auto mb-10 text-left animate-fade-in">
+            <div class="bg-white rounded-3xl p-6 md:p-8 shadow-2xl border-[3px] border-black flex flex-col md:flex-row items-center gap-6 relative overflow-hidden">
+              <div class="absolute -right-6 -top-6 w-24 h-24 bg-pink-100 rounded-full opacity-50"></div>
+              
+              <!-- Left: Points Badge -->
+              <div class="flex-shrink-0 w-24 h-24 md:w-32 md:h-32 bg-[#0f3d2e] rounded-2xl flex flex-col items-center justify-center text-white border-[3px] border-black shadow-[4px_4px_0_0_#000]">
+                <span class="text-4xl md:text-5xl font-black">{{ searchResult.points }}</span>
+                <span class="text-[10px] md:text-xs font-bold uppercase tracking-widest mt-1">Poin</span>
+              </div>
+
+              <!-- Right: Message -->
+              <div class="flex-1 text-center md:text-left">
+                <h4 class="text-2xl md:text-3xl font-black text-gray-900 mb-2 leading-tight">
+                  Halo, {{ searchResult.name }}! <span class="inline-block animate-bounce">👋</span>
+                </h4>
+                
+                <p v-if="searchResult.points >= 9" class="text-gray-700 font-bold text-sm md:text-base leading-relaxed">
+                  Wah keren! Kamu punya <span class="text-emerald-600 font-black">{{ Math.floor(searchResult.points / 9) }}</span> menu gratis siap ditukar. 
+                  Tunjukin ke barista ya! 🎁
+                </p>
+                <p v-else class="text-gray-700 font-bold text-sm md:text-base leading-relaxed">
+                  Semangat! Kamu butuh <span class="text-pink-500 font-black text-lg">{{ 9 - searchResult.points }}</span> poin lagi buat dapetin <span class="italic text-black underline decoration-pink-300 decoration-4">Kopi Gratis</span> pertama kamu. ☕
+                </p>
+              </div>
+            </div>
+          </div>
+        </transition>
 
         <!-- Stamp Card -->
         <div class="max-w-5xl mx-auto bg-pink-200 border-[3px] border-black rounded-lg shadow-xl">
