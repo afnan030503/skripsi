@@ -417,7 +417,19 @@ function editFood(food) {
 }
 
 function handleFoodsImage(e) {
-  foods.value.image = e.target.files ? e.target.files[0] : null
+  const file = e.target.files ? e.target.files[0] : null
+  if (file) {
+    // Validasi ukuran file (10MB = 10240KB = 10485760 bytes)
+    if (file.size > 10485760) {
+      notify('❌ Gambar terlalu besar! Silakan kompres terlebih dahulu. Maksimal 10MB', 'error')
+      e.target.value = '' // reset input
+      foods.value.image = null
+      return
+    }
+    foods.value.image = file
+  } else {
+    foods.value.image = null
+  }
 }
 
 function submitFoods() {
@@ -450,6 +462,17 @@ function submitFoods() {
     data.append('_method', 'PUT')
   }
 
+  console.log('🔥 Submitting to:', endpoint)
+  console.log('🔥 Editing Food ID:', editingFoodId.value)
+  console.log('🔥 FormData:', {
+    name: foods.value.name,
+    category_id: 1,
+    subcategory_id: foods.value.subcategory_id,
+    price: foods.value.price,
+    description: foods.value.description,
+    has_image: !!foods.value.image
+  })
+
   router.post(endpoint, data, {
     onSuccess: () => {
       loading.value = false
@@ -464,13 +487,22 @@ function submitFoods() {
     },
     onError: (errors) => {
       loading.value = false
-      console.error('Errors:', errors)
-      notify(
-        editingFoodId.value
-          ? '❌ Gagal memperbarui Foods!'
-          : '❌ Gagal menambahkan Foods!',
-        'error'
-      )
+      console.error('❌ Errors:', errors)
+      
+      // Tampilkan error detail dari backend jika ada
+      let errorMsg = editingFoodId.value
+        ? '❌ Gagal memperbarui Foods!'
+        : '❌ Gagal menambahkan Foods!'
+      
+      // Cek jika ada validation errors
+      if (errors && typeof errors === 'object') {
+        const firstError = Object.values(errors)[0]
+        if (firstError && firstError.length > 0) {
+          errorMsg += ' ' + firstError[0]
+        }
+      }
+      
+      notify(errorMsg, 'error')
     },
   })
 }
@@ -526,7 +558,19 @@ function editDrink(drink) {
 }
 
 function handleDrinksImage(e) {
-  drinks.value.image = e.target.files ? e.target.files[0] : null
+  const file = e.target.files ? e.target.files[0] : null
+  if (file) {
+    // Validasi ukuran file (10MB = 10240KB = 10485760 bytes)
+    if (file.size > 10485760) {
+      notify('❌ Gambar terlalu besar! Silakan kompres terlebih dahulu. Maksimal 10MB', 'error')
+      e.target.value = '' // reset input
+      drinks.value.image = null
+      return
+    }
+    drinks.value.image = file
+  } else {
+    drinks.value.image = null
+  }
 }
 
 function submitDrinks() {
@@ -559,6 +603,9 @@ endpoint = `/admin/menu/${editingDrinkId.value}`
 data.append('_method', 'PUT')
 }
 
+console.log('🔥 Submitting Drinks to:', endpoint)
+console.log('🔥 Editing Drink ID:', editingDrinkId.value)
+
 router.post(endpoint, data, {
 onSuccess: () => {
 loading.value = false
@@ -573,13 +620,22 @@ router.reload({ only: ['drinksMenus'] })
 },
 onError: (errors) => {
 loading.value = false
-console.error('Errors:', errors)
-notify(
-editingDrinkId.value
-? '❌ Gagal memperbarui Drinks!'
-: '❌ Gagal menambahkan Drinks!',
-'error'
-)
+console.error('❌ Errors:', errors)
+
+// Tampilkan error detail dari backend jika ada
+let errorMsg = editingDrinkId.value
+  ? '❌ Gagal memperbarui Drinks!'
+  : '❌ Gagal menambahkan Drinks!'
+
+// Cek jika ada validation errors
+if (errors && typeof errors === 'object') {
+  const firstError = Object.values(errors)[0]
+  if (firstError && firstError.length > 0) {
+    errorMsg += ' ' + firstError[0]
+  }
+}
+
+notify(errorMsg, 'error')
 },
 })
 }

@@ -10,6 +10,7 @@
           <a href="/#home" class="hover:text-emerald-700 transition">Home</a>
           <a href="/#menu" class="hover:text-emerald-700 transition">Menu</a>
           <a href="/#tetangga" class="hover:text-emerald-700 transition">Community</a>
+          <Link href="/promo-loyalty" class="hover:text-emerald-700 transition">Promo & Loyalty</Link>
           <Link href="/about" class="text-emerald-700 border-b-2 border-emerald-700 pb-1">About Us</Link>
           <a href="/#blog" class="hover:text-emerald-700 transition">Blog</a>
           <a href="/#contact" class="hover:text-emerald-700 transition">Contact Us</a>
@@ -55,52 +56,133 @@
         </div>
       </section>
 
-      <section class="relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] w-screen">
-        <div class="bg-black text-white w-full">
-          <div class="flex items-center justify-center gap-3 py-4 px-4">
-            <h3 class="text-3xl md:text-4xl font-black font-serif text-amber-300">Filosofi & Nilai Kami</h3>
+      <!-- PHILOSOPHY SECTION -->
+      <section class="w-full">
+        <!-- Header -->
+        <div class="bg-black py-10 text-center">
+          <h2 class="text-3xl md:text-5xl font-serif font-black text-yellow-400 flex items-center justify-center gap-4 tracking-wide">
+            <span class="text-green-500 text-4xl transform -rotate-12">🌱</span>
+            Filosofi & Nilai Kami
+          </h2>
+        </div>
+
+        <!-- Columns -->
+        <div class="grid grid-cols-1 md:grid-cols-3">
+          <!-- Column 1 -->
+          <div class="bg-[#6B82F8] p-12 md:p-16 text-center flex flex-col items-center justify-center min-h-[350px]">
+            <h3 class="text-3xl font-serif font-black mb-6 text-black tracking-tight">Kopi untuk Semua</h3>
+            <p class="text-gray-900 text-lg leading-relaxed max-w-xs font-medium">
+              Kami menghadirkan kopi dan minuman segar dengan harga yang ramah kantong mahasiswa tanpa mengorbankan rasa dan kualitas.
+            </p>
           </div>
-          <div class="grid md:grid-cols-3 gap-0 auto-rows-[260px] text-center">
-            <div
-              v-for="card in philosophyCards"
-              :key="card.title"
-              :class="[card.color, 'p-10 flex flex-col items-center justify-center']"
-            >
-              <h4 class="text-2xl md:text-3xl font-black font-serif mb-4">{{ card.title }}</h4>
-              <p class="text-sm leading-relaxed max-w-xs">{{ card.description }}</p>
-            </div>
+
+          <!-- Column 2 -->
+          <div class="bg-[#FF99D6] p-12 md:p-16 text-center flex flex-col items-center justify-center min-h-[350px]">
+            <h3 class="text-3xl font-serif font-black mb-6 text-black tracking-tight">Ruang untuk Terhubung</h3>
+            <p class="text-gray-900 text-lg leading-relaxed max-w-xs font-medium">
+              Kopi Utara dirancang sebagai tempat yang hidup: bisa buat kerja, main kartu, ngobrol, curhat, atau sekadar duduk menikmati suasana.
+            </p>
+          </div>
+
+          <!-- Column 3 -->
+          <div class="bg-[#5BC0F8] p-12 md:p-16 text-center flex flex-col items-center justify-center min-h-[350px]">
+            <h3 class="text-3xl font-serif font-black mb-6 text-black tracking-tight">Lokal & Autentik</h3>
+            <p class="text-gray-900 text-lg leading-relaxed max-w-xs font-medium">
+              Rasa yang jujur, pelayanan yang tulus, dan vibe yang hangat. Itu yang ingin kami jaga dalam setiap seduhan dan kunjungan.
+            </p>
           </div>
         </div>
       </section>
 
+      <!-- MOSAIC SECTION -->
+      <section class="w-full">
+        <!-- Row 1 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 min-h-[500px]">
+          <div class="bg-[#FFD700] flex items-center justify-center p-12 md:p-20 text-center order-2 md:order-1">
+            <h3 class="text-4xl md:text-6xl font-serif font-black text-black leading-tight">
+              Kopi susu sebagai menu favorit
+            </h3>
+          </div>
+          <div class="h-[500px] md:h-auto order-1 md:order-2">
+            <img src="/public/bck4.jpg" class="w-full h-full object-cover object-left" alt="Kopi Susu" />
+          </div>
+        </div>
+
+        <!-- Row 2 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 min-h-[500px]">
+          <div class="h-[500px] md:h-auto">
+            <img src="/public/bck5.jpg" class="w-full h-full object-cover" alt="Tempat Nyaman" />
+          </div>
+          <div class="bg-[#6EE7B7] flex items-center justify-center p-12 md:p-20 text-center">
+            <h3 class="text-4xl md:text-6xl font-serif font-black text-black leading-tight">
+              Tempat yang nyaman buat nugas, meeting kecil, dan santai sore
+            </h3>
+          </div>
+        </div>
+
+        <!-- Row 3 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 min-h-[500px]">
+          <div class="bg-[#F9A8D4] flex items-center justify-center p-12 md:p-20 text-center order-2 md:order-1">
+            <h3 class="text-4xl md:text-6xl font-serif font-black text-black leading-tight">
+              Signature refreshment
+            </h3>
+          </div>
+          <div class="h-[500px] md:h-auto order-1 md:order-2">
+            <img src="/public/bck6.png" class="w-full h-full object-cover" alt="Signature Refreshment" />
+          </div>
+        </div>
+
+        <!-- Row 4 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 min-h-[500px]">
+          <div class="h-[500px] md:h-auto">
+            <img src="/public/bck7.png" class="w-full h-full object-cover" alt="Burger & Snack" />
+          </div>
+          <div class="bg-[#F5E6CA] flex items-center justify-center p-12 md:p-20 text-center">
+            <h3 class="text-4xl md:text-6xl font-serif font-black text-black leading-tight">
+              Burger & snack untuk teman ngopi
+            </h3>
+          </div>
+        </div>
+      </section>
+    <section class="relative py-20 px-6 flex items-center justify-center min-h-[500px]">
+        <!-- Background Image with Blur -->
+        <div class="absolute inset-0 z-0">
+          <img src="/public/bck8.png" class="w-full h-full object-cover blur-sm" alt="Background">
+          <div class="absolute inset-0 bg-black/20"></div>
+        </div>
+
+        <!-- Content Card -->
+        <div class="relative z-10 bg-white rounded-3xl p-10 md:p-14 max-w-4xl text-center shadow-2xl">
+          <h2 class="text-3xl md:text-4xl font-serif font-black text-black mb-6">Dari Kami, Untuk Kamu</h2>
+          <p class="text-gray-800 text-lg leading-relaxed">
+            Kopi Utara ingin kamu merasa diterima seperti teman. Setiap kali kamu datang, kami ingin kamu pulang dengan perasaan lebih baik entah karena kopinya enak, suasananya nyaman, atau karena kamu menemukan momen kecil yang berarti di sini.
+          </p>
+        </div>
+      </section>
       <!-- HERO BELGE + EMPLOYEES -->
-      <section class="bg-[#e8dcc1] border-t-[10px] border-[#2f2a24] py-12 shadow-inner">
-        <div class="max-w-6xl mx-auto px-6 flex flex-col gap-6">
-          <h1 class="text-3xl md:text-4xl font-black text-[#2b1c12] text-center font-serif">These are men who cooked.</h1>
-          <div class="bg-white/70 rounded-3xl shadow-[0_18px_60px_rgba(0,0,0,0.18)] overflow-hidden border border-[#d8c9a6]">
-            <div class="flex flex-wrap justify-center gap-4 px-4 pt-6 pb-4">
-              <div
-                v-for="(person, idx) in displayEmployees"
-                :key="person.name + idx"
-                class="bg-white border border-[#c9bfa4] rounded-2xl shadow-sm overflow-hidden max-w-xs"
-              >
-                <img
-                  :src="person.photo"
-                  :alt="person.name"
-                  class="w-full h-60 object-cover bg-[#f5e9d0]"
-                />
-                <div class="p-3 text-center">
-                  <p class="text-base font-semibold text-[#2b1c12]">{{ person.name }}</p>
-                  <p class="text-sm text-gray-600">{{ person.position || person.hashtag }}</p>
-                </div>
-              </div>
+      <section class="bg-[#FDF6E3] border-t-[10px] border-[#2f2a24] py-16 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+          <h1 class="text-4xl md:text-5xl font-black text-black mb-12 font-serif tracking-tight">These are men who cooked.</h1>
+          
+          <div class="flex flex-wrap justify-center items-end gap-[-20px] md:gap-4 select-none">
+            <div
+              v-for="(person, idx) in displayEmployees"
+              :key="person.name + idx"
+              class="relative group transition-transform hover:scale-110 hover:z-10 duration-300"
+            >
+              <img
+                :src="person.photo"
+                :alt="person.name"
+                class="h-40 md:h-64 w-auto object-contain filter drop-shadow-[0_0_8px_rgba(255,255,255,1)] drop-shadow-[0_0_15px_rgba(255,255,255,0.8)]"
+                draggable="false"
+              />
             </div>
           </div>
         </div>
       </section>
 
       <!-- BRAND CARD + MAP -->
-      <section class="max-w-6xl mx-auto px-6">
+      <section class="w-full px-4 md:px-6 py-12">
         <div class="bg-white rounded-[30px] shadow-[0_18px_60px_rgba(0,0,0,0.14)] border border-gray-200 overflow-hidden">
           <div class="grid md:grid-cols-2">
             <div class="p-8 flex flex-col gap-4">
@@ -141,27 +223,6 @@
           </div>
         </div>
       </section>
-
-            <section class="relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] w-screen">
-        <div class="grid md:grid-cols-2 gap-0 auto-rows-[520px]">
-          <div class="bg-[#ffd93b] text-gray-900 h-full w-full flex items-center justify-center text-center px-8">
-            <h4 class="font-serif text-3xl md:text-4xl font-black leading-snug max-w-xl">Kopi susu sebagai menu favorit</h4>
-          </div>
-          <div
-            class="h-full w-full bg-cover bg-center"
-            style="background-image: url('/public/hero-cafelux.jpg');"
-          ></div>
-        </div>
-      </section>
-
-      <section class="max-w-5xl mx-auto px-6">
-        <div class="rounded-3xl bg-gradient-to-r from-amber-300 via-white to-emerald-100 p-10 shadow-[0_18px_60px_rgba(0,0,0,0.12)] border border-white">
-          <h4 class="text-2xl font-black text-center mb-4">Dari Kami, Untuk Kamu</h4>
-          <p class="text-center text-lg text-gray-800 leading-relaxed max-w-3xl mx-auto">
-            Kopi Utara ingin kamu merasa diterima seperti teman. Setiap kali kamu datang, kami ingin kamu pulang dengan perasaan lebih baik entah karena kopinya enak, suasananya nyaman, atau karena kamu menemukan momen kecil yang berarti di sini.
-          </p>
-        </div>
-      </section>
     </main>
   </div>
 </template>
@@ -170,7 +231,7 @@
 import { Link } from '@inertiajs/vue3';
 
 export default {
-  name: 'AboutPage',  
+  name: 'AboutPage',
   components: { Link },
   props: {
     employees: {
@@ -180,26 +241,7 @@ export default {
   },
   data() {
     return {
-      philosophyCards: [
-        {
-          title: 'Kopi untuk Semua',
-          description: 'Kopi menghadirkan kopi dan minuman segar dengan harga yang masih ramah kantong mahasiswa tanpa mengorbankan rasa dan kualitas.',
-          color: 'bg-[#6868d1] text-white',
-          tagline: 'Terjangkau & tulus'
-        },
-        {
-          title: 'Ruang untuk Terhubung',
-          description: 'Kopi Utara dirancang sebagai tempat yang hidup: bisa buat kerja, main kartu, ngobrol, curhat, atau sekadar duduk menikmati suasana.',
-          color: 'bg-[#f59ad2] text-gray-900',
-          tagline: 'Hangat & hidup'
-        },
-        {
-          title: 'Lokal & Autentik',
-          description: 'Rasa yang jujur, pelayanan yang tulus, dan vibe yang hangat. Itu yang ingin kami jaga dalam setiap seduhan dan kunjungan.',
-          color: 'bg-[#5cb7f4] text-gray-900',
-          tagline: 'Vibe utara'
-        },
-      ],
+
       mosaicBlocks: [
         {
           title: 'Kopi susu sebagai menu favorit',
@@ -255,7 +297,3 @@ export default {
   },
 };
 </script>
-
-
-
-

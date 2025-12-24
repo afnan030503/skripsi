@@ -52,76 +52,136 @@ class MenuController extends Controller
     // Tambah menu baru
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'category_id' => 'required|exists:categories,id',
-            'subcategory_id' => 'required|exists:subcategories,id',
-            'name' => 'required|string|max:255',
-            'price' => 'required|numeric|min:0',
-            'description' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
-        ]);
+        try {
+            \Log::info('Store Menu Request:', [
+                'request_data' => $request->except('image'),
+                'has_image' => $request->hasFile('image')
+            ]);
 
-        // Validasi subcategory milik category
-        if (!Subcategory::where('id', $validated['subcategory_id'])
-            ->where('category_id', $validated['category_id'])->exists()) {
-            return redirect()->back()->withErrors(['subcategory_id' => 'Subcategory tidak sesuai dengan Category'])->withInput();
+            $validated = $request->validate([
+                'category_id' => 'required|exists:categories,id',
+                'subcategory_id' => 'required|exists:subcategories,id',
+                'name' => 'required|string|max:255',
+                'price' => 'required|numeric|min:0',
+                'description' => 'nullable|string',
+                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:10240',
+            ]);
+
+            // Validasi subcategory milik category
+            $subcategoryExists = Subcategory::where('id', $validated['subcategory_id'])
+                ->where('category_id', $validated['category_id'])
+                ->exists();
+            
+            \Log::info('Subcategory validation:', [
+                'subcategory_id' => $validated['subcategory_id'],
+                'category_id' => $validated['category_id'],
+                'exists' => $subcategoryExists
+            ]);
+
+            if (!$subcategoryExists) {
+                \Log::warning('Subcategory tidak sesuai dengan Category', [
+                    'subcategory_id' => $validated['subcategory_id'],
+                    'category_id' => $validated['category_id']
+                ]);
+                return redirect()->back()->withErrors(['subcategory_id' => 'Subcategory tidak sesuai dengan Category'])->withInput();
+            }
+
+            $imagePath = null;
+            if ($request->hasFile('image')) {
+                $imagePath = $request->file('image')->store('menu-images', 'public');
+                \Log::info('Image uploaded:', ['path' => $imagePath]);
+            }
+
+            $menu = Menu::create([
+                'category_id' => $validated['category_id'],
+                'subcategory_id' => $validated['subcategory_id'],
+                'name' => $validated['name'],
+                'price' => $validated['price'],
+                'description' => $validated['description'] ?? null,
+                'image' => $imagePath,
+                'is_available' => true,
+            ]);
+
+            \Log::info('Menu berhasil dibuat', ['menu_id' => $menu->id]);
+
+            return redirect()->back()->with('success', 'Menu berhasil ditambahkan!');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            \Log::error('Validation Error on Menu Store:', [
+                'errors' => $e->errors()
+            ]);
+            return redirect()->back()->withErrors($e->errors())->withInput();
+        } catch (\Exception $e) {
+            \Log::error('Store Menu Error:', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            return redirect()->back()->with('error', 'Gagal menambahkan menu: ' . $e->getMessage());
         }
-
-        $imagePath = null;
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('menu-images', 'public');
-        }
-
-        Menu::create([
-            'category_id' => $validated['category_id'],
-            'subcategory_id' => $validated['subcategory_id'],
-            'name' => $validated['name'],
-            'price' => $validated['price'],
-            'description' => $validated['description'] ?? null,
-            'image' => $imagePath,
-            'is_available' => true,
-        ]);
-
-        return redirect()->back()->with('success', 'Menu berhasil ditambahkan!');
     }
 
     // Update menu
     public function update(Request $request, Menu $menu)
     {
-        $validated = $request->validate([
-            'category_id' => 'required|exists:categories,id',
-            'subcategory_id' => 'required|exists:subcategories,id',
-            'name' => 'required|string|max:255',
-            'price' => 'required|numeric|min:0',
-            'description' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
-        ]);
+        try {
+            \Log::info('Update Menu Request:', [
+                'menu_id' => $menu->id,
+                'request_data' => $request->except('image')
+            ]);
 
-        // Validasi subcategory milik category
-        if (!Subcategory::where('id', $validated['subcategory_id'])
-            ->where('category_id', $validated['category_id'])->exists()) {
-            return redirect()->back()->withErrors(['subcategory_id' => 'Subcategory tidak sesuai dengan Category'])->withInput();
-        }
+            $validated = $request->validate([
+                'category_id' => 'required|exists:categories,id',
+                'subcategory_id' => 'required|exists:subcategories,id',
+                'name' => 'required|string|max:255',
+                'price' => 'required|numeric|min:0',
+                'description' => 'nullable|string',
+                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:10240',
+            ]);
 
-        $data = [
-            'category_id' => $validated['category_id'],
-            'subcategory_id' => $validated['subcategory_id'],
-            'name' => $validated['name'],
-            'price' => $validated['price'],
-            'description' => $validated['description'] ?? null,
-        ];
-
-        if ($request->hasFile('image')) {
-            // Hapus gambar lama jika ada
-            if ($menu->image) {
-                \Storage::disk('public')->delete($menu->image);
+            // Validasi subcategory milik category
+            if (!Subcategory::where('id', $validated['subcategory_id'])
+                ->where('category_id', $validated['category_id'])->exists()) {
+                \Log::warning('Subcategory tidak sesuai dengan Category', [
+                    'subcategory_id' => $validated['subcategory_id'],
+                    'category_id' => $validated['category_id']
+                ]);
+                return redirect()->back()->withErrors(['subcategory_id' => 'Subcategory tidak sesuai dengan Category'])->withInput();
             }
-            $data['image'] = $request->file('image')->store('menu-images', 'public');
+
+            $data = [
+                'category_id' => $validated['category_id'],
+                'subcategory_id' => $validated['subcategory_id'],
+                'name' => $validated['name'],
+                'price' => $validated['price'],
+                'description' => $validated['description'] ?? null,
+            ];
+
+            if ($request->hasFile('image')) {
+                // Hapus gambar lama jika ada
+                if ($menu->image) {
+                    \Storage::disk('public')->delete($menu->image);
+                }
+                $data['image'] = $request->file('image')->store('menu-images', 'public');
+            }
+
+            $menu->update($data);
+
+            \Log::info('Menu berhasil diupdate', ['menu_id' => $menu->id]);
+
+            return redirect()->back()->with('success', 'Menu berhasil diperbarui!');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            \Log::error('Validation Error on Menu Update:', [
+                'menu_id' => $menu->id,
+                'errors' => $e->errors()
+            ]);
+            return redirect()->back()->withErrors($e->errors())->withInput();
+        } catch (\Exception $e) {
+            \Log::error('Update Menu Error:', [
+                'menu_id' => $menu->id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            return redirect()->back()->with('error', 'Gagal memperbarui menu: ' . $e->getMessage());
         }
-
-        $menu->update($data);
-
-        return redirect()->back()->with('success', 'Menu berhasil diperbarui!');
     }
 
     // Hapus menu

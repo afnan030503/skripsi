@@ -48,129 +48,119 @@
     </section>
 
     <section id="menu" class="w-full bg-black">
-      <!-- FULL 2×2 GRID (BESAR) -->
+      <!-- FULL 2×2 GRID (REDESIGNED) -->
       <div class="grid grid-cols-1 md:grid-cols-2 w-full">
 
         <!-- LEFT TOP – FOOD IMAGE -->
-        <div class="relative w-full h-[540px]">
+        <div class="relative w-full aspect-[4/3] bg-gray-50">
           <img 
             :src="selectedFoodImage || '/public/food1.jpg'"
-            class="w-full h-full object-contain p-8 bg-gray-50"
+            class="w-full h-full object-cover"
+            alt="Food"
           >
-
-          <div class="absolute bottom-6 left-6 right-6 bg-white/90 backdrop-blur-md p-6 rounded-2xl shadow-xl border border-white/50 transition-all duration-300">
-            <div class="flex justify-between items-start gap-4">
-              <div>
-                <h3 class="text-2xl font-bold text-gray-800 mb-1">{{ selectedFoodMenu?.name || 'Pilih Menu' }}</h3>
-                <p class="text-gray-600 leading-relaxed">
-                  {{ selectedFoodMenu?.description || 'Silakan pilih menu di samping untuk melihat detail.' }}
-                </p>
-              </div>
-              <span class="bg-gradient-to-r from-blue-500 to-sky-400 text-white px-5 py-2 rounded-full font-bold text-xl shadow-lg whitespace-nowrap">
-                {{ selectedFoodMenu ? formatPrice(selectedFoodMenu.price) : 'Rp 0' }}
-              </span>
+          <!-- Price Badge -->
+          <div class="absolute bottom-4 left-4 bg-white/95 backdrop-blur px-4 py-2 rounded-lg shadow-xl border-2 border-gray-200">
+            <div class="text-sm text-gray-600 mb-1">{{ selectedFoodMenu?.name || 'Menu Item' }}</div>
+            <div class="text-2xl font-black text-emerald-600">
+              {{ selectedFoodMenu ? formatPrice(selectedFoodMenu.price) : '24k' }}
             </div>
           </div>
         </div>
 
-        <!-- RIGHT TOP – FOOD CATEGORY BOX -->
-        <div class="p-10 md:p-14 bg-gradient-to-br from-sky-400 to-blue-500 text-white">
-          <!-- CATEGORY BUTTONS (BESAR) -->
-          <div class="flex flex-wrap gap-4 mb-10">
+        <!-- RIGHT TOP – FOOD CATEGORY & LIST -->
+        <div class="bg-gradient-to-br from-sky-300 via-sky-400 to-blue-500 text-gray-900 aspect-[4/3] p-6 flex flex-col">
+          <!-- CATEGORY TABS -->
+          <div class="flex gap-2 mb-6 border-b-2 border-gray-800/20 pb-2 overflow-x-auto">
             <button 
               v-for="cat in foodCategory.subcategories"
               :key="cat.id"
               @click="selectFoodSubcategory(cat.id)"
               :class="[
-                'px-6 py-2 rounded-full font-bold transition-all duration-300 shadow-sm border-2',
+                'px-4 py-2 font-bold text-sm whitespace-nowrap transition-all duration-200',
                 selectedFoodSubcategory === cat.id 
-                  ? 'bg-white text-blue-600 border-white scale-105 shadow-lg'
-                  : 'bg-transparent text-white border-white/30 hover:bg-white/10'
+                  ? 'bg-white text-gray-900 rounded-md shadow-md'
+                  : 'text-gray-800 hover:bg-white/30 rounded-md'
               ]"
             >
               {{ cat.name }}
             </button>
           </div>
 
-          <!-- FOOD LIST (BESAR) -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <!-- FOOD LIST -->
+          <div class="flex-1 overflow-y-auto space-y-1">
             <div 
               v-for="menu in foodMenus"
               :key="menu.id"
               @click="selectFoodMenu(menu)"
-              class="group bg-white/10 backdrop-blur-sm border border-white/20 p-5 rounded-2xl cursor-pointer hover:bg-white hover:text-blue-900 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+              :class="[
+                'py-2 px-3 border-b border-dotted border-gray-800/30 cursor-pointer hover:bg-white/20 transition-colors rounded',
+                selectedFoodMenu?.id === menu.id ? 'bg-white/30' : ''
+              ]"
             >
-              <div class="flex justify-between items-start mb-2">
-                <h4 class="font-bold text-lg leading-tight">{{ menu.name }}</h4>
-                <span class="bg-white/20 group-hover:bg-blue-100 group-hover:text-blue-600 px-2 py-1 rounded-lg text-sm font-bold whitespace-nowrap transition-colors">
-                  {{ formatPrice(menu.price) }}
-                </span>
+              <div class="flex justify-between items-center">
+                <span class="font-semibold text-sm">{{ menu.name }}</span>
+                <span class="font-bold text-sm ml-2">{{ formatPrice(menu.price) }}</span>
               </div>
-              <p class="text-sm opacity-80 line-clamp-2 group-hover:opacity-100">
-                {{ menu.description || 'Delicious food choice' }}
+              <p v-if="menu.description" class="text-xs text-gray-700 mt-1 line-clamp-1">
+                {{ menu.description }}
               </p>
             </div>
           </div>
         </div>
 
-        <!-- LEFT BOTTOM – DRINK SUBCATEGORIES -->
-        <div class="p-10 md:p-14 bg-gradient-to-br from-emerald-300 to-teal-500 text-white">
-          <!-- SUBCATEGORY BUTTONS (BESAR) -->
-          <div class="flex flex-wrap gap-4 mb-10">
+        <!-- LEFT BOTTOM – DRINK CATEGORY & LIST -->
+        <div class="bg-gradient-to-br from-emerald-200 via-emerald-300 to-teal-400 text-gray-900 aspect-[4/3] p-6 flex flex-col">
+          <!-- CATEGORY TABS -->
+          <div class="flex gap-2 mb-6 border-b-2 border-gray-800/20 pb-2 overflow-x-auto">
             <button
               v-for="sub in drinkCategory.subcategories"
               :key="sub.id"
               @click="selectDrinkSubcategory(sub.id)"
               :class="[
-                'px-6 py-2 rounded-full font-bold transition-all duration-300 shadow-sm border-2',
+                'px-4 py-2 font-bold text-sm whitespace-nowrap transition-all duration-200',
                 selectedDrinkSubcategory === sub.id 
-                  ? 'bg-white text-teal-700 border-white scale-105 shadow-lg' 
-                  : 'bg-transparent text-white border-white/30 hover:bg-white/10'
+                  ? 'bg-white text-gray-900 rounded-md shadow-md' 
+                  : 'text-gray-800 hover:bg-white/30 rounded-md'
               ]"
             >
               {{ sub.name }}
             </button>
           </div>
 
-          <!-- DRINK LIST (BESAR) -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <!-- DRINK LIST -->
+          <div class="flex-1 overflow-y-auto space-y-1">
             <div 
               v-for="menu in drinkMenus"
               :key="menu.id"
               @click="selectDrinkMenu(menu)"
-              class="group bg-white/10 backdrop-blur-sm border border-white/20 p-5 rounded-2xl cursor-pointer hover:bg-white hover:text-teal-900 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+              :class="[
+                'py-2 px-3 border-b border-dotted border-gray-800/30 cursor-pointer hover:bg-white/20 transition-colors rounded',
+                selectedDrinkMenu?.id === menu.id ? 'bg-white/30' : ''
+              ]"
             >
-              <div class="flex justify-between items-start mb-2">
-                <h4 class="font-bold text-lg leading-tight">{{ menu.name }}</h4>
-                <span class="bg-white/20 group-hover:bg-teal-100 group-hover:text-teal-600 px-2 py-1 rounded-lg text-sm font-bold whitespace-nowrap transition-colors">
-                  {{ formatPrice(menu.price) }}
-                </span>
+              <div class="flex justify-between items-center">
+                <span class="font-semibold text-sm">{{ menu.name }}</span>
+                <span class="font-bold text-sm ml-2">{{ formatPrice(menu.price) }}</span>
               </div>
-              <p class="text-sm opacity-80 line-clamp-2 group-hover:opacity-100">
-                {{ menu.description || 'Refreshing drink choice' }}
+              <p v-if="menu.description" class="text-xs text-gray-700 mt-1 line-clamp-1">
+                {{ menu.description }}
               </p>
             </div>
           </div>
         </div>
 
         <!-- RIGHT BOTTOM – DRINK IMAGE -->
-        <div class="relative w-full h-[540px]">
+        <div class="relative w-full aspect-[4/3] bg-gray-50">
           <img 
             :src="selectedDrinkImage || '/public/drink1.jpg'"
-            class="w-full h-full object-contain p-8 bg-gray-50"
+            class="w-full h-full object-cover"
+            alt="Drink"
           >
-
-          <div class="absolute bottom-6 left-6 right-6 bg-white/90 backdrop-blur-md p-6 rounded-2xl shadow-xl border border-white/50 transition-all duration-300">
-            <div class="flex justify-between items-start gap-4">
-              <div>
-                <h3 class="text-2xl font-bold text-gray-800 mb-1">{{ selectedDrinkMenu?.name || 'Pilih Menu' }}</h3>
-                <p class="text-gray-600 leading-relaxed">
-                  {{ selectedDrinkMenu?.description || 'Silakan pilih menu di samping untuk melihat detail.' }}
-                </p>
-              </div>
-              <span class="bg-gradient-to-r from-emerald-500 to-teal-400 text-white px-5 py-2 rounded-full font-bold text-xl shadow-lg whitespace-nowrap">
-                {{ selectedDrinkMenu ? formatPrice(selectedDrinkMenu.price) : 'Rp 0' }}
-              </span>
+          <!-- Price Badge -->
+          <div class="absolute bottom-4 left-4 bg-white/95 backdrop-blur px-4 py-2 rounded-lg shadow-xl border-2 border-gray-200">
+            <div class="text-sm text-gray-600 mb-1">{{ selectedDrinkMenu?.name || 'Menu Item' }}</div>
+            <div class="text-2xl font-black text-emerald-600">
+              {{ selectedDrinkMenu ? formatPrice(selectedDrinkMenu.price) : '24k' }}
             </div>
           </div>
         </div>
