@@ -1,15 +1,30 @@
 <template>
-  <aside class="w-64 bg-white text-slate-600 flex flex-col h-screen font-sans border-r border-slate-200">
-    <!-- HEADER -->
-    <div class="p-6 flex items-center gap-3 border-b border-slate-100">
-      <div class="w-10 h-10 rounded-lg bg-indigo-600 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-indigo-200">
-        U
+  <transition name="sidebar">
+    <aside 
+      v-if="showSidebar"
+      class="fixed lg:static inset-y-0 left-0 z-50 w-64 bg-white text-slate-600 flex flex-col h-screen font-sans border-r border-slate-200 shadow-2xl lg:shadow-none transition-transform duration-300"
+      :class="isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'"
+    >
+      <!-- HEADER -->
+      <div class="p-6 flex items-center justify-between gap-3 border-b border-slate-100">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-lg bg-indigo-600 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-indigo-200">
+            U
+          </div>
+          <div>
+            <h1 class="text-lg font-bold text-slate-800 tracking-tight">Admin Panel</h1>
+            <p class="text-xs text-slate-500 font-medium">Utara Coffee</p>
+          </div>
+        </div>
+
+        <!-- MOBILE CLOSE BUTTON -->
+        <button 
+          @click="$emit('close')"
+          class="lg:hidden p-2 rounded-lg bg-slate-50 text-slate-500 hover:text-indigo-600 transition-colors"
+        >
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
       </div>
-      <div>
-        <h1 class="text-lg font-bold text-slate-800 tracking-tight">Admin Panel</h1>
-        <p class="text-xs text-slate-500 font-medium">Utara Coffee</p>
-      </div>
-    </div>
 
     <!-- NAVIGATION -->
     <nav class="mt-6 flex-1 px-3 overflow-y-auto custom-scrollbar">
@@ -125,6 +140,34 @@
           </Link>
         </li>
 
+        <!-- Kelola Komunitas -->
+        <li>
+          <Link
+            href="/admin/community"
+            class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group"
+            :class="currentRoute.includes('/admin/community')
+              ? 'bg-indigo-50 text-indigo-700 font-bold'
+              : 'hover:bg-slate-50 hover:text-slate-900'"
+          >
+            <svg class="w-5 h-5 transition-colors" :class="currentRoute.includes('/admin/community') ? 'text-indigo-600' : 'text-slate-400 group-hover:text-slate-600'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+            <span class="text-sm">Kelola Komunitas</span>
+          </Link>
+        </li>
+
+        <!-- Kelola Crew -->
+        <li>
+          <Link
+            href="/admin/crews"
+            class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group"
+            :class="currentRoute.includes('/admin/crews')
+              ? 'bg-indigo-50 text-indigo-700 font-bold'
+              : 'hover:bg-slate-50 hover:text-slate-900'"
+          >
+            <svg class="w-5 h-5 transition-colors" :class="currentRoute.includes('/admin/crews') ? 'text-indigo-600' : 'text-slate-400 group-hover:text-slate-600'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+            <span class="text-sm">Kelola Crew</span>
+          </Link>
+        </li>
+
         <!-- Kelola Pengguna -->
         <li>
           <Link
@@ -155,12 +198,25 @@
       </form>
     </div>
   </aside>
+  </transition>
+
+  <!-- OVERLAY FOR MOBILE -->
+  <div 
+    v-if="isOpen" 
+    @click="$emit('close')"
+    class="lg:hidden fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-40 transition-opacity"
+  ></div>
 </template>
 
 <script setup>
 import { ref } from "vue";
-import { Link, router } from "@inertiajs/vue3";
-import { usePage } from "@inertiajs/vue3";
+import { Link, router, usePage } from "@inertiajs/vue3";
+
+const props = defineProps({
+  isOpen: { type: Boolean, default: false }
+});
+
+defineEmits(['close']);
 
 const page = usePage();
 const currentRoute = page.url;
@@ -168,6 +224,8 @@ const tab = new URLSearchParams(window.location.search).get("tab");
 
 // Auto-open menu if current route is related to menu
 const menuOpen = ref(currentRoute.includes('/admin/menu'));
+
+const showSidebar = ref(true); // Always true for now as transition handles visibility
 
 const logout = () => router.post("/logout");
 </script>
@@ -182,5 +240,13 @@ const logout = () => router.post("/logout");
 .custom-scrollbar::-webkit-scrollbar-thumb {
   background-color: #cbd5e1;
   border-radius: 20px;
+}
+
+/* Sidebar Transition */
+.sidebar-enter-active, .sidebar-leave-active {
+  transition: transform 0.3s ease;
+}
+.sidebar-enter-from, .sidebar-leave-to {
+  transform: translateX(-100%);
 }
 </style>

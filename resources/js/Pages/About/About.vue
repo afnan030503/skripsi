@@ -1,13 +1,15 @@
 <template>
   <div class="min-h-screen bg-[#f6f7f9] text-gray-900">
-    <header class="fixed top-0 inset-x-0 z-40 bg-white/90 backdrop-blur shadow-sm border-b border-gray-100">
-      <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-        <Link href="/" class="flex items-center justify-center gap-3 py-4 px-4">
-          <img src="/public/utara.jpg" alt="Utara" class="h-12 w-auto rounded-xl shadow" />
-          <span class="text-2xl font-black text-emerald-700 tracking-wide">UTARA</span>
+    <header class="fixed top-0 inset-x-0 z-50 bg-white/90 backdrop-blur shadow-sm border-b border-gray-100">
+      <div class="max-w-7xl mx-auto px-4 md:px-6 h-20 flex items-center justify-between">
+        <Link href="/" class="flex items-center gap-2 md:gap-3">
+          <img src="/public/utara.jpg" alt="Utara" class="h-10 md:h-12 w-auto rounded-xl shadow" />
+          <span class="text-xl md:text-2xl font-black text-emerald-700 tracking-wide">UTARA</span>
         </Link>
-        <nav class="hidden md:flex items-center gap-6 text-sm font-semibold text-gray-700">
-          <a href="/#home" class="hover:text-emerald-700 transition">Home</a>
+        
+        <!-- Desktop Nav -->
+        <nav class="hidden lg:flex items-center gap-6 text-sm font-semibold text-gray-700">
+          <Link href="/" class="hover:text-emerald-700 transition">Home</Link>
           <a href="/#menu" class="hover:text-emerald-700 transition">Menu</a>
           <a href="/#tetangga" class="hover:text-emerald-700 transition">Community</a>
           <Link href="/promo-loyalty" class="hover:text-emerald-700 transition">Promo & Loyalty</Link>
@@ -15,11 +17,41 @@
           <a href="/#blog" class="hover:text-emerald-700 transition">Blog</a>
           <a href="/#contact" class="hover:text-emerald-700 transition">Contact Us</a>
         </nav>
-        <div class="flex items-center justify-center gap-3 py-4 px-4">
+
+        <div class="flex items-center gap-2 md:gap-3">
+          <!-- Mobile Menu Toggle -->
+          <button @click="isMobileMenuOpen = !isMobileMenuOpen" class="lg:hidden p-2 text-gray-600">
+            <svg v-if="!isMobileMenuOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+            <svg v-else class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+          </button>
+
           <Link href="/login" class="hidden sm:inline-block px-4 py-2 rounded-full border border-gray-200 text-sm font-semibold hover:border-emerald-600 hover:text-emerald-700 transition">Login</Link>
-          <a href="https://wa.me/6281215246678?text=Halo%20Kopi%20Utara" target="_blank" class="px-5 py-2 rounded-full bg-emerald-600 text-white font-semibold shadow hover:bg-emerald-700 transition">Reservasi</a>
+          <a href="https://wa.me/6281215246678?text=Halo%20Kopi%20Utara" target="_blank" class="px-4 md:px-5 py-2 rounded-full bg-emerald-600 text-white text-sm md:text-base font-semibold shadow hover:bg-emerald-700 transition">Reservasi</a>
         </div>
       </div>
+
+      <!-- Mobile Menu Overlay -->
+      <transition 
+        enter-active-class="transition duration-200 ease-out"
+        enter-from-class="opacity-0 -translate-y-4"
+        enter-to-class="opacity-100 translate-y-0"
+        leave-active-class="transition duration-150 ease-in"
+        leave-from-class="opacity-100 translate-y-0"
+        leave-to-class="opacity-0 -translate-y-4"
+      >
+        <div v-if="isMobileMenuOpen" class="lg:hidden bg-white border-t border-gray-100 shadow-xl overflow-hidden absolute w-full top-20 left-0">
+          <nav class="flex flex-col p-4 gap-4 text-gray-800 font-bold">
+            <Link @click="isMobileMenuOpen = false" href="/" class="p-2 hover:bg-emerald-50 rounded-lg">Home</Link>
+            <a @click="isMobileMenuOpen = false" href="/#menu" class="p-2 hover:bg-emerald-50 rounded-lg">Menu</a>
+            <a @click="isMobileMenuOpen = false" href="/#tetangga" class="p-2 hover:bg-emerald-50 rounded-lg">Community</a>
+            <Link @click="isMobileMenuOpen = false" href="/promo-loyalty" class="p-2 hover:bg-emerald-50 rounded-lg">Promo & Loyalty</Link>
+            <Link @click="isMobileMenuOpen = false" href="/about" class="p-2 hover:bg-emerald-50 rounded-lg text-emerald-600">About Us</Link>
+            <a @click="isMobileMenuOpen = false" href="/#blog" class="p-2 hover:bg-emerald-50 rounded-lg">Blog</a>
+            <a @click="isMobileMenuOpen = false" href="/#contact" class="p-2 hover:bg-emerald-50 rounded-lg">Contact Us</a>
+            <Link @click="isMobileMenuOpen = false" href="/login" class="p-2 bg-gray-100 rounded-lg text-center">Login</Link>
+          </nav>
+        </div>
+      </transition>
     </header>
 
     <main class="pt-16 pb-20 space-y-0">
@@ -159,24 +191,112 @@
           </p>
         </div>
       </section>
-      <!-- HERO BELGE + EMPLOYEES -->
+      <!-- HERO BEIGE + CREW -->
       <section class="bg-[#FDF6E3] border-t-[10px] border-[#2f2a24] py-16 overflow-hidden">
         <div class="max-w-7xl mx-auto px-6 text-center">
           <h1 class="text-4xl md:text-5xl font-black text-black mb-12 font-serif tracking-tight">These are men who cooked.</h1>
           
-          <div class="flex flex-wrap justify-center items-end gap-[-20px] md:gap-4 select-none">
-            <div
-              v-for="(person, idx) in displayEmployees"
-              :key="person.name + idx"
-              class="relative group transition-transform hover:scale-110 hover:z-10 duration-300"
-            >
-              <img
-                :src="person.photo"
-                :alt="person.name"
-                class="h-40 md:h-64 w-auto object-contain filter drop-shadow-[0_0_8px_rgba(255,255,255,1)] drop-shadow-[0_0_15px_rgba(255,255,255,0.8)]"
-                draggable="false"
-              />
+          <div class="flex flex-col items-center gap-y-12 select-none max-w-7xl mx-auto">
+            <!-- ROW 1 (Max 4) -->
+            <div v-if="crewPhotos.length > 0" class="flex flex-wrap justify-center items-end gap-x-4 md:gap-x-8 gap-y-8 md:gap-y-10 transition-all">
+              <div
+                v-for="crew in crewPhotos.slice(0, 4)"
+                :key="crew.id"
+                class="relative group transition-transform hover:scale-105 md:hover:scale-110 hover:z-10 duration-300 flex flex-col items-center w-[40%] sm:w-auto"
+              >
+                <img
+                  :src="crew.image_url"
+                  :alt="crew.name || 'Crew'"
+                  class="h-32 sm:h-48 md:h-64 w-auto object-contain transition-all duration-500 mb-2 crew-photo-outline"
+                  draggable="false"
+                />
+                <div class="mt-1 md:mt-2 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-center">
+                  <p class="text-[10px] md:text-sm font-black text-black uppercase tracking-wider">{{ crew.name }}</p>
+                  <p class="text-[8px] md:text-[10px] font-bold text-gray-600 uppercase">{{ crew.position }}</p>
+                </div>
+              </div>
             </div>
+
+            <!-- ROW 2 (Max 2) -->
+            <div v-if="crewPhotos.length > 4" class="flex flex-wrap justify-center items-end gap-x-4 md:gap-x-8 gap-y-8 md:gap-y-10 transition-all">
+              <div
+                v-for="crew in crewPhotos.slice(4, 6)"
+                :key="crew.id"
+                class="relative group transition-transform hover:scale-105 md:hover:scale-110 hover:z-10 duration-300 flex flex-col items-center w-[40%] sm:w-auto"
+              >
+                <img
+                  :src="crew.image_url"
+                  :alt="crew.name || 'Crew'"
+                  class="h-32 sm:h-48 md:h-64 w-auto object-contain transition-all duration-500 mb-2"
+                  style="filter: drop-shadow(3px 3px 0 white) drop-shadow(-3px -3px 0 white) drop-shadow(3px -3px 0 white) drop-shadow(-3px 3px 0 white);"
+                  draggable="false"
+                />
+                <div class="mt-1 md:mt-2 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-center">
+                  <p class="text-[10px] md:text-sm font-black text-black uppercase tracking-wider">{{ crew.name }}</p>
+                  <p class="text-[8px] md:text-[10px] font-bold text-gray-600 uppercase">{{ crew.position }}</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- ROW 3 (Max 3) -->
+            <div v-if="crewPhotos.length > 6" class="flex flex-wrap justify-center items-end gap-x-4 md:gap-x-8 gap-y-8 md:gap-y-10 transition-all">
+              <div
+                v-for="crew in crewPhotos.slice(6, 9)"
+                :key="crew.id"
+                class="relative group transition-transform hover:scale-105 md:hover:scale-110 hover:z-10 duration-300 flex flex-col items-center w-[40%] sm:w-auto"
+              >
+                <img
+                  :src="crew.image_url"
+                  :alt="crew.name || 'Crew'"
+                  class="h-32 sm:h-48 md:h-64 w-auto object-contain transition-all duration-500 mb-2"
+                  style="filter: drop-shadow(3px 3px 0 white) drop-shadow(-3px -3px 0 white) drop-shadow(3px -3px 0 white) drop-shadow(-3px 3px 0 white);"
+                  draggable="false"
+                />
+                <div class="mt-1 md:mt-2 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-center">
+                  <p class="text-[10px] md:text-sm font-black text-black uppercase tracking-wider">{{ crew.name }}</p>
+                  <p class="text-[8px] md:text-[10px] font-bold text-gray-600 uppercase">{{ crew.position }}</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- REST (if any) -->
+            <div v-if="crewPhotos.length > 9" class="flex flex-wrap justify-center items-end gap-x-4 md:gap-x-8 gap-y-8 md:gap-y-10 transition-all">
+              <div
+                v-for="crew in crewPhotos.slice(9)"
+                :key="crew.id"
+                class="relative group transition-transform hover:scale-105 md:hover:scale-110 hover:z-10 duration-300 flex flex-col items-center w-[40%] sm:w-auto"
+              >
+                <img
+                  :src="crew.image_url"
+                  :alt="crew.name || 'Crew'"
+                  class="h-32 sm:h-48 md:h-64 w-auto object-contain transition-all duration-500 mb-2"
+                  style="filter: drop-shadow(3px 3px 0 white) drop-shadow(-3px -3px 0 white) drop-shadow(3px -3px 0 white) drop-shadow(-3px 3px 0 white);"
+                  draggable="false"
+                />
+                <div class="mt-1 md:mt-2 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-center">
+                  <p class="text-[10px] md:text-sm font-black text-black uppercase tracking-wider">{{ crew.name }}</p>
+                  <p class="text-[8px] md:text-[10px] font-bold text-gray-600 uppercase">{{ crew.position }}</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- FALLBACK IF EMPTY -->
+            <template v-if="crewPhotos.length === 0">
+              <div class="flex flex-wrap justify-center items-end gap-x-8 gap-y-10">
+                <div
+                  v-for="(person, idx) in fallbackEmployees"
+                  :key="'fallback-'+idx"
+                  class="relative group transition-transform hover:scale-110 hover:z-10 duration-300 flex flex-col items-center"
+                >
+                  <img
+                    :src="person.photo"
+                    :alt="person.name"
+                    class="h-40 md:h-64 w-auto object-contain filter drop-shadow-[0_0_8px_rgba(255,255,255,1)]"
+                    draggable="false"
+                  />
+                </div>
+              </div>
+            </template>
           </div>
         </div>
       </section>
@@ -241,6 +361,9 @@ export default {
   },
   data() {
     return {
+      isMobileMenuOpen: false,
+      crewPhotos: [],
+
 
       mosaicBlocks: [
         {
@@ -270,6 +393,9 @@ export default {
       ],
     };
   },
+  mounted() {
+    this.fetchCrewPhotos();
+  },
   computed: {
     displayEmployees() {
       if (this.employees && this.employees.length) {
@@ -284,6 +410,16 @@ export default {
     },
   },
   methods: {
+    async fetchCrewPhotos() {
+      try {
+        const response = await fetch('/crew/photos');
+        if (response.ok) {
+          this.crewPhotos = await response.json();
+        }
+      } catch (error) {
+        console.error('Failed to fetch crew photos:', error);
+      }
+    },
     resolvePhoto(emp, idx) {
       const fallbackPhotos = ['/public/orang1.png', '/public/orang2.png', '/public/orang3.png', '/public/orang4.png'];
       const photo = emp?.photo;
@@ -297,3 +433,15 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.crew-photo-outline {
+  filter: drop-shadow(2px 2px 0 white) drop-shadow(-2px -2px 0 white) drop-shadow(2px -2px 0 white) drop-shadow(-2px 2px 0 white);
+}
+
+@media (min-width: 768px) {
+  .crew-photo-outline {
+    filter: drop-shadow(4px 4px 0 white) drop-shadow(-4px -4px 0 white) drop-shadow(4px -4px 0 white) drop-shadow(-4px 4px 0 white);
+  }
+}
+</style>

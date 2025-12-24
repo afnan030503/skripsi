@@ -1,15 +1,25 @@
 <template>
   <div class="flex min-h-screen bg-slate-50 font-sans">
     <!-- SIDEBAR -->
-    <AdminSidebar />
-
+    <AdminSidebar :isOpen="isSidebarOpen" @close="isSidebarOpen = false" />
+    
     <!-- CONTENT -->
-    <main class="flex-1 overflow-y-auto">
+    <main class="flex-1 min-w-0 overflow-y-auto text-slate-800">
       <!-- TOP BAR -->
-      <header class="bg-white border-b border-slate-200 px-8 py-4 sticky top-0 z-10 flex justify-between items-center">
-        <div>
-          <h1 class="text-2xl font-bold text-slate-800 tracking-tight">Dashboard</h1>
-          <p class="text-sm text-slate-500">Overview statistik dan aktivitas terbaru</p>
+      <header class="bg-white border-b border-slate-200 px-4 md:px-8 py-4 sticky top-0 z-30 flex justify-between items-center">
+        <div class="flex items-center gap-4">
+          <!-- HAMBURGER -->
+          <button 
+            @click="isSidebarOpen = true"
+            class="lg:hidden p-2 rounded-lg bg-slate-100 text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 transition-colors"
+          >
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+          </button>
+
+          <div>
+            <h1 class="text-xl md:text-2xl font-bold text-slate-800 tracking-tight">Dashboard</h1>
+            <p class="text-xs md:text-sm text-slate-500 hidden sm:block">Overview statistik dan aktivitas terbaru</p>
+          </div>
         </div>
         <div class="flex items-center gap-4">
           <div class="text-right hidden md:block">
@@ -22,12 +32,12 @@
         </div>
       </header>
 
-      <div class="p-8 max-w-7xl mx-auto">
+      <div class="p-4 md:p-8 max-w-7xl mx-auto">
         <!-- WELCOME CARD -->
-        <div class="bg-indigo-600 rounded-2xl p-8 text-white shadow-xl shadow-indigo-200 mb-8 relative overflow-hidden">
+        <div class="bg-indigo-600 rounded-2xl p-6 md:p-8 text-white shadow-xl shadow-indigo-200 mb-8 relative overflow-hidden">
           <div class="relative z-10">
-            <h2 class="text-3xl font-bold mb-2">Selamat Datang Kembali! 👋</h2>
-            <p class="text-indigo-100 max-w-2xl text-lg">
+            <h2 class="text-2xl md:text-3xl font-bold mb-2">Selamat Datang Kembali! 👋</h2>
+            <p class="text-indigo-100 max-w-2xl text-base md:text-lg">
               Kelola semua data menu, kategori, dan konten website Utara Coffee dari satu tempat.
             </p>
           </div>
@@ -139,6 +149,8 @@
 import { ref } from 'vue'
 import { Link, usePage, router } from '@inertiajs/vue3'
 import AdminSidebar from "@/Layouts/AdminSidebar.vue";
+
+const isSidebarOpen = ref(false);
 
 const props = defineProps({
   foodsCount: {type: Number,default: 0},

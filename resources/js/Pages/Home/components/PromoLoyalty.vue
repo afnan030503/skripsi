@@ -1,13 +1,15 @@
 <template>
   <div class="min-h-screen bg-stone-50 flex flex-col">
     <!-- Navbar sama seperti Home -->
-    <header class="fixed top-0 inset-x-0 z-40 bg-white/90 backdrop-blur shadow-sm border-b border-gray-100">
-      <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-        <Link href="/" class="flex items-center justify-center gap-3 py-4 px-4">
-          <img src="/public/utara.jpg" alt="Utara" class="h-12 w-auto rounded-xl shadow" />
-          <span class="text-2xl font-black text-emerald-700 tracking-wide">UTARA</span>
+    <header class="fixed top-0 inset-x-0 z-50 bg-white/90 backdrop-blur shadow-sm border-b border-gray-100">
+      <div class="max-w-7xl mx-auto px-4 md:px-6 h-20 flex items-center justify-between">
+        <Link href="/" class="flex items-center gap-2 md:gap-3">
+          <img src="/public/utara.jpg" alt="Utara" class="h-10 md:h-12 w-auto rounded-xl shadow" />
+          <span class="text-xl md:text-2xl font-black text-emerald-700 tracking-wide">UTARA</span>
         </Link>
-        <nav class="hidden md:flex items-center gap-6 text-sm font-semibold text-gray-700">
+        
+        <!-- Desktop Nav -->
+        <nav class="hidden lg:flex items-center gap-6 text-sm font-semibold text-gray-700">
           <Link href="/" class="hover:text-emerald-700 transition">Home</Link>
           <a href="/#menu" class="hover:text-emerald-700 transition">Menu</a>
           <a href="/#tetangga" class="hover:text-emerald-700 transition">Community</a>
@@ -16,11 +18,41 @@
           <a href="/#blog" class="hover:text-emerald-700 transition">Blog</a>
           <a href="/#contact" class="hover:text-emerald-700 transition">Contact Us</a>
         </nav>
-        <div class="flex items-center justify-center gap-3 py-4 px-4">
+
+        <div class="flex items-center gap-2 md:gap-3">
+          <!-- Mobile Menu Toggle -->
+          <button @click="isMobileMenuOpen = !isMobileMenuOpen" class="lg:hidden p-2 text-gray-600">
+            <svg v-if="!isMobileMenuOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+            <svg v-else class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+          </button>
+
           <Link href="/login" class="hidden sm:inline-block px-4 py-2 rounded-full border border-gray-200 text-sm font-semibold hover:border-emerald-600 hover:text-emerald-700 transition">Login</Link>
-          <a href="https://wa.me/6281215246678?text=Halo%20Kopi%20Utara" target="_blank" class="px-5 py-2 rounded-full bg-emerald-600 text-white font-semibold shadow hover:bg-emerald-700 transition">Reservasi</a>
+          <a href="https://wa.me/6281215246678?text=Halo%20Kopi%20Utara" target="_blank" class="px-4 md:px-5 py-2 rounded-full bg-emerald-600 text-white text-sm md:text-base font-semibold shadow hover:bg-emerald-700 transition">Reservasi</a>
         </div>
       </div>
+
+      <!-- Mobile Menu Overlay -->
+      <transition 
+        enter-active-class="transition duration-200 ease-out"
+        enter-from-class="opacity-0 -translate-y-4"
+        enter-to-class="opacity-100 translate-y-0"
+        leave-active-class="transition duration-150 ease-in"
+        leave-from-class="opacity-100 translate-y-0"
+        leave-to-class="opacity-0 -translate-y-4"
+      >
+        <div v-if="isMobileMenuOpen" class="lg:hidden bg-white border-t border-gray-100 shadow-xl overflow-hidden absolute w-full top-20 left-0">
+          <nav class="flex flex-col p-4 gap-4 text-gray-800 font-bold">
+            <Link @click="isMobileMenuOpen = false" href="/" class="p-2 hover:bg-emerald-50 rounded-lg">Home</Link>
+            <a @click="isMobileMenuOpen = false" href="/#menu" class="p-2 hover:bg-emerald-50 rounded-lg">Menu</a>
+            <a @click="isMobileMenuOpen = false" href="/#tetangga" class="p-2 hover:bg-emerald-50 rounded-lg">Community</a>
+            <Link @click="isMobileMenuOpen = false" href="/promo-loyalty" class="p-2 hover:bg-emerald-50 rounded-lg text-emerald-600">Promo & Loyalty</Link>
+            <Link @click="isMobileMenuOpen = false" href="/about" class="p-2 hover:bg-emerald-50 rounded-lg">About Us</Link>
+            <a @click="isMobileMenuOpen = false" href="/#blog" class="p-2 hover:bg-emerald-50 rounded-lg">Blog</a>
+            <a @click="isMobileMenuOpen = false" href="/#contact" class="p-2 hover:bg-emerald-50 rounded-lg">Contact Us</a>
+            <Link @click="isMobileMenuOpen = false" href="/login" class="p-2 bg-gray-100 rounded-lg text-center">Login</Link>
+          </nav>
+        </div>
+      </transition>
     </header>
 
 
@@ -48,8 +80,8 @@
           <div class="flex items-center bg-black/80 text-white rounded-md shadow overflow-hidden w-full md:w-auto">
             <input
               type="tel"
-              placeholder="Masukkan Nomor handphone kamu"
-              class="flex-1 bg-transparent placeholder-gray-300 px-4 py-3 outline-none text-sm md:min-w-[340px]"
+              placeholder="Masukkan Nomor handphone"
+              class="flex-1 bg-transparent placeholder-gray-400 px-4 py-3 outline-none text-xs md:text-sm md:min-w-[340px]"
             />
             <button class="bg-white text-black px-4 py-3 flex items-center justify-center hover:bg-gray-200 transition">
               <span class="sr-only">Cari</span>
@@ -68,13 +100,13 @@
             </p>
           </div>
 
-          <div class="px-10 py-10">
-            <div class="grid grid-cols-5 gap-6 justify-items-center">
+          <div class="px-4 md:px-10 py-6 md:py-10">
+            <div class="grid grid-cols-5 gap-3 md:gap-6 justify-items-center">
               <!-- 9 Pink Circles -->
               <div
                 v-for="n in 9"
                 :key="n"
-                class="h-20 w-20 md:h-24 md:w-24 rounded-full bg-pink-300 shadow-md"
+                class="h-10 w-10 sm:h-16 sm:w-16 md:h-20 md:w-20 rounded-full bg-pink-300 shadow-inner border-2 border-pink-400/70"
               ></div>
               
               <!-- 10th Badge with Logo -->
@@ -122,26 +154,26 @@
               <!-- Logo Image dari public/logo.png -->
               <div class="relative flex-shrink-0">
                 <img 
-                  src="/public/logo.png" 
+                  src="/logo.png" 
                   alt="UTARA Logo" 
-                  class="w-24 h-24 md:w-28 md:h-28 object-contain rounded-2xl"
+                  class="w-20 h-20 md:w-28 md:h-28 object-contain rounded-2xl"
                 />
               </div>
               
               <!-- Text UTARA -->
-              <h2 class="text-7xl md:text-8xl font-black text-[#0f3d2e] tracking-tight leading-none" style="font-family: 'Arial Black', 'Arial Bold', sans-serif; letter-spacing: -0.02em;">
+              <h2 class="text-6xl md:text-8xl font-black text-[#0f3d2e] tracking-tight leading-none" style="font-family: 'Arial Black', 'Arial Bold', sans-serif; letter-spacing: -0.02em;">
                 UTARA
               </h2>
             </div>
 
             <!-- Tagline -->
-            <p class="text-gray-700 text-base leading-relaxed">
+            <p class="text-gray-700 text-sm md:text-base leading-relaxed">
               Tempatnya cerita, tawa, dan kopi yang diseduh dengan hati.<br />
               Kami hadir di belakang kampus untuk menemani tugas, obrolan, dan pagi yang hangat.
             </p>
 
             <!-- Buttons -->
-            <div class="flex gap-4">
+            <div class="flex flex-col sm:flex-row gap-4">
               <!-- WhatsApp / Reservasi Button with Phone Number -->
               <div class="flex-1 border-[3px] border-black rounded-xl overflow-hidden shadow-lg">
                 <a 
@@ -165,7 +197,7 @@
                   <a 
                     href="https://instagram.com/utara.yk" 
                     target="_blank" 
-                    class="flex items-center gap-1.5 hover:scale-105 transition-transform"
+                    class="flex items-center gap-1.5 hover:scale-110 transition-transform"
                   >
                     <div class="bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400 p-1.5 rounded-md">
                       <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -177,7 +209,7 @@
                   <a 
                     href="https://tiktok.com/@utara.yk" 
                     target="_blank" 
-                    class="flex items-center gap-1.5 hover:scale-105 transition-transform"
+                    class="flex items-center gap-1.5 hover:scale-110 transition-transform"
                   >
                     <div class="bg-gray-900 p-1.5 rounded-md">
                       <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -275,6 +307,7 @@ import { Link } from '@inertiajs/vue3';
 
 // State untuk modal
 const showModal = ref(false);
+const isMobileMenuOpen = ref(false);
 
 // Data untuk maps
 const mapsEmbedUrl = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3953.123456789!2d110.123456!3d-7.123456!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zN8KwMDcnMjQuNSJTIDExMMKwMDcnMjQuNSJF!5e0!3m2!1sen!2sid!4v1234567890";

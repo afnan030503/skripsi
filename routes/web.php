@@ -3,6 +3,8 @@
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BlogController;
+use App\Http\Controllers\CommunityPhotoController;
+use App\Http\Controllers\CrewController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MenuController;
@@ -44,6 +46,10 @@ Route::post('/posts', [PostController::class, 'store']);
 Route::get('/reviews', [ReviewController::class, 'index']);
 Route::post('/reviews', [ReviewController::class, 'store']);
 Route::get('/reviews/google', [ReviewController::class, 'google']);
+
+// COMMUNITY PHOTOS (public)
+Route::get('/community/photos', [CommunityPhotoController::class, 'getActive']);
+Route::get('/crew/photos', [CrewController::class, 'getActive']);
 
 // ======================
 // LOGIN
@@ -122,8 +128,21 @@ Route::middleware(['auth'])->group(function () {
 
     // Posts Management
     Route::get('/admin/posts', [PostController::class, 'getPending'])->name('admin.posts.index');
+    Route::put('/admin/posts/{id}', [PostController::class, 'update'])->name('admin.posts.update');
     Route::post('/admin/posts/{id}/approve', [PostController::class, 'approve'])->name('admin.posts.approve');
     Route::post('/admin/posts/{id}/reject', [PostController::class, 'reject'])->name('admin.posts.reject');
+
+    // Community Photos Management
+    Route::get('/admin/community', [CommunityPhotoController::class, 'index'])->name('admin.community.index');
+    Route::post('/admin/community', [CommunityPhotoController::class, 'store'])->name('admin.community.store');
+    Route::put('/admin/community/{id}', [CommunityPhotoController::class, 'update'])->name('admin.community.update');
+    Route::delete('/admin/community/{id}', [CommunityPhotoController::class, 'destroy'])->name('admin.community.destroy');
+
+    // Crew Management
+    Route::get('/admin/crews', [CrewController::class, 'index'])->name('admin.crew.index');
+    Route::post('/admin/crews', [CrewController::class, 'store'])->name('admin.crew.store');
+    Route::put('/admin/crews/{id}', [CrewController::class, 'update'])->name('admin.crew.update');
+    Route::delete('/admin/crews/{id}', [CrewController::class, 'destroy'])->name('admin.crew.destroy');
 });
 
     // Community Posts

@@ -28,111 +28,64 @@
   </transition>
 
   <!-- ================= HERO KOMUNITAS ================= -->
-  <section id="tetangga" class="relative h-[calc(80vh-57px)] bg-[#0f3d2e] py-10">
-    <div class="pl-5 pt-10 font-tuku_handwriting text-3xl lg:pl-16 text-white">
-      <h3>
-        "DARI PELANGGAN," <br />
-        "JADI TEMAN"
+  <section 
+    id="tetangga" 
+    class="relative h-[calc(90vh-57px)] overflow-hidden transition-colors duration-700 ease-in-out"
+    :style="{ backgroundColor: bgColor }"
+  >
+    <!-- FLOATING TITLE LABEL -->
+    <div class="absolute top-6 md:top-12 left-4 md:left-16 z-20 bg-white px-4 md:px-6 py-2 md:py-3 border-l-[4px] md:border-l-[6px] border-[#e31e24] shadow-md">
+      <h3 class="text-lg md:text-2xl font-bold text-gray-800 tracking-tight">
+        Dari pelanggan, jadi teman
       </h3>
     </div>
 
-    <div class="h-[20px]"></div>
-
     <div
-      class="relative mt-6 flex h-[calc(80vh-220px)] min-w-full overflow-x-auto overflow-y-hidden gap-10 px-10"
+      @scroll="handleScroll"
+      class="relative flex h-full min-w-full overflow-x-auto overflow-y-hidden gap-10 md:gap-20 px-6 md:px-10 items-end pb-10 scrollbar-hide"
     >
-      <div
-        class="group relative w-fit flex-shrink-0 overflow-visible cursor-pointer"
-      >
-        <img
-          src="/public/orang1.png"
-          alt="Tetangga Petani Garut"
-          class="h-full w-auto object-contain transition-all duration-500 group-hover:scale-[1.03]"
-        />
-
+      <template v-if="communityPhotos.length > 0">
         <div
-          class="absolute bottom-0 left-1/2 z-10 -translate-x-1/2 translate-y-0 opacity-0
-                 group-hover:opacity-100 group-hover:-translate-y-3
-                 transition-all duration-500 ease-in-out
-                 whitespace-nowrap border border-black
-                 bg-[#f1e8d7] px-6 py-3 rounded-md
-                 font-tuku_handwriting text-2xl shadow-sm"
+          v-for="photo in communityPhotos"
+          :key="photo.id"
+          class="group relative w-fit flex-shrink-0 overflow-visible cursor-pointer"
         >
-          Tetangga Petani Garut
+          <img
+            :src="photo.image_url"
+            :alt="photo.caption || 'Tetangga'"
+            class="h-[50vh] md:h-[60vh] w-auto object-contain transition-all duration-500 group-hover:scale-[1.02] filter drop-shadow-[0_0_2px_rgba(255,255,255,0.8)]"
+            style="filter: drop-shadow(4px 4px 0 white) drop-shadow(-4px -4px 0 white) drop-shadow(4px -4px 0 white) drop-shadow(-4px 4px 0 white);"
+            @touchstart.passive="() => {}"
+          />
+
+          <div
+            v-if="photo.caption"
+            class="absolute bottom-10 left-1/2 z-10 -translate-x-1/2 translate-y-0 opacity-0
+                   group-hover:opacity-100 group-hover:-translate-y-3
+                   transition-all duration-500 ease-in-out
+                   whitespace-nowrap border border-black
+                   bg-[#f1e8d7] px-6 py-3 rounded-md
+                   font-tuku_handwriting text-2xl shadow-sm"
+          >
+            {{ photo.caption }}
+          </div>
         </div>
-      </div>
+      </template>
 
-      <div
-        class="group relative w-fit flex-shrink-0 overflow-visible cursor-pointer"
-      >
-        <img
-          src="/public/orang2.png"
-          alt="NFTetangga Bintaro"
-          class="h-full w-auto object-contain transition-all duration-500 group-hover:scale-[1.03]"
-        />
-
-        <div
-          class="absolute bottom-0 left-1/2 z-10 -translate-x-1/2 translate-y-0 opacity-0
-                 group-hover:opacity-100 group-hover:-translate-y-3
-                 transition-all duration-500 ease-in-out
-                 whitespace-nowrap border border-black
-                 bg-[#f1e8d7] px-6 py-3 rounded-md
-                 font-tuku_handwriting text-2xl shadow-sm"
-        >
-          NFTetangga Bintaro
+      <!-- FALLBACK IF EMPTY -->
+      <template v-else>
+        <div class="flex items-center justify-center w-full text-green-800/30 font-bold text-3xl italic">
+          Belum ada foto komunitas aktif...
         </div>
-      </div>
-
-      <div
-        class="group relative w-fit flex-shrink-0 overflow-visible cursor-pointer"
-      >
-        <img
-          src="/public/orang3.png"
-          alt="Tetangga Cipete"
-          class="h-full w-auto object-contain transition-all duration-500 group-hover:scale-[1.03]"
-        />
-
-        <div
-          class="absolute bottom-0 left-1/2 z-10 -translate-x-1/2 translate-y-0 opacity-0
-                 group-hover:opacity-100 group-hover:-translate-y-3
-                 transition-all duration-500 ease-in-out
-                 whitespace-nowrap border border-black
-                 bg-[#f1e8d7] px-6 py-3 rounded-md
-                 font-tuku_handwriting text-2xl shadow-sm"
-        >
-          Tetangga Cipete
-        </div>
-      </div>
-
-      <div
-        class="group relative w-fit flex-shrink-0 overflow-visible cursor-pointer"
-      >
-        <img
-          src="/public/orang4.png"
-          alt="Tetangga BSD"
-          class="h-full w-auto object-contain transition-all duration-500 group-hover:scale-[1.03]"
-        />
-
-        <div
-          class="absolute bottom-0 left-1/2 z-10 -translate-x-1/2 translate-y-0 opacity-0
-                 group-hover:opacity-100 group-hover:-translate-y-3
-                 transition-all duration-500 ease-in-out
-                 whitespace-nowrap border border-black
-                 bg-[#f1e8d7] px-6 py-3 rounded-md
-                 font-tuku_handwriting text-2xl shadow-sm"
-        >
-          Tetangga BSD
-        </div>
-      </div>
+      </template>
     </div>
   </section>
 
   <!-- ================= GALERI KOMUNITAS ================= -->
   <section class="py-20 bg-white w-full">
     <div class="px-6 w-full">
-      <!-- HEADER -->
-      <div class="flex items-center justify-between mb-12">
-        <h2 class="text-5xl font-bold text-black">Galeri Komunitas</h2>
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-12">
+        <h2 class="text-3xl md:text-5xl font-bold text-black">Galeri Komunitas</h2>
 
         <button
           @click="openModal"
@@ -209,9 +162,12 @@
   <transition name="fade">
     <div
       v-if="showModal"
-      class="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
     >
-      <div class="bg-white rounded-xl shadow-xl w-full max-w-5xl mx-4 relative p-8">
+      <div 
+        class="bg-white rounded-xl shadow-xl w-full relative p-6 md:p-8 max-h-[90vh] overflow-y-auto transition-all duration-300"
+        :class="isSuccess ? 'max-w-md' : 'max-w-5xl'"
+      >
         <!-- Close Button -->
         <button
           @click="closeModal"
@@ -221,12 +177,29 @@
         </button>
 
         <!-- Title -->
-        <h3 class="text-2xl font-bold text-gray-900 mb-8">
+        <h3 v-if="!isSuccess" class="text-2xl font-bold text-gray-900 mb-8">
           Bagikan Momen di utara
         </h3>
 
+        <!-- SUCCESS MESSAGE -->
+        <div v-if="isSuccess" class="py-6 flex flex-col items-center text-center">
+          <div class="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-3xl mb-4 animate-bounce">
+            ✓
+          </div>
+          <h3 class="text-2xl font-bold text-gray-900 mb-2">Post Berhasil Terkirim!</h3>
+          <p class="text-gray-600 max-w-xs mx-auto mb-6 text-sm">
+            Terima kasih telah berbagi momen! Postingan Anda sedang menunggu persetujuan admin sebelum ditampilkan di galeri.
+          </p>
+          <button
+            @click="closeModal"
+            class="px-6 py-2 bg-black text-white font-bold rounded-lg hover:bg-gray-800 transition shadow-lg text-sm"
+          >
+            Selesai
+          </button>
+        </div>
+
         <!-- MAIN LAYOUT: LEFT UPLOAD + RIGHT FORM -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+        <div v-if="!isSuccess" class="grid grid-cols-1 md:grid-cols-2 gap-10">
           <!-- LEFT: UPLOAD BOX -->
           <div
             class="border-2 border-dashed border-gray-300 rounded-xl p-6 flex flex-col items-center justify-center cursor-pointer hover:border-black transition min-h-[340px]"
@@ -346,7 +319,7 @@
         </div>
 
         <!-- SUBMIT BUTTON -->
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mt-10">
+        <div v-if="!isSuccess" class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mt-10">
           <p v-if="errors.general" class="text-sm text-red-500">
             {{ errors.general }}
           </p>
@@ -355,7 +328,7 @@
             :disabled="submitting"
             @click="submitForm"
           >
-            Submit Post
+            {{ submitting ? 'Mengirim...' : 'Submit Post' }}
           </button>
         </div>
       </div>
@@ -371,10 +344,26 @@ const logoSrc = '/logo.png';
 const categoryOptions = [...categories];
 
 const posts = ref([]);
+const communityPhotos = ref([]);
+const bgColor = ref('#4db8ff'); // Initial blue color
+const scrollContainer = ref(null);
+
+const handleScroll = (e) => {
+  const container = e.target;
+  const scrollPercentage = container.scrollLeft / (container.scrollWidth - container.clientWidth);
+  
+  // Transition between Blue (#4db8ff) and Green (#7ee7ab)
+  if (scrollPercentage > 0.5) {
+    bgColor.value = '#7ee7ab';
+  } else {
+    bgColor.value = '#4db8ff';
+  }
+};
 const csrfToken = ref(
   document.head.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || null
 );
 const showModal = ref(false);
+const isSuccess = ref(false);
 const submitting = ref(false);
 const showToast = ref(false);
 
@@ -432,6 +421,17 @@ const fetchPosts = async () => {
   }
 };
 
+const fetchCommunityPhotos = async () => {
+  try {
+    const res = await fetch('/community/photos');
+    if (res.ok) {
+      communityPhotos.value = await res.json();
+    }
+  } catch (error) {
+    console.error('Failed to fetch community photos', error);
+  }
+};
+
 const postsByCategory = (category) => {
   const categoryLower = category.toLowerCase();
   return posts.value.filter((post) => {
@@ -452,6 +452,11 @@ const openModal = () => {
 const closeModal = () => {
   showModal.value = false;
   submitting.value = false;
+  // Delay reset so transition finishes
+  setTimeout(() => {
+    isSuccess.value = false;
+    resetForm();
+  }, 300);
 };
 
 const triggerFileInput = () => {
@@ -517,16 +522,7 @@ const submitForm = async () => {
 
     if (res.ok) {
       await fetchPosts();
-      resetForm();
-      closeModal();
-      
-      // Tampilkan toast notification
-      showToast.value = true;
-      
-      // Auto-hide toast setelah 5 detik
-      setTimeout(() => {
-        showToast.value = false;
-      }, 5000);
+      isSuccess.value = true;
     } else if (res.status === 422) {
       const data = await res.json();
       errors.value = data.errors || {};
@@ -543,6 +539,7 @@ const submitForm = async () => {
 onMounted(async () => {
   await fetchCsrfToken();
   await fetchPosts();
+  await fetchCommunityPhotos();
 });
 </script>
 
@@ -554,6 +551,14 @@ onMounted(async () => {
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 /* Toast notification animation */

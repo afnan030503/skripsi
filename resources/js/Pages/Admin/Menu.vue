@@ -1,15 +1,29 @@
 <template>
   <div class="flex min-h-screen bg-gray-100 font-sans">
-   <!-- SIDEBAR -->
-    <AdminSidebar />
-
+    <!-- SIDEBAR -->
+    <AdminSidebar :isOpen="isSidebarOpen" @close="isSidebarOpen = false" />
+ 
     <!-- CONTENT -->
-    <main class="flex-1 p-8 overflow-y-auto">
-      <!-- HEADER -->
-      <div class="mb-8 pb-4 border-b">
-        <h1 class="text-3xl font-bold text-gray-800">{{ currentTitle }}</h1>
-        <p class="text-sm text-gray-500">Selamat datang di {{ currentTitle }}</p>
-      </div>
+    <main class="flex-1 min-w-0 overflow-y-auto">
+      <!-- TOP BAR -->
+      <header class="bg-white border-b border-slate-200 px-4 md:px-8 py-4 sticky top-0 z-30 flex justify-between items-center mb-6 md:mb-8">
+        <div class="flex items-center gap-4">
+          <!-- HAMBURGER -->
+          <button 
+            @click="isSidebarOpen = true"
+            class="lg:hidden p-2 rounded-lg bg-slate-100 text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 transition-colors"
+          >
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+          </button>
+
+          <div>
+            <h1 class="text-xl md:text-3xl font-bold text-gray-800">{{ currentTitle }}</h1>
+            <p class="text-xs md:text-sm text-gray-500 hidden sm:block">Selamat datang di {{ currentTitle }}</p>
+          </div>
+        </div>
+      </header>
+
+      <div class="px-4 md:px-8 pb-8">
 
       <!-- FOODS SECTION -->
       <div v-if="tab === 'foods'">
@@ -314,6 +328,7 @@
           </div>
         </div>
       </div>
+      </div>
     </main>
 
     <!-- POPUP NOTIFIKASI -->
@@ -334,6 +349,8 @@
 import { ref, computed } from 'vue'
 import { router, Link, usePage } from '@inertiajs/vue3'
 import AdminSidebar from "@/Layouts/AdminSidebar.vue";
+
+const isSidebarOpen = ref(false);
 
 const props = defineProps({
   foodsMenus: {

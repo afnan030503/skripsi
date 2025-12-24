@@ -97,6 +97,28 @@ class PostController extends Controller
     }
 
     /**
+     * PUT /admin/posts/{id}
+     * Update a post (title and tag only)
+     */
+    public function update(Request $request, $id)
+    {
+        $post = Post::findOrFail($id);
+
+        $validated = $request->validate([
+            'title' => ['required', 'string', 'max:255'],
+            'tag'   => ['nullable', 'string', 'max:255'],
+            'category' => ['required', 'string', 'max:50'],
+        ]);
+
+        $post->update($validated);
+
+        return response()->json([
+            'message' => 'Post updated successfully.',
+            'post' => $post,
+        ]);
+    }
+
+    /**
      * POST /admin/posts/{id}/approve
      * Approve a post
      */
