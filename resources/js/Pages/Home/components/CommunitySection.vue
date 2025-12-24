@@ -49,13 +49,14 @@
           v-for="photo in communityPhotos"
           :key="photo.id"
           class="group relative w-fit flex-shrink-0 overflow-visible cursor-pointer"
+          @click="toggleCaption(photo.id)"
         >
           <img
             :src="photo.image_url"
             :alt="photo.caption || 'Tetangga'"
             class="h-[50vh] md:h-[60vh] w-auto object-contain transition-all duration-500 group-hover:scale-[1.02] filter drop-shadow-[0_0_2px_rgba(255,255,255,0.8)]"
+            :class="{ 'scale-[1.02]': activePhotoId === photo.id }"
             style="filter: drop-shadow(4px 4px 0 white) drop-shadow(-4px -4px 0 white) drop-shadow(4px -4px 0 white) drop-shadow(-4px 4px 0 white);"
-            @touchstart.passive="() => {}"
           />
 
           <div
@@ -66,6 +67,7 @@
                    whitespace-nowrap border border-black
                    bg-[#f1e8d7] px-6 py-3 rounded-md
                    font-tuku_handwriting text-2xl shadow-sm"
+            :class="{ 'opacity-100 -translate-y-3': activePhotoId === photo.id }"
           >
             {{ photo.caption }}
           </div>
@@ -347,6 +349,15 @@ const posts = ref([]);
 const communityPhotos = ref([]);
 const bgColor = ref('#4db8ff'); // Initial blue color
 const scrollContainer = ref(null);
+const activePhotoId = ref(null);
+
+const toggleCaption = (id) => {
+  if (activePhotoId.value === id) {
+    activePhotoId.value = null;
+  } else {
+    activePhotoId.value = id;
+  }
+};
 
 const handleScroll = (e) => {
   const container = e.target;
