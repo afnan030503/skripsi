@@ -3,8 +3,9 @@
     <!-- Navbar sama seperti Home -->
     <header class="fixed top-0 inset-x-0 z-40 bg-white/90 backdrop-blur shadow-sm border-b border-gray-100">
       <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-        <Link href="/" class="flex items-center justify-center py-4 px-4">
-          <img src="/public/logoutara.png" alt="Utara" class="h-12 w-auto" />
+        <Link href="/" class="flex items-center justify-center gap-3 py-4 px-4">
+          <img src="/public/utara.jpg" alt="Utara" class="h-12 w-auto rounded-xl shadow" />
+          <span class="text-2xl font-black text-emerald-700 tracking-wide">UTARA</span>
         </Link>
         <nav class="hidden md:flex items-center gap-6 text-sm font-semibold text-gray-700">
           <Link href="/" class="hover:text-emerald-700 transition">Home</Link>

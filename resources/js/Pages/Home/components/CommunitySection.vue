@@ -1,4 +1,32 @@
 <template>
+  <!-- ================= TOAST NOTIFICATION ================= -->
+  <transition name="slide-down">
+    <div
+      v-if="showToast"
+      class="fixed top-20 left-1/2 -translate-x-1/2 z-[100] w-full max-w-md px-4"
+    >
+      <div class="bg-white border-l-4 border-green-500 rounded-lg shadow-2xl p-4 flex items-start gap-3">
+        <div class="flex-shrink-0">
+          <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+        </div>
+        <div class="flex-1">
+          <h4 class="text-sm font-bold text-gray-900 mb-1">Upload Berhasil! 🎉</h4>
+          <p class="text-xs text-gray-600">
+            Postingan Anda telah diterima dan sedang menunggu persetujuan dari admin. 
+            Kami akan segera meninjau konten Anda!
+          </p>
+        </div>
+        <button @click="showToast = false" class="flex-shrink-0 text-gray-400 hover:text-gray-600">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </transition>
+
   <!-- ================= HERO KOMUNITAS ================= -->
   <section id="tetangga" class="relative h-[calc(80vh-57px)] bg-[#0f3d2e] py-10">
     <div class="pl-5 pt-10 font-tuku_handwriting text-3xl lg:pl-16 text-white">
@@ -348,6 +376,7 @@ const csrfToken = ref(
 );
 const showModal = ref(false);
 const submitting = ref(false);
+const showToast = ref(false);
 
 const fileInput = ref(null);
 const selectedFile = ref(null);
@@ -490,6 +519,14 @@ const submitForm = async () => {
       await fetchPosts();
       resetForm();
       closeModal();
+      
+      // Tampilkan toast notification
+      showToast.value = true;
+      
+      // Auto-hide toast setelah 5 detik
+      setTimeout(() => {
+        showToast.value = false;
+      }, 5000);
     } else if (res.status === 422) {
       const data = await res.json();
       errors.value = data.errors || {};
@@ -516,6 +553,20 @@ onMounted(async () => {
 }
 .fade-enter-from,
 .fade-leave-to {
+  opacity: 0;
+}
+
+/* Toast notification animation */
+.slide-down-enter-active,
+.slide-down-leave-active {
+  transition: all 0.3s ease-out;
+}
+.slide-down-enter-from {
+  transform: translate(-50%, -100%);
+  opacity: 0;
+}
+.slide-down-leave-to {
+  transform: translate(-50%, -100%);
   opacity: 0;
 }
 </style>
