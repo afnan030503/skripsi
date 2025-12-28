@@ -13,7 +13,7 @@
           <a href="/#tetangga" class="hover:text-emerald-700 transition">Community</a>
           <Link href="/promo-loyalty" class="hover:text-emerald-700 transition">Promo & Loyalty</Link>
           <Link href="/about" class="text-emerald-700 border-b-2 border-emerald-700 pb-1">About Us</Link>
-          <a href="/#blog" class="hover:text-emerald-700 transition">Blog</a>
+          <a href="/blog" class="hover:text-emerald-700 transition">Blog</a>
           <a href="/#contact" class="hover:text-emerald-700 transition">Contact Us</a>
         </nav>
 

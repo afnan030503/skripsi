@@ -14,7 +14,7 @@
           <a href="/#tetangga" class="hover:text-emerald-700 transition">Community</a>
           <Link href="/promo-loyalty" class="text-emerald-700 border-b-2 border-emerald-700 pb-1">Promo & Loyalty</Link>
           <Link href="/about" class="hover:text-emerald-700 transition">About Us</Link>
-          <a href="/#blog" class="hover:text-emerald-700 transition">Blog</a>
+          <Link href="/blog" class="hover:text-emerald-700 transition">Blog</Link>
           <a href="/#contact" class="hover:text-emerald-700 transition">Contact Us</a>
         </nav>
 
@@ -46,7 +46,7 @@
             <a @click="isMobileMenuOpen = false" href="/#tetangga" class="p-2 hover:bg-emerald-50 rounded-lg">Community</a>
             <Link @click="isMobileMenuOpen = false" href="/promo-loyalty" class="p-2 hover:bg-emerald-50 rounded-lg text-emerald-600">Promo & Loyalty</Link>
             <Link @click="isMobileMenuOpen = false" href="/about" class="p-2 hover:bg-emerald-50 rounded-lg">About Us</Link>
-            <a @click="isMobileMenuOpen = false" href="/#blog" class="p-2 hover:bg-emerald-50 rounded-lg">Blog</a>
+            <Link @click="isMobileMenuOpen = false" href="/blog" class="p-2 hover:bg-emerald-50 rounded-lg">Blog</Link>
             <a @click="isMobileMenuOpen = false" href="/#contact" class="p-2 hover:bg-emerald-50 rounded-lg">Contact Us</a>
             <Link @click="isMobileMenuOpen = false" href="/login" class="p-2 bg-gray-100 rounded-lg text-center">Login</Link>
           </nav>
