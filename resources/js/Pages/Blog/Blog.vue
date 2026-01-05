@@ -100,9 +100,12 @@
                   <span><strong>Duration</strong> 1 Min</span>
                 </div>
                 
-                <button class="px-4 py-2 border border-gray-400 rounded text-xs font-semibold text-gray-700 hover:bg-gray-100 transition">
+                <Link 
+                  :href="'/blog/' + (featuredBlog?.slug || '#')"
+                  class="px-4 py-2 border border-gray-400 rounded text-xs font-semibold text-gray-700 hover:bg-gray-100 transition"
+                >
                   BACA LEBIH
-                </button>
+                </Link>
               </div>
             </div>
           </div>
@@ -153,10 +156,13 @@
                   <span><strong class="text-gray-700">Read</strong> {{ blog.duration }}</span>
                 </div>
                 
-                <!-- Tag Button -->
-                <button class="px-3 py-1.5 border border-gray-300 rounded text-xs font-medium text-gray-600 hover:bg-gray-100 transition uppercase">
-                  {{ blog.tag || 'ART' }}
-                </button>
+                <!-- Tag Button replaced with Read Detail -->
+                <Link 
+                  :href="'/blog/' + blog.slug"
+                  class="px-3 py-1.5 border border-gray-300 rounded text-xs font-medium text-gray-600 hover:bg-emerald-600 hover:text-white transition uppercase"
+                >
+                  BACA DETAIL
+                </Link>
               </div>
             </div>
           </article>

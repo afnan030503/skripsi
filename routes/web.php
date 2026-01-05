@@ -152,6 +152,14 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/admin/members/{id}', [MemberController::class, 'update'])->name('admin.members.update');
     Route::post('/admin/members/{id}/redeem', [MemberController::class, 'redeem'])->name('admin.members.redeem');
     Route::delete('/admin/members/{id}', [MemberController::class, 'destroy'])->name('admin.members.destroy');
+
+    // Blog Management
+    Route::get('/admin/blogs', [\App\Http\Controllers\Admin\BlogController::class, 'index'])->name('admin.blogs.index');
+    Route::get('/admin/blogs/create', [\App\Http\Controllers\Admin\BlogController::class, 'create'])->name('admin.blogs.create');
+    Route::get('/admin/blogs/{id}/edit', [\App\Http\Controllers\Admin\BlogController::class, 'edit'])->name('admin.blogs.edit');
+    Route::post('/admin/blogs', [\App\Http\Controllers\Admin\BlogController::class, 'store'])->name('admin.blogs.store');
+    Route::post('/admin/blogs/{id}', [\App\Http\Controllers\Admin\BlogController::class, 'update'])->name('admin.blogs.update');
+    Route::delete('/admin/blogs/{id}', [\App\Http\Controllers\Admin\BlogController::class, 'destroy'])->name('admin.blogs.destroy');
 });
 
     // Community Posts

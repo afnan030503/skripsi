@@ -7,6 +7,7 @@
     },
     "devDependencies": {
         "@tailwindcss/postcss": "^4.1.17",
+        "@tailwindcss/typography": "^0.5.19",
         "@vitejs/plugin-vue": "^5.0.0",
         "autoprefixer": "^10.4.22",
         "axios": "^1.6.0",
