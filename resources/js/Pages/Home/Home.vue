@@ -85,115 +85,128 @@
       <div class="grid grid-cols-1 md:grid-cols-2 w-full overflow-hidden">
 
         <!-- LEFT TOP – FOOD IMAGE (Responsive Height) -->
-        <div class="relative w-full aspect-[4/3] md:aspect-auto md:h-full bg-gray-50 overflow-hidden">
+        <div class="relative w-full aspect-[4/3] md:aspect-auto md:h-full bg-sky-300 overflow-hidden">
           <img 
             :src="selectedFoodImage || '/public/food1.jpg'"
             class="w-full h-full object-cover"
             alt="Food"
           >
-          <!-- Price Badge -->
-          <div class="absolute bottom-4 left-4 bg-white/95 backdrop-blur px-3 py-1.5 md:px-4 md:py-2 rounded-lg shadow-xl border-2 border-gray-200">
-            <div class="text-[10px] md:text-sm text-gray-600 mb-0.5 md:mb-1">{{ selectedFoodMenu?.name || 'Menu Item' }}</div>
-            <div class="text-lg md:text-2xl font-black text-emerald-600">
-              {{ selectedFoodMenu ? formatPrice(selectedFoodMenu.price) : '24k' }}
+          <!-- Price Badge - New Style -->
+          <div class="absolute bottom-4 left-4 right-4 flex items-stretch shadow-xl rounded-lg overflow-hidden">
+            <div class="bg-[#c5e636] px-4 py-3 flex items-center justify-center">
+              <span class="text-xl md:text-2xl font-black text-gray-900">
+                {{ selectedFoodMenu ? formatPrice(selectedFoodMenu.price) : '24K' }}
+              </span>
+            </div>
+            <div class="flex-1 bg-white px-4 py-3 flex items-center">
+              <span class="text-sm md:text-base text-gray-700">
+                {{ selectedFoodMenu?.description || 'Crispy fish fillet with sauce and fresh veggies on a soft bun.' }}
+              </span>
             </div>
           </div>
         </div>
 
         <!-- RIGHT TOP – FOOD CATEGORY & LIST -->
-        <div class="bg-gradient-to-br from-sky-300 via-sky-400 to-blue-500 text-gray-900 min-h-[400px] md:aspect-[4/3] p-6 flex flex-col">
-          <!-- CATEGORY TABS -->
-          <div class="flex gap-2 mb-4 md:mb-6 border-b-2 border-gray-800/20 pb-2 overflow-x-auto no-scrollbar">
+        <div class="bg-sky-300 text-gray-900 min-h-[400px] md:aspect-[4/3] p-6 md:p-8 flex flex-col">
+          <!-- CATEGORY TABS - Wrap to multiple rows -->
+          <div class="flex flex-wrap gap-2 mb-6 pb-4 border-b border-dashed border-sky-400">
             <button 
               v-for="cat in foodCategory.subcategories"
               :key="cat.id"
               @click="selectFoodSubcategory(cat.id)"
               :class="[
-                'px-4 py-2 font-bold text-xs md:text-sm whitespace-nowrap transition-all duration-200',
+                'px-4 py-2 font-bold text-sm transition-all duration-200 border-2',
                 selectedFoodSubcategory === cat.id 
-                  ? 'bg-white text-gray-900 rounded-md shadow-md'
-                  : 'text-gray-800 hover:bg-white/30 rounded-md'
+                  ? 'bg-sky-500 text-white border-sky-500 rounded-md'
+                  : 'bg-transparent text-gray-800 border-transparent hover:bg-sky-200 rounded-md'
               ]"
             >
               {{ cat.name }}
             </button>
           </div>
 
-          <!-- FOOD LIST -->
-          <div class="flex-1 overflow-y-auto space-y-1 pr-2 custom-scrollbar">
-            <div 
-              v-for="menu in foodMenus"
-              :key="menu.id"
-              @click="selectFoodMenu(menu)"
-              :class="[
-                'py-2 px-3 border-b border-dotted border-gray-800/30 cursor-pointer hover:bg-white/20 transition-colors rounded',
-                selectedFoodMenu?.id === menu.id ? 'bg-white/30' : ''
-              ]"
-            >
-              <div class="flex justify-between items-center">
-                <span class="font-semibold text-xs md:text-sm">{{ menu.name }}</span>
-                <span class="font-bold text-xs md:text-sm ml-2">{{ formatPrice(menu.price) }}</span>
+          <!-- FOOD LIST - 2 Columns Grid -->
+          <div class="flex-1 overflow-y-auto">
+            <div class="grid grid-cols-2 gap-x-6">
+              <div 
+                v-for="menu in foodMenus"
+                :key="menu.id"
+                @click="selectFoodMenu(menu)"
+                :class="[
+                  'py-3 border-b border-dashed border-sky-400 cursor-pointer hover:bg-sky-200/50 transition-colors',
+                  selectedFoodMenu?.id === menu.id ? 'bg-sky-200/50' : ''
+                ]"
+              >
+                <span class="font-semibold text-sm text-gray-900">{{ menu.name }}</span>
               </div>
-              <p v-if="menu.description" class="text-[10px] md:text-xs text-gray-700 mt-1 line-clamp-1">
-                {{ menu.description }}
-              </p>
             </div>
           </div>
         </div>
 
         <!-- LEFT BOTTOM – DRINK CATEGORY & LIST (Moved after image on mobile via order classes) -->
-        <div class="bg-gradient-to-br from-emerald-200 via-emerald-300 to-teal-400 text-gray-900 min-h-[400px] md:aspect-[4/3] p-6 flex flex-col order-last md:order-none">
-          <!-- CATEGORY TABS -->
-          <div class="flex gap-2 mb-4 md:mb-6 border-b-2 border-gray-800/20 pb-2 overflow-x-auto no-scrollbar">
+        <div class="bg-emerald-200 text-gray-900 min-h-[400px] md:aspect-[4/3] p-6 md:p-8 flex flex-col order-last md:order-none">
+          <!-- CATEGORY TABS - Wrap to multiple rows -->
+          <div class="flex flex-wrap gap-2 mb-4 pb-4 border-b border-dashed border-emerald-400">
             <button
               v-for="sub in drinkCategory.subcategories"
               :key="sub.id"
               @click="selectDrinkSubcategory(sub.id)"
               :class="[
-                'px-4 py-2 font-bold text-xs md:text-sm whitespace-nowrap transition-all duration-200',
+                'px-4 py-2 font-bold text-sm transition-all duration-200 border-2',
                 selectedDrinkSubcategory === sub.id 
-                  ? 'bg-white text-gray-900 rounded-md shadow-md' 
-                  : 'text-gray-800 hover:bg-white/30 rounded-md'
+                  ? 'bg-emerald-600 text-white border-emerald-600 rounded-md' 
+                  : 'bg-transparent text-gray-800 border-transparent hover:bg-emerald-300 rounded-md'
               ]"
             >
               {{ sub.name }}
             </button>
           </div>
 
-          <!-- DRINK LIST -->
-          <div class="flex-1 overflow-y-auto space-y-1 pr-2 custom-scrollbar">
-            <div 
-              v-for="menu in drinkMenus"
-              :key="menu.id"
-              @click="selectDrinkMenu(menu)"
-              :class="[
-                'py-2 px-3 border-b border-dotted border-gray-800/30 cursor-pointer hover:bg-white/20 transition-colors rounded',
-                selectedDrinkMenu?.id === menu.id ? 'bg-white/30' : ''
-              ]"
-            >
-              <div class="flex justify-between items-center">
-                <span class="font-semibold text-xs md:text-sm">{{ menu.name }}</span>
-                <span class="font-bold text-xs md:text-sm ml-2">{{ formatPrice(menu.price) }}</span>
+          <!-- DRINK LIST - 2 Columns Grid -->
+          <div class="flex-1 overflow-y-auto">
+            <div class="grid grid-cols-2 gap-x-6">
+              <div 
+                v-for="menu in drinkMenus"
+                :key="menu.id"
+                @click="selectDrinkMenu(menu)"
+                :class="[
+                  'py-3 border-b border-dashed border-emerald-400 cursor-pointer hover:bg-emerald-300/50 transition-colors',
+                  selectedDrinkMenu?.id === menu.id ? 'bg-emerald-300/50' : ''
+                ]"
+              >
+                <span class="font-semibold text-sm text-gray-900">{{ menu.name }}</span>
               </div>
-              <p v-if="menu.description" class="text-[10px] md:text-xs text-gray-700 mt-1 line-clamp-1">
-                {{ menu.description }}
-              </p>
             </div>
           </div>
         </div>
 
         <!-- RIGHT BOTTOM – DRINK IMAGE -->
-        <div class="relative w-full aspect-[4/3] md:aspect-auto md:h-full bg-gray-50 overflow-hidden">
+        <div class="relative w-full aspect-[4/3] md:aspect-auto md:h-full bg-sky-300 overflow-hidden">
           <img 
             :src="selectedDrinkImage || '/public/drink1.jpg'"
             class="w-full h-full object-cover"
             alt="Drink"
           >
-          <!-- Price Badge -->
-          <div class="absolute bottom-4 left-4 bg-white/95 backdrop-blur px-3 py-1.5 md:px-4 md:py-2 rounded-lg shadow-xl border-2 border-gray-200">
-            <div class="text-[10px] md:text-sm text-gray-600 mb-0.5 md:mb-1">{{ selectedDrinkMenu?.name || 'Menu Item' }}</div>
-            <div class="text-lg md:text-2xl font-black text-emerald-600">
-              {{ selectedDrinkMenu ? formatPrice(selectedDrinkMenu.price) : '24k' }}
+          <!-- UTARA Logo Watermark -->
+          <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <div class="bg-[#0f3d2e]/80 px-6 py-4 rounded-lg">
+              <div class="flex items-center gap-2 text-white">
+                <span class="text-3xl md:text-4xl font-black">北</span>
+                <span class="text-2xl md:text-3xl font-black tracking-wider">UTARA</span>
+              </div>
+            </div>
+          </div>
+          <!-- Price Badge - New Style -->
+          <div class="absolute bottom-4 left-4 right-4 flex items-stretch shadow-xl rounded-lg overflow-hidden">
+            <div class="bg-sky-400 px-4 py-3 flex items-center justify-center">
+              <span class="text-xl md:text-2xl font-black text-white">
+                {{ selectedDrinkMenu ? formatPrice(selectedDrinkMenu.price) : '24K' }}
+              </span>
+            </div>
+            <div class="flex-1 bg-white px-4 py-3 flex items-center">
+              <span class="text-sm md:text-base text-gray-700">
+                {{ selectedDrinkMenu?.description || 'Crispy fish fillet with sauce and fresh veggies on a soft bun.' }}
+              </span>
             </div>
           </div>
         </div>
@@ -242,66 +255,71 @@
       <div class="max-w-7xl mx-auto px-6">
         <div class="grid md:grid-cols-2 gap-12 items-start">
           <!-- LEFT SIDE: UTARA LOGO & BUTTONS -->
-          <div class="space-y-4 flex flex-col items-center md:items-start text-center md:text-left">
+          <div class="space-y-6 flex flex-col items-center md:items-start text-center md:text-left">
             <!-- UTARA Logo Image -->
             <div class="flex items-center justify-center md:items-start md:justify-start w-full">
               <img 
-                src="/public/utara.jpg" 
+                :src="logoUtara" 
                 alt="UTARA Logo" 
-                class="w-auto h-20 md:h-24 object-contain rounded-lg"
-                style="max-width: 100%;"
+                class="w-auto h-32 md:h-44 lg:h-48 object-contain"
               />
             </div>
 
             <!-- Tagline -->
-            <p class="text-gray-700 text-xs md:text-sm leading-relaxed max-w-sm md:max-w-[450px]">
-              Tempatnya cerita, tawa, dan kopi yang diseduh dengan hati.<br />
-              Kami hadir di belakang kampus untuk menemani tugas, obrolan, dan pagi yang hangat.
-            </p>
+            <div class="space-y-1">
+              <p class="text-gray-700 text-base md:text-lg leading-relaxed">
+                Tempatnya cerita, tawa, dan kopi yang diseduh dengan hati.
+              </p>
+              <p class="text-gray-700 text-base md:text-lg leading-relaxed">
+                Kami hadir di belakang kampus untuk menemani tugas, obrolan, dan pagi yang hangat.
+              </p>
+            </div>
 
             <!-- Buttons Stack -->
-            <div class="flex flex-col sm:flex-row gap-3 w-full max-w-sm md:max-w-[450px]">
+            <div class="flex flex-col sm:flex-row gap-4 w-full max-w-2xl">
               <!-- WhatsApp / Reservasi Button -->
-              <div class="flex-1 border-2 border-black rounded-lg overflow-hidden shadow-md">
+              <div class="flex-1 border-2 border-black rounded-xl overflow-hidden shadow-lg">
                 <a 
                   href="https://wa.me/6281215246678?text=Halo%20Kopi%20Utara" 
                   target="_blank"
-                  class="block bg-sky-400 text-white font-bold text-center py-2.5 text-xs md:text-sm hover:bg-sky-500 transition-all"
+                  class="block bg-sky-400 text-white font-bold text-center py-3.5 text-sm md:text-base hover:bg-sky-500 transition-all"
                 >
                   Kontak Whatsapp / Reservasi
                 </a>
-                <div class="bg-white text-gray-900 font-bold text-center py-2.5 border-t-2 border-black text-xs md:text-sm">
+                <div class="bg-white text-gray-900 font-bold text-center py-3.5 border-t-2 border-black text-base md:text-lg">
                   081215246678
                 </div>
               </div>
 
               <!-- Social Media Button -->
-              <div class="flex-1 border-2 border-black rounded-lg overflow-hidden shadow-md">
-                <div class="bg-emerald-500 text-white font-bold text-center py-2.5 text-xs md:text-sm">
+              <div class="flex-1 border-2 border-black rounded-xl overflow-hidden shadow-lg">
+                <div class="bg-emerald-500 text-white font-bold text-center py-3.5 text-sm md:text-base">
                   Sosial Media
                 </div>
-                <div class="bg-white py-2 px-2 border-t-2 border-black flex items-center justify-center gap-4">
+                <div class="bg-white py-3 px-4 border-t-2 border-black flex items-center justify-center gap-4">
                   <a 
                     href="https://instagram.com/utara.yk" 
                     target="_blank" 
-                    class="flex items-center gap-1.5 hover:scale-110 transition-transform"
+                    class="flex items-center gap-2 hover:scale-110 transition-transform"
                   >
-                    <div class="bg-pink-500 p-1.5 rounded-md">
-                      <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <div class="bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400 p-1.5 rounded-lg">
+                      <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zM12 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
                       </svg>
                     </div>
+                    <span class="font-bold text-gray-900 text-sm">Utara.yk</span>
                   </a>
                   <a 
                     href="https://tiktok.com/@utara.yk" 
                     target="_blank" 
-                    class="flex items-center gap-1.5 hover:scale-110 transition-transform"
+                    class="flex items-center gap-2 hover:scale-110 transition-transform"
                   >
-                    <div class="bg-black p-1.5 rounded-md">
-                      <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <div class="bg-black p-1.5 rounded-lg">
+                      <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/>
                       </svg>
                     </div>
+                    <span class="font-bold text-gray-900 text-sm">Utara.yk</span>
                   </a>
                 </div>
               </div>
@@ -377,6 +395,7 @@ export default {
       selectedFoodMenu: null,
       selectedDrinkMenu: null,
       isMobileMenuOpen: false,
+      logoUtara: '/logoutara.png',
     };
   },
 

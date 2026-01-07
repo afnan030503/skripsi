@@ -182,21 +182,13 @@
         <div class="grid md:grid-cols-2 gap-12 lg:gap-20 items-start">
           <!-- LEFT SIDE: UTARA LOGO & BUTTONS -->
           <div class="space-y-6">
-            <!-- UTARA Logo dengan logo.png dan text besar -->
-            <div class="flex items-center gap-4 mb-2">
-              <!-- Logo Image dari public/logo.png -->
-              <div class="relative flex-shrink-0">
-                <img 
-                  :src="logoPng" 
-                  alt="UTARA Logo" 
-                  class="w-20 h-20 md:w-28 md:h-28 object-contain rounded-2xl"
-                />
-              </div>
-              
-              <!-- Text UTARA -->
-              <h2 class="text-6xl md:text-8xl font-black text-[#0f3d2e] tracking-tight leading-none" style="font-family: 'Arial Black', 'Arial Bold', sans-serif; letter-spacing: -0.02em;">
-                UTARA
-              </h2>
+            <!-- UTARA Logo -->
+            <div class="mb-4">
+              <img 
+                :src="logoUtaraPng" 
+                alt="UTARA Logo" 
+                class="h-32 md:h-44 lg:h-48 w-auto object-contain"
+              />
             </div>
 
             <!-- Tagline -->
@@ -341,7 +333,7 @@ import axios from 'axios';
 
 // Asset paths
 const utaraJpg = '/utara.jpg';
-const logoPng = '/logo.png';
+const logoUtaraPng = '/logoutara.png';
 const masAzizPng = '/Masaziz.png';
 
 // State untuk modal
