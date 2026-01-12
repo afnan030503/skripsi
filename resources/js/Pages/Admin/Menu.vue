@@ -2,7 +2,7 @@
   <div class="flex h-screen bg-gray-100 font-sans overflow-hidden">
     <!-- SIDEBAR -->
     <AdminSidebar :isOpen="isSidebarOpen" @close="isSidebarOpen = false" />
- 
+
     <!-- CONTENT -->
     <main class="flex-1 min-w-0 overflow-y-auto">
       <!-- TOP BAR -->
@@ -86,6 +86,11 @@
                   File selected: {{ foods.image.name }}
                 </p>
               </div>
+
+              <div class="mb-4 text-xs text-gray-500 flex flex-col justify-center">
+                <p class="font-bold text-gray-700 mb-1">Tips:</p>
+                <p>Klik pada foto di daftar bawah untuk mengatur posisi tampilan secara presisi.</p>
+              </div>
             </div>
 
             <div class="mb-6">
@@ -128,20 +133,31 @@
               :key="food.id"
               class="bg-white rounded-lg shadow-md hover:shadow-xl transition duration-300 overflow-hidden border border-gray-200 relative group"
             >
-              <!-- Image Container -->
-              <div class="w-full h-40 bg-emerald-100 flex items-center justify-center overflow-hidden">
+              <!-- Image Container (Clickable for Adjust) -->
+              <div 
+                @click="openAdjustModal(food)"
+                class="w-full h-40 bg-emerald-100 flex items-center justify-center overflow-hidden cursor-move relative group/img"
+              >
                 <img
                     v-if="food.image"
-                    :src="`/storage/${food.image}`"
+                    :src="food.image"
                     alt="Food Image"
-                    class="w-full h-full object-cover"
-                    />
-                    <img
+                    class="w-full h-full object-cover pointer-events-none transition-transform"
+                    :style="{ 
+                      objectPosition: food.image_position || 'center',
+                      transform: `scale(${food.image_zoom || 1})`
+                    }"
+                />
+                <img
                     v-else
                     src="https://placehold.co/200x160/10b981/ffffff?text=FOOD"
                     alt="No Image"
                     class="w-full h-full object-cover"
                 />
+                <div class="absolute inset-0 bg-black/20 opacity-0 group-hover/img:opacity-100 flex items-center justify-center transition-opacity flex-col">
+                  <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4"></path></svg>
+                  <span class="text-white text-[10px] font-bold uppercase mt-1">Sesuaikan Posisi</span>
+                </div>
               </div>
 
               <!-- Content -->
@@ -238,6 +254,11 @@
                   File selected: {{ drinks.image.name }}
                 </p>
               </div>
+
+              <div class="mb-4 text-xs text-gray-500 flex flex-col justify-center">
+                <p class="font-bold text-gray-700 mb-1">Tips:</p>
+                <p>Klik pada foto di daftar bawah untuk mengatur posisi tampilan secara presisi.</p>
+              </div>
             </div>
 
             <div class="mb-6">
@@ -280,13 +301,20 @@
               :key="drink.id"
               class="bg-white rounded-lg shadow-md hover:shadow-xl transition duration-300 overflow-hidden border border-gray-200 relative group"
             >
-              <!-- Image Container -->
-              <div class="w-full h-40 bg-blue-100 flex items-center justify-center overflow-hidden">
+              <!-- Image Container (Clickable for Adjust) -->
+              <div 
+                @click="openAdjustModal(drink)"
+                class="w-full h-40 bg-blue-100 flex items-center justify-center overflow-hidden cursor-move relative group/img"
+              >
                <img
                     v-if="drink.image"
-                    :src="`/storage/${drink.image}`"
+                    :src="drink.image"
                     alt="Drink Image"
-                    class="w-full h-full object-cover"
+                    class="w-full h-full object-cover pointer-events-none transition-transform"
+                    :style="{ 
+                      objectPosition: drink.image_position || 'center',
+                      transform: `scale(${drink.image_zoom || 1})`
+                    }"
                     />
                     <img
                     v-else
@@ -294,6 +322,10 @@
                     alt="No Image"
                     class="w-full h-full object-cover"
                 />
+                <div class="absolute inset-0 bg-black/20 opacity-0 group-hover/img:opacity-100 flex items-center justify-center transition-opacity flex-col">
+                  <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4"></path></svg>
+                  <span class="text-white text-[10px] font-bold uppercase mt-1">Sesuaikan Posisi</span>
+                </div>
               </div>
 
               <!-- Content -->
@@ -335,12 +367,89 @@
     <div
       v-if="showPopup"
       :class="[
-        'fixed bottom-6 right-6 px-5 py-3 rounded-xl shadow-2xl z-50 transition-transform duration-300 transform ease-out',
+        'fixed bottom-6 right-6 px-5 py-3 rounded-xl shadow-2xl z-[110] transition-transform duration-300 transform ease-out',
         popupType === 'success' ? 'bg-green-600 text-white' : 'bg-red-600 text-white',
       ]"
       style="min-width: 250px;"
     >
       {{ popup }}
+    </div>
+  </div>
+
+  <!-- MODAL ADJUST IMAGE POSITION -->
+  <div v-if="adjustModal" class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+    <div class="bg-white rounded-3xl w-full max-w-2xl overflow-hidden shadow-2xl">
+      <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+        <div>
+          <h3 class="text-xl font-black text-gray-800 uppercase tracking-tight">Sesuaikan Posisi Foto</h3>
+          <p class="text-sm text-gray-500 font-medium">Klik dan geser foto untuk mengatur tampilan ke user</p>
+        </div>
+        <button @click="closeAdjustModal" class="p-2 hover:bg-gray-200 rounded-full transition-colors text-gray-500">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+      </div>
+
+      <div class="p-8 flex flex-col items-center">
+        <!-- FRAME SIMULASI USER (4:3) -->
+        <div class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Simulasi Tampilan Website</div>
+        <div 
+          class="relative w-full aspect-[4/3] max-w-[500px] border-[6px] border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] overflow-hidden cursor-move touch-none"
+          :style="{ backgroundColor: adjustData.category_id === 1 ? '#78ccf9' : '#99f6c4' }"
+          @pointerdown="startDragging"
+        >
+            <img 
+              ref="adjustImgRef"
+              :src="adjustData.image" 
+              class="w-full h-full object-cover pointer-events-none select-none transition-transform duration-75"
+              :style="{ 
+                objectPosition: currentPosition,
+                transform: `scale(${zoom})`
+              }"
+              alt="Preview"
+            >
+          <!-- CROSSHAIR OVERLAY -->
+          <div class="absolute inset-0 pointer-events-none border-2 border-dashed border-white/30 flex items-center justify-center">
+            <div class="w-full h-[1px] bg-white/20"></div>
+            <div class="h-full w-[1px] bg-white/20 absolute"></div>
+          </div>
+        </div>
+
+        <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-[550px]">
+           <div class="flex flex-col gap-2">
+             <label class="text-[10px] font-black text-gray-500 uppercase tracking-wider">Perbesar (Zoom)</label>
+             <input type="range" v-model="zoom" min="1" max="3" step="0.01" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-black">
+           </div>
+           <div class="flex flex-col gap-2">
+             <label class="text-[10px] font-black text-gray-500 uppercase tracking-wider">Posisi Vertikal</label>
+             <input type="range" v-model="posY" min="0" max="100" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-black">
+           </div>
+           <div class="flex flex-col gap-2">
+             <label class="text-[10px] font-black text-gray-500 uppercase tracking-wider">Posisi Horizontal</label>
+             <input type="range" v-model="posX" min="0" max="100" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-black">
+           </div>
+        </div>
+        
+        <div class="mt-6 flex gap-4 text-[10px] font-bold text-gray-400 uppercase italic">
+          <span>Zoom: {{ Math.round(zoom * 100) }}%</span>
+          <span>Posisi: {{ posX }}% , {{ posY }}%</span>
+        </div>
+      </div>
+
+      <div class="p-6 bg-gray-50 border-t border-gray-100 flex gap-4">
+        <button 
+          @click="savePosition" 
+          :disabled="loading"
+          class="flex-1 bg-black text-white font-black py-4 rounded-xl hover:bg-gray-800 transition-all shadow-lg active:scale-95 disabled:bg-gray-400 uppercase tracking-wider"
+        >
+          {{ loading ? 'Menyimpan...' : 'Simpan Perubahan' }}
+        </button>
+        <button 
+          @click="closeAdjustModal"
+          class="px-8 bg-white text-gray-600 font-bold border-2 border-gray-200 rounded-xl hover:bg-gray-50 transition-all uppercase tracking-wider text-sm"
+        >
+          Batal
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -353,37 +462,30 @@ import AdminSidebar from "@/Layouts/AdminSidebar.vue";
 const isSidebarOpen = ref(false);
 
 const props = defineProps({
-  foodsMenus: {
-    type: Array,
-    default: () => [],
-  },
-  drinksMenus: {
-    type: Array,
-    default: () => [],
-  },
-  tab: {
-    type: String,
-    default: 'foods'
-  },
-  foodsSubcategories: {
-    type: Array,
-    default: () => []
-  },
-  drinksSubcategories: {
-    type: Array,
-    default: () => []
-  }
+  foodsMenus: { type: Array, default: () => [] },
+  drinksMenus: { type: Array, default: () => [] },
+  tab: { type: String, default: 'foods' },
+  foodsSubcategories: { type: Array, default: () => [] },
+  drinksSubcategories: { type: Array, default: () => [] }
 })
 
-const page = usePage()
 const tab = ref(props.tab || 'foods')
-const menuOpen = ref(true)
 const loading = ref(false)
 
 // Popup notification
 const showPopup = ref(false)
 const popup = ref('')
 const popupType = ref('success')
+
+// Image Adjustment
+const adjustModal = ref(false)
+const adjustData = ref({ id: null, image: '', category_id: null })
+const posX = ref(50)
+const posY = ref(50)
+const zoom = ref(1)
+const isDragging = ref(false)
+
+const currentPosition = computed(() => `${posX.value}% ${posY.value}%`)
 
 const currentTitle = computed(() => {
   if (tab.value === 'foods') return 'Kelola Menu - Foods'
@@ -395,30 +497,26 @@ function notify(msg, type = 'success') {
   popup.value = msg
   popupType.value = type
   showPopup.value = true
-  setTimeout(() => (showPopup.value = false), 3000)
+  console.log(`[Notification] ${type.toUpperCase()}: ${msg}`)
+  // Tambah alert jika user masih tidak melihat popup (opsional, tapi lebih aman)
+  // alert(msg) 
+  setTimeout(() => (showPopup.value = false), 4000)
 }
 
 /* FOODS */
 const foodsForm = ref(false)
 const editingFoodId = ref(null)
-const foods = ref({
-  name: '',
-  price: null,
-  description: '',
-  subcategory_id: '',
-  image: null,
-})
+const foods = ref({ name: '', price: null, description: '', subcategory_id: '', image: null })
 
 function openFoodsForm() {
   editingFoodId.value = null
-  foods.value = { name: '', price: null, description: '', subcategory_id: '', image: null }
+  foods.value = { name: '', price: null, description: '', subcategory_id: '', image_position: 'center', image: null }
   foodsForm.value = true
 }
 
 function closeFoodsForm() {
   foodsForm.value = false
-  editingFoodId.value = null
-  foods.value = { name: '', price: null, description: '', subcategory_id: '', image: null }
+  foods.value = { name: '', price: null, description: '', subcategory_id: '', image_position: 'center', image: null }
 }
 
 function editFood(food) {
@@ -428,6 +526,7 @@ function editFood(food) {
     price: food.price,
     description: food.description,
     subcategory_id: food.subcategory_id,
+    image_position: food.image_position || 'center',
     image: null,
   }
   foodsForm.value = true
@@ -435,34 +534,15 @@ function editFood(food) {
 
 function handleFoodsImage(e) {
   const file = e.target.files ? e.target.files[0] : null
-  if (file) {
-    // Validasi ukuran file (10MB = 10240KB = 10485760 bytes)
-    if (file.size > 10485760) {
-      notify('❌ Gambar terlalu besar! Silakan kompres terlebih dahulu. Maksimal 10MB', 'error')
-      e.target.value = '' // reset input
-      foods.value.image = null
-      return
-    }
-    foods.value.image = file
-  } else {
-    foods.value.image = null
-  }
+  if (file && file.size <= 10485760) foods.value.image = file
+  else if (file) notify('❌ Gambar terlalu besar! Maks @10MB', 'error')
 }
 
 function submitFoods() {
-  if (!foods.value.name) {
-    notify('Nama menu tidak boleh kosong!', 'error')
+  if (!foods.value.name || !foods.value.price || !foods.value.subcategory_id) {
+    notify('Mohon lengkapi data!', 'error')
     return
   }
-  if (!foods.value.price || foods.value.price < 0) {
-    notify('Harga tidak valid!', 'error')
-    return
-  }
-  if (!foods.value.subcategory_id) {
-    notify('Pilih subcategory terlebih dahulu!', 'error')
-    return
-  }
-
   loading.value = true
   const data = new FormData()
   data.append('name', foods.value.name)
@@ -470,96 +550,34 @@ function submitFoods() {
   data.append('subcategory_id', foods.value.subcategory_id)
   data.append('price', foods.value.price)
   data.append('description', foods.value.description || '')
+  data.append('image_position', foods.value.image_position || 'center')
   if (foods.value.image) data.append('image', foods.value.image)
+  if (editingFoodId.value) data.append('_method', 'PUT')
 
-  // Gunakan POST + _method=PUT saat edit
-  let endpoint = '/admin/menu/store'
-  if (editingFoodId.value) {
-    endpoint = `/admin/menu/${editingFoodId.value}`
-    data.append('_method', 'PUT')
-  }
-
-  console.log('🔥 Submitting to:', endpoint)
-  console.log('🔥 Editing Food ID:', editingFoodId.value)
-  console.log('🔥 FormData:', {
-    name: foods.value.name,
-    category_id: 1,
-    subcategory_id: foods.value.subcategory_id,
-    price: foods.value.price,
-    description: foods.value.description,
-    has_image: !!foods.value.image
-  })
-
-  router.post(endpoint, data, {
-    onSuccess: () => {
-      loading.value = false
-      notify(
-        editingFoodId.value
-          ? '✅ Menu Foods berhasil diperbarui!'
-          : '✅ Menu Foods berhasil ditambahkan!',
-        'success'
-      )
-      closeFoodsForm()
-      router.reload({ only: ['foodsMenus'] })
-    },
-    onError: (errors) => {
-      loading.value = false
-      console.error('❌ Errors:', errors)
-      
-      // Tampilkan error detail dari backend jika ada
-      let errorMsg = editingFoodId.value
-        ? '❌ Gagal memperbarui Foods!'
-        : '❌ Gagal menambahkan Foods!'
-      
-      // Cek jika ada validation errors
-      if (errors && typeof errors === 'object') {
-        const firstError = Object.values(errors)[0]
-        if (firstError && firstError.length > 0) {
-          errorMsg += ' ' + firstError[0]
-        }
-      }
-      
-      notify(errorMsg, 'error')
-    },
+  router.post(editingFoodId.value ? `/admin/menu/${editingFoodId.value}` : '/admin/menu/store', data, {
+    onSuccess: () => { loading.value = false; notify('Sukses!'); closeFoodsForm(); router.reload() },
+    onError: () => { loading.value = false; notify('Gagal!', 'error') }
   })
 }
 
-
-function deleteFood(foodId) {
-  if (confirm('Yakin ingin menghapus menu ini?')) {
-    router.delete(`/admin/menu/${foodId}`, {
-      onSuccess: () => {
-        notify('✅ Menu Foods berhasil dihapus!', 'success')
-        router.reload({ only: ['foodsMenus'] })
-      },
-      onError: () => {
-        notify('❌ Gagal menghapus Foods!', 'error')
-      }
-    })
-  }
+function deleteFood(id) {
+  if (confirm('Hapus?')) router.delete(`/admin/menu/${id}`, { onSuccess: () => router.reload() })
 }
 
 /* DRINKS */
 const drinksForm = ref(false)
 const editingDrinkId = ref(null)
-const drinks = ref({
-  name: '',
-  price: null,
-  description: '',
-  subcategory_id: '',
-  image: null,
-})
+const drinks = ref({ name: '', price: null, description: '', subcategory_id: '', image: null })
 
 function openDrinksForm() {
   editingDrinkId.value = null
-  drinks.value = { name: '', price: null, description: '', subcategory_id: '', image: null }
+  drinks.value = { name: '', price: null, description: '', subcategory_id: '', image_position: 'center', image: null }
   drinksForm.value = true
 }
 
 function closeDrinksForm() {
   drinksForm.value = false
-  editingDrinkId.value = null
-  drinks.value = { name: '', price: null, description: '', subcategory_id: '', image: null }
+  drinks.value = { name: '', price: null, description: '', subcategory_id: '', image_position: 'center', image: null }
 }
 
 function editDrink(drink) {
@@ -569,6 +587,7 @@ function editDrink(drink) {
     price: drink.price,
     description: drink.description,
     subcategory_id: drink.subcategory_id,
+    image_position: drink.image_position || 'center',
     image: null,
   }
   drinksForm.value = true
@@ -576,103 +595,96 @@ function editDrink(drink) {
 
 function handleDrinksImage(e) {
   const file = e.target.files ? e.target.files[0] : null
-  if (file) {
-    // Validasi ukuran file (10MB = 10240KB = 10485760 bytes)
-    if (file.size > 10485760) {
-      notify('❌ Gambar terlalu besar! Silakan kompres terlebih dahulu. Maksimal 10MB', 'error')
-      e.target.value = '' // reset input
-      drinks.value.image = null
-      return
-    }
-    drinks.value.image = file
-  } else {
-    drinks.value.image = null
-  }
+  if (file && file.size <= 10485760) drinks.value.image = file
+  else if (file) notify('❌ Gambar terlalu besar!', 'error')
 }
 
 function submitDrinks() {
-if (!drinks.value.name) {
-notify('Nama menu tidak boleh kosong!', 'error')
-return
-}
-if (!drinks.value.price || drinks.value.price < 0) {
-notify('Harga tidak valid!', 'error')
-return
-}
-if (!drinks.value.subcategory_id) {
-notify('Pilih subcategory terlebih dahulu!', 'error')
-return
-}
+  loading.value = true
+  const data = new FormData()
+  data.append('name', drinks.value.name)
+  data.append('category_id', 2)
+  data.append('subcategory_id', drinks.value.subcategory_id)
+  data.append('price', drinks.value.price)
+  data.append('description', drinks.value.description || '')
+  data.append('image_position', drinks.value.image_position || 'center')
+  if (drinks.value.image) data.append('image', drinks.value.image)
+  if (editingDrinkId.value) data.append('_method', 'PUT')
 
-loading.value = true
-const data = new FormData()
-data.append('name', drinks.value.name)
-data.append('category_id', 2)
-data.append('subcategory_id', drinks.value.subcategory_id)
-data.append('price', drinks.value.price)
-data.append('description', drinks.value.description || '')
-if (drinks.value.image) data.append('image', drinks.value.image)
-
-// Gunakan POST + _method=PUT jika edit
-let endpoint = '/admin/menu/store'
-if (editingDrinkId.value) {
-endpoint = `/admin/menu/${editingDrinkId.value}`
-data.append('_method', 'PUT')
+  router.post(editingDrinkId.value ? `/admin/menu/${editingDrinkId.value}` : '/admin/menu/store', data, {
+    onSuccess: () => { loading.value = false; notify('Sukses!'); closeDrinksForm(); router.reload() },
+    onError: () => { loading.value = false; notify('Gagal!', 'error') }
+  })
 }
 
-console.log('🔥 Submitting Drinks to:', endpoint)
-console.log('🔥 Editing Drink ID:', editingDrinkId.value)
+function deleteDrink(id) {
+  if (confirm('Hapus?')) router.delete(`/admin/menu/${id}`, { onSuccess: () => router.reload() })
+}
 
-router.post(endpoint, data, {
-onSuccess: () => {
-loading.value = false
-notify(
-editingDrinkId.value
-? '✅ Menu Drinks berhasil diperbarui!'
-: '✅ Menu Drinks berhasil ditambahkan!',
-'success'
-)
-closeDrinksForm()
-router.reload({ only: ['drinksMenus'] })
-},
-onError: (errors) => {
-loading.value = false
-console.error('❌ Errors:', errors)
+function logout() { router.post('/logout') }
 
-// Tampilkan error detail dari backend jika ada
-let errorMsg = editingDrinkId.value
-  ? '❌ Gagal memperbarui Drinks!'
-  : '❌ Gagal menambahkan Drinks!'
-
-// Cek jika ada validation errors
-if (errors && typeof errors === 'object') {
-  const firstError = Object.values(errors)[0]
-  if (firstError && firstError.length > 0) {
-    errorMsg += ' ' + firstError[0]
+/* IMAGE ADJUST LOGIC */
+function openAdjustModal(item) {
+  if (!item.image) return
+  adjustData.value = { id: item.id, image: item.image, category_id: item.category_id }
+  if (item.image_position && item.image_position.includes('%')) {
+    const parts = item.image_position.split(' ')
+    posX.value = parseInt(parts[0]) || 50
+    posY.value = parseInt(parts[1]) || 50
+  } else {
+    const map = { top: 0, bottom: 100, center: 50, left: 0, right: 100 }
+    posX.value = map[item.image_position] !== undefined ? map[item.image_position] : 50
+    posY.value = map[item.image_position] !== undefined ? map[item.image_position] : 50
+    if (item.image_position === 'top') { posX.value = 50; posY.value = 0 }
+    if (item.image_position === 'bottom') { posX.value = 50; posY.value = 100 }
   }
+  
+  // Parse Zoom if exists (stored in a separate way or just default)
+  // For now let's just use it as 1, or we could extend the schema.
+  // BUT the user wants free movement. Let's keep zoom for now.
+  zoom.value = item.image_zoom || 1
+  
+  adjustModal.value = true
 }
 
-notify(errorMsg, 'error')
-},
-})
-}
+function closeAdjustModal() { adjustModal.value = false }
 
-
-function deleteDrink(drinkId) {
-  if (confirm('Yakin ingin menghapus menu ini?')) {
-    router.delete(`/admin/menu/${drinkId}`, {
-      onSuccess: () => {
-        notify('✅ Menu Drinks berhasil dihapus!', 'success')
-        router.reload({ only: ['drinksMenus'] })
-      },
-      onError: () => {
-        notify('❌ Gagal menghapus Drinks!', 'error')
-      }
-    })
+function startDragging(e) {
+  isDragging.value = true
+  const rect = e.currentTarget.getBoundingClientRect()
+  const move = (m) => {
+    posX.value = Math.max(0, Math.min(100, Math.round(((m.clientX - rect.left) / rect.width) * 100)))
+    posY.value = Math.max(0, Math.min(100, Math.round(((m.clientY - rect.top) / rect.height) * 100)))
   }
+  const up = () => { isDragging.value = false; window.removeEventListener('pointermove', move); window.removeEventListener('pointerup', up) }
+  window.addEventListener('pointermove', move)
+  window.addEventListener('pointerup', up)
 }
 
-function logout() {
-  router.post('/logout')
+function savePosition() {
+  loading.value = true
+  const positionStr = `${posX.value}% ${posY.value}%`
+  const menu = [...props.foodsMenus, ...props.drinksMenus].find(m => m.id === adjustData.value.id)
+  
+  router.put(`/admin/menu/${adjustData.value.id}`, {
+    category_id: menu.category_id,
+    subcategory_id: menu.subcategory_id,
+    name: menu.name,
+    price: menu.price,
+    description: menu.description,
+    image_position: positionStr,
+    image_zoom: zoom.value
+  }, {
+    onSuccess: () => { 
+      loading.value = false
+      notify('✅ Berhasil menyimpan posisi foto!')
+      closeAdjustModal() 
+    },
+    onError: (err) => { 
+      loading.value = false
+      notify('❌ Gagal menyimpan!', 'error')
+      console.error(err)
+    }
+  })
 }
 </script>

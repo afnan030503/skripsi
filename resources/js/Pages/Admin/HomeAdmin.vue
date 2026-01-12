@@ -169,7 +169,7 @@
               </div>
               <span class="text-xs font-bold px-2 py-1 bg-slate-100 text-slate-600 rounded-full">Loyalty</span>
             </div>
-            <h3 class="text-3xl font-bold text-slate-800 mb-1">Member</h3>
+            <h3 class="text-3xl font-bold text-slate-800 mb-1">Promo & Royalti</h3>
             <p class="text-sm text-slate-500 font-medium">Kelola Poin & Member</p>
           </div>
 

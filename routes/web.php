@@ -26,13 +26,15 @@ use App\Models\Menu;
 // PUBLIC ROUTES
 // ======================
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/menu', [MenuController::class, 'index'])->name('menu');
+Route::get('/home', [HomeController::class, 'index']);
+Route::get('/menu', [HomeController::class, 'index']);
+Route::get('/tetangga', [HomeController::class, 'index']);
 Route::get('/promo', [PromoController::class, 'index'])->name('promo');
 Route::get('/about', [AboutController::class, 'index'])->name('about');
 Route::get('/blog', [BlogController::class, 'index'])->name('blog');
 Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.show');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
-Route::get('/promo-loyalty', fn () => Inertia::render('Home/components/PromoLoyalty'))->name('promo-loyalty');
+Route::get('/promo-loyalty', fn () => Inertia::render('PromoLoyalty'))->name('promo-loyalty');
 
 // CSRF token endpoint for frontend fetch fallback
 Route::get('/csrf-token', fn () => response()->json([
@@ -91,10 +93,14 @@ Route::middleware(['auth'])->group(function () {
     // Menu
     Route::get('/admin/menu', function (Request $request) {
         $tab = $request->query('tab', 'foods');
+        $formatMenu = function($menu) {
+            $menu->image = $menu->image ? asset('storage/' . $menu->image) : null;
+            return $menu;
+        };
 
         return Inertia::render('Admin/Menu', [
-            'foodsMenus' => Menu::where('category_id', 1)->get(),
-            'drinksMenus' => Menu::where('category_id', 2)->get(),
+            'foodsMenus' => Menu::where('category_id', 1)->get()->map($formatMenu),
+            'drinksMenus' => Menu::where('category_id', 2)->get()->map($formatMenu),
             'foodsSubcategories' => Subcategory::where('category_id', 1)->orderBy('order')->get(),
             'drinksSubcategories' => Subcategory::where('category_id', 2)->orderBy('order')->get(),
             'tab' => $tab,
@@ -160,6 +166,11 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/admin/blogs', [\App\Http\Controllers\Admin\BlogController::class, 'store'])->name('admin.blogs.store');
     Route::post('/admin/blogs/{id}', [\App\Http\Controllers\Admin\BlogController::class, 'update'])->name('admin.blogs.update');
     Route::delete('/admin/blogs/{id}', [\App\Http\Controllers\Admin\BlogController::class, 'destroy'])->name('admin.blogs.destroy');
+
+    // Review Management
+    Route::get('/admin/reviews', [ReviewController::class, 'adminIndex'])->name('admin.reviews.index');
+    Route::put('/admin/reviews/{review}', [ReviewController::class, 'updateStatus'])->name('admin.reviews.update');
+    Route::delete('/admin/reviews/{review}', [ReviewController::class, 'destroy'])->name('admin.reviews.destroy');
 });
 
     // Community Posts

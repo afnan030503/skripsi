@@ -1,58 +1,11 @@
 <template>
   <div class="min-h-screen bg-white flex flex-col">
     <!-- Navbar -->
-    <header class="fixed top-0 inset-x-0 z-50 bg-white/90 backdrop-blur shadow-sm border-b border-gray-100">
-      <div class="max-w-7xl mx-auto px-4 md:px-6 h-20 flex items-center justify-between">
-        <Link href="/" class="flex items-center gap-2 md:gap-3">
-          <img :src="utaraImg" alt="Utara" class="h-10 md:h-12 w-auto rounded-xl shadow" />
-        </Link>
-        
-        <!-- Desktop Nav -->
-        <nav class="hidden lg:flex items-center gap-6 text-sm font-semibold text-gray-700">
-          <Link href="/" class="hover:text-emerald-700 transition">Home</Link>
-          <a href="/#menu" class="hover:text-emerald-700 transition">Menu</a>
-          <a href="/#tetangga" class="hover:text-emerald-700 transition">Community</a>
-          <Link href="/promo-loyalty" class="hover:text-emerald-700 transition">Promo & Loyalty</Link>
-          <Link href="/about" class="hover:text-emerald-700 transition">About Us</Link>
-          <Link href="/blog" class="text-emerald-700 border-b-2 border-emerald-700 pb-1">Blog</Link>
-          <a href="/#contact" class="hover:text-emerald-700 transition">Contact Us</a>
-        </nav>
-
-        <div class="flex items-center gap-2 md:gap-3">
-          <!-- Mobile Menu Toggle -->
-          <button @click="isMobileMenuOpen = !isMobileMenuOpen" class="lg:hidden p-2 text-gray-600">
-            <svg v-if="!isMobileMenuOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
-            <svg v-else class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-          </button>
-
-          <Link href="/login" class="hidden sm:inline-block px-4 py-2 rounded-full border border-gray-200 text-sm font-semibold hover:border-emerald-600 hover:text-emerald-700 transition">Login</Link>
-          <a href="https://wa.me/6281215246678?text=Halo%20Kopi%20Utara" target="_blank" class="px-4 md:px-5 py-2 rounded-full bg-emerald-600 text-white text-sm md:text-base font-semibold shadow hover:bg-emerald-700 transition">Reservasi</a>
-        </div>
-      </div>
-
-      <!-- Mobile Menu Overlay -->
-      <transition 
-        enter-active-class="transition duration-200 ease-out"
-        enter-from-class="opacity-0 -translate-y-4"
-        enter-to-class="opacity-100 translate-y-0"
-        leave-active-class="transition duration-150 ease-in"
-        leave-from-class="opacity-100 translate-y-0"
-        leave-to-class="opacity-0 -translate-y-4"
-      >
-        <div v-if="isMobileMenuOpen" class="lg:hidden bg-white border-t border-gray-100 shadow-xl overflow-hidden absolute w-full top-20 left-0">
-          <nav class="flex flex-col p-4 gap-4 text-gray-800 font-bold">
-            <Link @click="isMobileMenuOpen = false" href="/" class="p-2 hover:bg-emerald-50 rounded-lg">Home</Link>
-            <a @click="isMobileMenuOpen = false" href="/#menu" class="p-2 hover:bg-emerald-50 rounded-lg">Menu</a>
-            <a @click="isMobileMenuOpen = false" href="/#tetangga" class="p-2 hover:bg-emerald-50 rounded-lg">Community</a>
-            <Link @click="isMobileMenuOpen = false" href="/promo-loyalty" class="p-2 hover:bg-emerald-50 rounded-lg">Promo & Loyalty</Link>
-            <Link @click="isMobileMenuOpen = false" href="/about" class="p-2 hover:bg-emerald-50 rounded-lg">About Us</Link>
-            <Link @click="isMobileMenuOpen = false" href="/blog" class="p-2 hover:bg-emerald-50 rounded-lg text-emerald-600">Blog</Link>
-            <a @click="isMobileMenuOpen = false" href="/#contact" class="p-2 hover:bg-emerald-50 rounded-lg">Contact Us</a>
-            <Link @click="isMobileMenuOpen = false" href="/login" class="p-2 bg-gray-100 rounded-lg text-center">Login</Link>
-          </nav>
-        </div>
-      </transition>
-    </header>
+    <Header 
+      :scrolled="scrolled" 
+      :isMobileMenuOpen="isMobileMenuOpen"
+      @toggleMobileMenu="isMobileMenuOpen = !isMobileMenuOpen"
+    />
 
     <!-- Spacer untuk navbar fixed -->
     <div class="h-20"></div>
@@ -80,7 +33,7 @@
           <div class="grid md:grid-cols-2 gap-8 mb-8">
             <!-- Left: Large Title -->
             <div>
-              <h1 class="text-5xl md:text-7xl font-black text-[#0f3d2e] leading-none tracking-tight" style="font-family: 'Arial Black', sans-serif;">
+              <h1 class="text-5xl md:text-7xl font-black text-[#0f3d2e] leading-none tracking-tight" style="font-family: 'Noto Sans', sans-serif;">
                 KOPI<br/>
                 DIPAGI<br/>
                 HARI
@@ -252,8 +205,9 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
 import { Link } from '@inertiajs/vue3';
+import { Header } from '@/Components';
 
 const props = defineProps({
   blogs: {
@@ -263,6 +217,19 @@ const props = defineProps({
 });
 
 const isMobileMenuOpen = ref(false);
+const scrolled = ref(false);
+
+const handleScroll = () => {
+  scrolled.value = window.scrollY > 50;
+};
+
+onMounted(() => {
+  window.addEventListener('scroll', handleScroll);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener('scroll', handleScroll);
+});
 
 // Image paths (using string concatenation to avoid Vite import analysis)
 const utaraImg = '/utara' + '.jpg';

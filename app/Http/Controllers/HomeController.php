@@ -40,7 +40,9 @@ class HomeController extends Controller
                                     'name' => $menu->name,
                                     'price' => (float)$menu->price,
                                     'description' => $menu->description,
-                                    'image' => $menu->image ? '/storage/' . $menu->image : null,
+                                    'image' => $menu->image ? asset('storage/' . $menu->image) : null,
+                                    'image_position' => $menu->image_position,
+                                    'image_zoom' => (float)$menu->image_zoom,
                                 ];
                             })->toArray()
                         ];

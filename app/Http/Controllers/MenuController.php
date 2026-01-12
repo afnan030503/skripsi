@@ -34,7 +34,9 @@ class MenuController extends Controller
                                     'name' => $menu->name,
                                     'price' => (float)$menu->price,
                                     'description' => $menu->description,
-                                    'image' => $menu->image,
+                                    'image' => $menu->image ? asset('storage/' . $menu->image) : null,
+                                    'image_position' => $menu->image_position,
+                                    'image_zoom' => (float)$menu->image_zoom,
                                 ];
                             })->toArray()
                         ];
@@ -65,6 +67,8 @@ class MenuController extends Controller
                 'price' => 'required|numeric|min:0',
                 'description' => 'nullable|string',
                 'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:10240',
+                'image_position' => 'nullable|string|max:255',
+                'image_zoom' => 'nullable|numeric|min:0.1|max:5',
             ]);
 
             // Validasi subcategory milik category
@@ -99,6 +103,8 @@ class MenuController extends Controller
                 'price' => $validated['price'],
                 'description' => $validated['description'] ?? null,
                 'image' => $imagePath,
+                'image_position' => $validated['image_position'] ?? 'center',
+                'image_zoom' => $validated['image_zoom'] ?? 1.0,
                 'is_available' => true,
             ]);
 
@@ -135,6 +141,8 @@ class MenuController extends Controller
                 'price' => 'required|numeric|min:0',
                 'description' => 'nullable|string',
                 'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:10240',
+                'image_position' => 'nullable|string|max:255',
+                'image_zoom' => 'nullable|numeric|min:0.1|max:5',
             ]);
 
             // Validasi subcategory milik category
@@ -153,6 +161,8 @@ class MenuController extends Controller
                 'name' => $validated['name'],
                 'price' => $validated['price'],
                 'description' => $validated['description'] ?? null,
+                'image_position' => $validated['image_position'] ?? 'center',
+                'image_zoom' => $validated['image_zoom'] ?? 1.0,
             ];
 
             if ($request->hasFile('image')) {

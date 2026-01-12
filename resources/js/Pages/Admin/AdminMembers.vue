@@ -9,7 +9,7 @@
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
           </button>
           <div>
-            <h1 class="text-xl md:text-2xl font-bold text-gray-800">Kelola Member</h1>
+            <h1 class="text-xl md:text-2xl font-bold text-gray-800">Promo & Royalti</h1>
             <p class="text-xs text-gray-500 hidden sm:block">Manajemen poin dan royalti kustomer Utara</p>
           </div>
         </div>

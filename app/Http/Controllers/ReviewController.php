@@ -7,6 +7,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
+use Inertia\Inertia;
 
 class ReviewController extends Controller
 {
@@ -15,13 +16,16 @@ class ReviewController extends Controller
      */
     public function index(): JsonResponse
     {
-        $reviews = Review::latest()->get()->map(function ($review) {
-            if ($review->avatar_url) {
-                $review->avatar_url = Storage::url($review->avatar_url);
-            }
+        $reviews = Review::where('status', 'approved')
+            ->latest()
+            ->get()
+            ->map(function ($review) {
+                if ($review->avatar_url) {
+                    $review->avatar_url = Storage::url($review->avatar_url);
+                }
 
-            return $review;
-        });
+                return $review;
+            });
 
         return response()->json($reviews);
     }
@@ -31,27 +35,40 @@ class ReviewController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        $data = $request->validate([
-            'name' => ['required', 'string', 'max:150'],
-            'title' => ['nullable', 'string', 'max:120'],
-            'rating' => ['required', 'numeric', 'min:1', 'max:5'],
-            'message' => ['required', 'string', 'max:1000'],
-            'avatar' => ['nullable', 'image', 'max:4096'],
-        ]);
+        \Illuminate\Support\Facades\Log::info('Review submission attempt', $request->all());
+        try {
+            $data = $request->validate([
+                'name' => ['required', 'string', 'max:150'],
+                'title' => ['nullable', 'string', 'max:120'],
+                'rating' => ['required', 'numeric', 'min:1', 'max:5'],
+                'message' => ['required', 'string', 'max:1000'],
+                'avatar' => ['nullable', 'image', 'max:4096'],
+            ]);
 
-        if ($request->hasFile('avatar')) {
-            $data['avatar_url'] = $request->file('avatar')->store('reviews', 'public');
+            if ($request->hasFile('avatar')) {
+                $data['avatar_url'] = $request->file('avatar')->store('reviews', 'public');
+            }
+
+            unset($data['avatar']);
+            $data['status'] = 'pending';
+
+            $review = Review::create($data);
+
+            if ($review->avatar_url) {
+                $review->avatar_url = Storage::url($review->avatar_url);
+            }
+
+            return response()->json($review, 201);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Review submission failed: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+                'request' => $request->all()
+            ]);
+            return response()->json([
+                'message' => 'Terjadi kesalahan pada server.',
+                'error' => $e->getMessage(),
+            ], 500);
         }
-
-        unset($data['avatar']);
-
-        $review = Review::create($data);
-
-        if ($review->avatar_url) {
-            $review->avatar_url = Storage::url($review->avatar_url);
-        }
-
-        return response()->json($review, 201);
     }
 
     /**
@@ -126,5 +143,39 @@ class ReviewController extends Controller
         );
 
         return response()->json($reviews);
+    }
+    public function adminIndex()
+    {
+        $reviews = Review::latest()->get()->map(function ($review) {
+            if ($review->avatar_url) {
+                $review->avatar_url = Storage::url($review->avatar_url);
+            }
+            return $review;
+        });
+
+        return Inertia::render('Admin/Reviews', [
+            'reviews' => $reviews
+        ]);
+    }
+
+    public function updateStatus(Request $request, Review $review)
+    {
+        $data = $request->validate([
+            'status' => 'required|in:pending,approved,rejected'
+        ]);
+
+        $review->update(['status' => $data['status']]);
+
+        return back()->with('success', 'Status review berhasil diperbarui.');
+    }
+
+    public function destroy(Review $review)
+    {
+        if ($review->avatar_url) {
+            Storage::disk('public')->delete($review->avatar_url);
+        }
+        $review->delete();
+
+        return back()->with('success', 'Review berhasil dihapus.');
     }
 }

@@ -15,6 +15,7 @@ class Review extends Model
         'rating',
         'message',
         'avatar_url',
+        'status',
     ];
 
     protected $casts = [

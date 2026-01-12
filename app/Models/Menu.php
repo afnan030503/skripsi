@@ -16,11 +16,14 @@ class Menu extends Model
         'description',
         'price',
         'image',
+        'image_position',
+        'image_zoom',
         'is_available'
     ];
 
     protected $casts = [
         'price' => 'decimal:2',
+        'image_zoom' => 'float',
         'is_available' => 'boolean'
     ];
 

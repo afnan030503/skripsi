@@ -17,26 +17,25 @@ const submit = () => {
 <template>
   <div class="min-h-screen bg-stone-50 flex flex-col items-center justify-center px-4">
     <Head title="Log in" />
-    
-    <!-- Logo Utara -->
-    <div class="flex items-center gap-3 mb-8 cursor-pointer select-none">
-      <span class="text-4xl font-bold border-2 rounded px-3 py-1 text-emerald-700">北</span>
-      <span class="text-4xl font-bold text-emerald-700 tracking-widest">UTARA</span>
+    <div class="login-logo-wrapper mb-10">
+      <Link href="/">
+        <img :src="'/logoutara.png'" alt="Utara" class="h-16 md:h-20 w-auto" />
+      </Link>
     </div>
 
-    <!-- Back Button -->
-    <a 
-      href="http://127.0.0.1:8000/" 
-      class="mb-6 inline-flex items-center gap-2 text-emerald-700 hover:text-emerald-800 font-semibold transition"
-    >
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-      </svg>
-      Back to Home
-    </a>
-
     <!-- Login Box -->
-    <div class="w-full max-w-md bg-white rounded-2xl shadow-lg p-8">
+    <div class="w-full max-w-md bg-white rounded-2xl shadow-lg p-8 relative">
+      <!-- Back Link -->
+      <Link 
+        href="/" 
+        class="absolute top-6 left-6 flex items-center gap-1.5 text-sm font-semibold text-gray-400 hover:text-emerald-600 transition"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+        Back
+      </Link>
+
       <h2 class="text-3xl font-bold text-gray-900 mb-6 text-center">Welcome Back</h2>
 
     <div v-if="$page.props.errors.error" class="mb-4 text-red-600 text-center font-semibold">
