@@ -125,57 +125,58 @@ const setActive = (section) => {
 
     <!-- Mobile Menu Overlay -->
     <transition 
-      enter-active-class="transition duration-300 ease-out"
-      enter-from-class="opacity-0 translate-x-full"
-      enter-to-class="opacity-100 translate-x-0"
-      leave-active-class="transition duration-200 ease-in"
-      leave-from-class="opacity-100 translate-x-0"
-      leave-to-class="opacity-0 translate-x-full"
+      enter-active-class="transition duration-500 ease-in-out"
+      enter-from-class="-translate-y-full opacity-100"
+      enter-to-class="translate-y-0 opacity-100"
+      leave-active-class="transition duration-500 ease-in-out"
+      leave-from-class="translate-y-0 opacity-100"
+      leave-to-class="-translate-y-full opacity-100"
     >
-      <div v-if="isMobileMenuOpen" class="lg:hidden fixed inset-0 bg-white z-[60] flex flex-col">
+      <div v-if="isMobileMenuOpen" class="lg:hidden fixed inset-0 bg-white z-[60] flex flex-col h-screen">
         <!-- Mobile Header inside Menu -->
-        <div class="h-20 px-4 flex items-center justify-between border-b border-gray-100 mb-6">
+        <div class="h-24 px-6 flex items-center justify-between border-b border-gray-100">
           <Logo />
           <div class="flex items-center gap-4">
-            <button @click="$emit('toggleMobileMenu')" class="p-2 text-gray-800">
+            <button @click="$emit('toggleMobileMenu')" class="p-2 text-black hover:bg-gray-100 rounded-full transition">
               <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
               </svg>
             </button>
-            <a href="https://wa.me/6281215246678" target="_blank" class="px-4 py-2 bg-[#5ac8fa] text-black text-sm font-bold border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] uppercase tracking-tight">
+            <a href="https://wa.me/6281215246678" target="_blank" class="px-5 py-2 bg-[#5ac8fa] text-black text-sm font-bold border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] uppercase tracking-tight hover:-translate-y-0.5 transition-transform">
               Reservation
             </a>
           </div>
         </div>
 
         <!-- Mobile Nav Links -->
-        <nav class="flex flex-col px-6 flex-1 overflow-y-auto">
+        <nav class="flex flex-col px-8 py-4 flex-1 overflow-y-auto">
           <template v-for="(link, idx) in [
-            { name: 'Home & Menu', section: 'home', path: '/home' },
+            { name: 'Home', section: 'home', path: '/home' },
+            { name: 'Menu', section: 'menu', path: '/menu' },
+            { name: 'Community', section: 'tetangga', path: '/tetangga' },
             { name: 'Promo & Loyalty', section: 'promo', path: '/promo-loyalty' },
             { name: 'About Us', section: 'about', path: '/about' },
-            { name: 'Blog', section: 'blog', path: '/blog' },
-            { name: 'Contact Us', section: 'contact', path: '/contact' }
+            { name: 'Blog', section: 'blog', path: '/blog' }
           ]" :key="link.section">
-            <div class="flex flex-col">
+            <div class="flex flex-col group">
               <Link 
                 :href="link.path"
                 @click="$emit('toggleMobileMenu'); setActive(link.section)"
                 :class="[
-                  'py-5 text-xl font-bold transition-colors',
-                  activeSection === link.section ? 'text-[#014133]' : 'text-gray-400'
+                  'py-5 text-lg font-bold transition-colors',
+                  activeSection === link.section ? 'text-[#014133]' : 'text-gray-500 group-hover:text-[#014133]'
                 ]"
               >
                 {{ link.name }}
               </Link>
-              <div class="border-t-2 border-dashed border-gray-200 w-full"></div>
+              <div class="border-t-2 border-dashed border-gray-200 w-full group-hover:border-gray-400 transition-colors"></div>
             </div>
           </template>
         </nav>
 
         <!-- Mobile Footer -->
-        <div class="p-8 text-center border-t border-gray-50 bg-gray-50/50">
-          <div class="text-xs font-bold text-gray-500 uppercase tracking-widest opacity-80">
+        <div class="p-8 text-center bg-transparent">
+          <div class="text-xs font-bold text-gray-400 uppercase tracking-widest">
             © 2024 Utara-YK. All Rights Reserved.
           </div>
         </div>

@@ -19,7 +19,7 @@ defineEmits(['selectFoodSubcategory', 'selectDrinkSubcategory', 'selectFoodMenu'
 <template>
   <section id="menu" class="w-full bg-black border-b-[8px] border-black">
     <!-- MOBILE ONLY: SUBCATEGORY TABS -->
-    <div class="md:hidden bg-[#5ac8fa] border-b-4 border-black px-4 py-4 overflow-x-auto no-scrollbar">
+    <div class="md:hidden bg-[#5ac8fa] px-4 py-4 overflow-x-auto no-scrollbar">
       <div class="flex gap-4 min-w-max">
         <button 
           v-for="cat in foodCategory.subcategories"
@@ -41,7 +41,7 @@ defineEmits(['selectFoodSubcategory', 'selectDrinkSubcategory', 'selectFoodMenu'
     <div class="grid grid-cols-2 md:grid-cols-2 w-full overflow-hidden">
       
       <!-- [QUAD 1] FOOD IMAGE (MOB: Left Col / DSK: Top-Left) -->
-      <div class="relative w-full aspect-[4/5] md:aspect-auto md:h-[540px] bg-[#78ccf9] overflow-hidden border-r-2 md:border-r-4 border-black">
+      <div class="relative w-full aspect-[4/5] md:aspect-auto md:h-[540px] bg-[#78ccf9] overflow-hidden border-black">
         <img 
           :src="selectedFoodImage" 
           class="w-full h-full object-cover" 
@@ -82,7 +82,7 @@ defineEmits(['selectFoodSubcategory', 'selectDrinkSubcategory', 'selectFoodMenu'
       </div>
 
       <!-- [QUAD 2] FOOD LIST (MOB: Right Col / DSK: Top-Right) -->
-      <div class="bg-white md:bg-[#78ccf9] p-4 md:p-12 flex flex-col md:h-[540px] border-black">
+      <div class="bg-white md:bg-[#78ccf9] p-4 md:p-12 flex flex-col h-[260px] md:h-[540px] border-black">
         <!-- DESKTOP ONLY: SUBCATEGORY TABS -->
         <div class="hidden md:flex flex-wrap gap-4 mb-8">
           <button 
@@ -100,7 +100,7 @@ defineEmits(['selectFoodSubcategory', 'selectDrinkSubcategory', 'selectFoodMenu'
           </button>
         </div>
         
-        <div class="flex-1 overflow-y-auto pr-2 no-scrollbar h-full">
+        <div class="flex-1 overflow-y-auto pr-2 h-full overscroll-y-contain">
           <div class="flex flex-col md:grid md:grid-cols-2 md:gap-x-10">
             <div 
               v-for="menu in foodMenus"
@@ -126,7 +126,7 @@ defineEmits(['selectFoodSubcategory', 'selectDrinkSubcategory', 'selectFoodMenu'
       </div>
 
       <!-- MOBILE ONLY: DRINK SUBCATEGORIES -->
-      <div class="md:hidden col-span-2 bg-[#99f6c4] border-t-4 border-b-4 border-black px-4 py-4 overflow-x-auto no-scrollbar">
+      <div class="md:hidden col-span-2 bg-[#99f6c4] px-4 py-4 overflow-x-auto no-scrollbar">
         <div class="flex gap-4 min-w-max">
           <button
             v-for="sub in drinkCategory.subcategories"
@@ -145,7 +145,7 @@ defineEmits(['selectFoodSubcategory', 'selectDrinkSubcategory', 'selectFoodMenu'
       </div>
 
       <!-- [QUAD 3] DRINK LIST (MOB: Left Col / DSK: Bottom-Left) -->
-      <div class="bg-white md:bg-[#99f6c4] p-4 md:p-12 flex flex-col md:h-[540px] order-last md:order-none border-r-2 md:border-r-4 border-black">
+      <div class="bg-white md:bg-[#99f6c4] p-4 md:p-12 flex flex-col h-[260px] md:h-[540px] order-last md:order-none">
         <!-- DESKTOP ONLY: SUBCATEGORY TABS -->
         <div class="hidden md:flex flex-wrap gap-4 mb-8">
           <button
@@ -163,7 +163,7 @@ defineEmits(['selectFoodSubcategory', 'selectDrinkSubcategory', 'selectFoodMenu'
           </button>
         </div>
 
-        <div class="flex-1 overflow-y-auto pr-2 no-scrollbar h-full">
+        <div class="flex-1 overflow-y-auto pr-2 h-full overscroll-y-contain">
           <div class="flex flex-col md:grid md:grid-cols-2 md:gap-x-10">
             <div 
               v-for="menu in drinkMenus"
@@ -189,7 +189,7 @@ defineEmits(['selectFoodSubcategory', 'selectDrinkSubcategory', 'selectFoodMenu'
       </div>
 
       <!-- [QUAD 4] DRINK IMAGE (MOB: Right Col / DSK: Bottom-Right) -->
-      <div class="relative w-full aspect-[4/5] md:aspect-auto md:h-[540px] bg-[#99f6c4] overflow-hidden border-black">
+      <div class="relative w-full aspect-[4/5] md:aspect-auto md:h-[540px] bg-[#99f6c4] overflow-hidden">
         <img 
           :src="selectedDrinkImage" 
           class="w-full h-full object-cover" 
@@ -260,15 +260,19 @@ defineEmits(['selectFoodSubcategory', 'selectDrinkSubcategory', 'selectFoodMenu'
 
 <style scoped>
 /* Custom scrollbar for menu list if needed */
+.overflow-y-auto {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.5) transparent;
+}
 .overflow-y-auto::-webkit-scrollbar {
-  width: 4px;
+  width: 6px;
 }
 .overflow-y-auto::-webkit-scrollbar-track {
   background: transparent;
 }
 .overflow-y-auto::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 2px;
+  background: black;
+  border-radius: 3px;
 }
 /* Hide scrollbar for Chrome, Safari and Opera */
 .no-scrollbar::-webkit-scrollbar {

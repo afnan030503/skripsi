@@ -54,7 +54,7 @@
           <img
             :src="photo.image_url"
             :alt="photo.caption || 'Tetangga'"
-            class="h-[50vh] md:h-[60vh] w-auto object-contain transition-all duration-500 group-hover:scale-[1.02] filter drop-shadow-[0_0_2px_rgba(255,255,255,0.8)]"
+            class="h-[35vh] md:h-[45vh] w-auto object-contain transition-all duration-500 group-hover:scale-[1.02] filter drop-shadow-[0_0_2px_rgba(255,255,255,0.8)]"
             :class="{ 'scale-[1.02]': activePhotoId === photo.id }"
             style="filter: drop-shadow(4px 4px 0 white) drop-shadow(-4px -4px 0 white) drop-shadow(4px -4px 0 white) drop-shadow(-4px 4px 0 white);"
           />
