@@ -41,7 +41,7 @@ defineEmits(['selectFoodSubcategory', 'selectDrinkSubcategory', 'selectFoodMenu'
     <div class="grid grid-cols-2 md:grid-cols-2 w-full overflow-hidden">
       
       <!-- [QUAD 1] FOOD IMAGE (MOB: Left Col / DSK: Top-Left) -->
-      <div class="relative w-full aspect-[4/5] md:aspect-auto md:h-[540px] bg-[#78ccf9] overflow-hidden border-black">
+      <div class="relative w-full h-[260px] md:aspect-auto md:h-[540px] bg-[#78ccf9] overflow-hidden border-black">
         <img 
           :src="selectedFoodImage" 
           class="w-full h-full object-cover" 
@@ -189,7 +189,7 @@ defineEmits(['selectFoodSubcategory', 'selectDrinkSubcategory', 'selectFoodMenu'
       </div>
 
       <!-- [QUAD 4] DRINK IMAGE (MOB: Right Col / DSK: Bottom-Right) -->
-      <div class="relative w-full aspect-[4/5] md:aspect-auto md:h-[540px] bg-[#99f6c4] overflow-hidden">
+      <div class="relative w-full h-[260px] md:aspect-auto md:h-[540px] bg-[#99f6c4] overflow-hidden">
         <img 
           :src="selectedDrinkImage" 
           class="w-full h-full object-cover" 
@@ -200,13 +200,7 @@ defineEmits(['selectFoodSubcategory', 'selectDrinkSubcategory', 'selectFoodMenu'
           alt="Drink"
         >
         
-        <!-- LOGO OVERLAY (Desktop only) -->
-        <div class="hidden md:flex absolute inset-0 flex-col items-center justify-center pointer-events-none">
-          <div class="flex flex-col items-center text-white/90 drop-shadow-[4px_4px_0px_rgba(0,0,0,0.5)]">
-            <span class="text-8xl md:text-9xl font-black">北</span>
-            <span class="text-4xl md:text-5xl font-black tracking-[0.2em] -mt-4">UTARA</span>
-          </div>
-        </div>
+
 
         <!-- DESKTOP PRICE OVERLAY -->
         <div class="hidden md:flex absolute bottom-6 left-6 right-6 items-stretch shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] border-2 border-black overflow-hidden">
