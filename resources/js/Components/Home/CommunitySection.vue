@@ -30,12 +30,12 @@
   <!-- ================= HERO KOMUNITAS ================= -->
   <section 
     id="tetangga" 
-    class="relative h-[calc(90vh-57px)] overflow-hidden transition-colors duration-700 ease-in-out"
+    class="relative h-[50vh] md:h-[calc(90vh-57px)] overflow-hidden transition-colors duration-700 ease-in-out"
     :style="{ backgroundColor: bgColor }"
   >
     <!-- FLOATING TITLE LABEL -->
-    <div class="absolute top-6 md:top-12 left-4 md:left-16 z-20 bg-white px-4 md:px-6 py-2 md:py-3 border-l-[4px] md:border-l-[6px] border-[#e31e24] shadow-md">
-      <h3 class="text-lg md:text-2xl font-bold text-gray-800 tracking-tight">
+    <div class="absolute top-4 left-4 md:top-12 md:left-16 z-20 bg-white px-3 py-1.5 md:px-6 md:py-3 border-l-[4px] md:border-l-[6px] border-[#e31e24] shadow-md">
+      <h3 class="text-sm md:text-2xl font-bold text-gray-800 tracking-tight">
         Dari pelanggan, jadi teman
       </h3>
     </div>
@@ -84,22 +84,22 @@
   </section>
 
   <!-- ================= GALERI KOMUNITAS ================= -->
-  <section class="py-20 bg-white w-full">
+  <section class="py-10 md:py-20 bg-white w-full">
     <div class="px-6 w-full">
-      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-12">
-        <h2 class="text-3xl md:text-5xl font-bold text-black">Galeri Komunitas</h2>
+      <div class="flex flex-row items-center justify-between gap-4 mb-6 md:mb-12">
+        <h2 class="text-lg md:text-5xl font-bold text-black">Galeri Komunitas</h2>
 
         <button
           @click="openModal"
-          class="px-4 py-2 border border-black text-black rounded-lg hover:bg-black hover:text-white transition"
+          class="shrink-0 px-3 py-1.5 bg-[#5ac8fa] text-black text-[10px] md:text-xs font-bold border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-0.5 transition-transform sm:px-4 sm:py-2 sm:bg-white sm:text-black sm:text-sm sm:border sm:border-black sm:shadow-none sm:rounded-lg sm:hover:bg-black sm:hover:text-white sm:hover:translate-y-0 sm:transition"
         >
           Tambahkan Post
         </button>
       </div>
 
       <!-- LOOP KATEGORI -->
-      <div v-for="category in categories" :key="category" class="mb-12">
-        <h3 class="text-2xl font-bold text-black mb-4">{{ category }}</h3>
+      <div v-for="category in categories" :key="category" class="mb-8 md:mb-12">
+        <h3 class="text-xl md:text-2xl font-bold text-black mb-4">{{ category }}</h3>
 
         <div class="overflow-x-auto pb-4">
           <div class="flex gap-6 min-w-full snap-x snap-mandatory">

@@ -13,7 +13,7 @@ const navigateToSection = (section, path) => {
   const isHomeRelated = currentPath === '/' || currentPath === '/home' || currentPath === '/menu' || currentPath === '/tetangga'
   
   if (isHomeRelated) {
-    // Instant scroll and URL update without data loading
+    // URL update without data loading
     setActive(section)
     window.history.pushState({}, '', path)
     
@@ -23,14 +23,42 @@ const navigateToSection = (section, path) => {
       const headerOffset = 80
       const elementPosition = el.getBoundingClientRect().top
       const offsetPosition = elementPosition + window.pageYOffset - headerOffset
-      window.scrollTo({ top: offsetPosition, behavior: 'auto' })
+      
+      // Delay 350ms before scrolling
+      setTimeout(() => {
+        smoothScrollTo(offsetPosition, 350)
+      }, 350)
     }
     if (props.isMobileMenuOpen) emit('toggleMobileMenu')
   } else {
     // Normal inertia visit for different pages
     emit('toggleMobileMenu')
-    // Router visit will be handled by the Link component or we can wrap it
   }
+}
+
+// Custom Smooth Scroll Function
+const smoothScrollTo = (targetPosition, duration) => {
+  const startPosition = window.pageYOffset
+  const distance = targetPosition - startPosition
+  let startTime = null
+
+  const animation = (currentTime) => {
+    if (startTime === null) startTime = currentTime
+    const timeElapsed = currentTime - startTime
+    const run = ease(timeElapsed, startPosition, distance, duration)
+    window.scrollTo(0, run)
+    if (timeElapsed < duration) requestAnimationFrame(animation)
+  }
+
+  // Ease in-out quadratic
+  const ease = (t, b, c, d) => {
+    t /= d / 2
+    if (t < 1) return c / 2 * t * t + b
+    t--
+    return -c / 2 * (t * (t - 2) - 1) + b
+  }
+
+  requestAnimationFrame(animation)
 }
 
 // Check if we should use Link or a custom handler
@@ -64,7 +92,7 @@ const setActive = (section) => {
 
 <template>
   <header :class="['fixed top-0 inset-x-0 z-50 transition-all duration-300', scrolled ? 'bg-white/90 backdrop-blur shadow-sm border-b' : 'bg-transparent']">
-    <div class="max-w-7xl mx-auto px-4 md:px-6 h-20 flex items-center justify-between">
+    <div class="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 h-16 sm:h-20 flex items-center justify-between">
       <Logo />
       
       <!-- Desktop Nav -->
@@ -109,17 +137,29 @@ const setActive = (section) => {
 
       <div class="flex items-center gap-2 md:gap-3">
         <!-- Mobile Menu Toggle -->
-        <button @click="$emit('toggleMobileMenu')" class="lg:hidden p-2 text-gray-600">
-          <svg v-if="!isMobileMenuOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+        <button @click="$emit('toggleMobileMenu')" class="lg:hidden p-1.5 sm:p-2 text-gray-600">
+          <svg v-if="!isMobileMenuOpen" class="w-5 h-5 sm:w-6 sm:h-6" fill="currentColor" viewBox="0 0 24 24">
+            <rect x="3" y="5" width="4" height="4" rx="1"></rect>
+            <rect x="10" y="5" width="4" height="4" rx="1"></rect>
+            <rect x="17" y="5" width="4" height="4" rx="1"></rect>
+            <rect x="3" y="12" width="4" height="4" rx="1"></rect>
+            <rect x="10" y="12" width="4" height="4" rx="1"></rect>
+            <rect x="17" y="12" width="4" height="4" rx="1"></rect>
+            <rect x="3" y="19" width="4" height="4" rx="1"></rect>
+            <rect x="10" y="19" width="4" height="4" rx="1"></rect>
+            <rect x="17" y="19" width="4" height="4" rx="1"></rect>
           </svg>
-          <svg v-else class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg v-else class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
           </svg>
         </button>
 
         <Link href="/login" class="hidden sm:inline-block px-4 py-2 rounded-full border border-gray-200 text-sm font-semibold hover:border-emerald-600 hover:text-emerald-700 transition">Login</Link>
-        <a href="https://wa.me/6281215246678?text=Halo%20Kopi%20Utara" target="_blank" class="px-4 md:px-5 py-2 rounded-full bg-emerald-600 text-white text-sm md:text-base font-semibold shadow hover:bg-emerald-700 transition">Reservasi</a>
+        <!-- Mobile: Blue button with border & shadow, Desktop: Green rounded button -->
+        <a href="https://wa.me/6281215246678?text=Halo%20Kopi%20Utara" target="_blank" class="px-2 py-1 bg-[#5ac8fa] text-black text-[10px] uppercase tracking-wide font-bold border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-0.5 transition-transform sm:px-4 sm:py-2 sm:bg-emerald-600 sm:text-white sm:text-sm sm:border-0 sm:shadow-none sm:rounded-full sm:hover:translate-y-0 sm:hover:bg-emerald-700 sm:transition md:px-5 md:text-base">
+          <span class="sm:hidden">Reservation</span>
+          <span class="hidden sm:inline">Reservasi</span>
+        </a>
       </div>
     </div>
 
@@ -134,15 +174,15 @@ const setActive = (section) => {
     >
       <div v-if="isMobileMenuOpen" class="lg:hidden fixed inset-0 bg-white z-[60] flex flex-col h-screen">
         <!-- Mobile Header inside Menu -->
-        <div class="h-24 px-6 flex items-center justify-between border-b border-gray-100">
+        <div class="h-16 px-3 flex items-center justify-between border-b border-gray-100">
           <Logo />
-          <div class="flex items-center gap-4">
-            <button @click="$emit('toggleMobileMenu')" class="p-2 text-black hover:bg-gray-100 rounded-full transition">
-              <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div class="flex items-center gap-2">
+            <button @click="$emit('toggleMobileMenu')" class="p-1.5 text-black hover:bg-gray-100 rounded-full transition">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
               </svg>
             </button>
-            <a href="https://wa.me/6281215246678" target="_blank" class="px-5 py-2 bg-[#5ac8fa] text-black text-sm font-bold border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] uppercase tracking-tight hover:-translate-y-0.5 transition-transform">
+            <a href="https://wa.me/6281215246678" target="_blank" class="px-3 py-1.5 bg-[#5ac8fa] text-black text-xs font-bold border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-0.5 transition-transform">
               Reservation
             </a>
           </div>
@@ -159,11 +199,22 @@ const setActive = (section) => {
             { name: 'Blog', section: 'blog', path: '/blog' }
           ]" :key="link.section">
             <div class="flex flex-col group">
+              <button
+                v-if="isSamePage(link.path)"
+                @click="navigateToSection(link.section, link.path)"
+                :class="[
+                  'py-5 text-lg font-bold transition-colors text-left',
+                  activeSection === link.section ? 'text-[#014133]' : 'text-gray-500 group-hover:text-[#014133]'
+                ]"
+              >
+                {{ link.name }}
+              </button>
               <Link 
+                v-else
                 :href="link.path"
                 @click="$emit('toggleMobileMenu'); setActive(link.section)"
                 :class="[
-                  'py-5 text-lg font-bold transition-colors',
+                  'py-5 text-lg font-bold transition-colors text-left',
                   activeSection === link.section ? 'text-[#014133]' : 'text-gray-500 group-hover:text-[#014133]'
                 ]"
               >

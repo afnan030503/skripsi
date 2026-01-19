@@ -2,18 +2,23 @@
   <section id="reviews" class="bg-[#050B16] text-white py-16">
     <div class="w-full px-6 md:px-16 flex flex-col gap-8">
       <div
-        class="w-full flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-white/20 pb-6"
+        class="w-full flex flex-row items-center justify-between gap-4 border-b border-white/20 pb-4 md:pb-6"
       >
         <div>
-          <p class="uppercase tracking-[0.4rem] text-emerald-200 text-sm">Kata Kostumer</p>
-          <h2 class="text-4xl md:text-5xl font-bold mt-2">Cerita hangat dari tetangga kami</h2>
-          <p class="text-white/70 text-lg mt-2">
-            Bagikan pengalamanmu menikmati kopi, tempat, dan waktu di Utara.
-          </p>
+          <h2 class="text-xl md:text-sm font-bold md:font-normal uppercase tracking-normal md:tracking-[0.4rem] text-white md:text-emerald-200">
+            Kata Kostumer
+          </h2>
+          <!-- Show description only on Desktop -->
+          <div class="hidden md:block">
+            <h2 class="text-4xl md:text-5xl font-bold mt-2">Cerita hangat dari tetangga kami</h2>
+            <p class="text-white/70 text-lg mt-2">
+              Bagikan pengalamanmu menikmati kopi, tempat, dan waktu di Utara.
+            </p>
+          </div>
         </div>
         <button
           @click="openForm"
-          class="self-start md:self-auto bg-sky-500 hover:bg-sky-400 text-white px-6 py-3 rounded-xl font-semibold transition shadow-lg"
+          class="shrink-0 bg-[#5ac8fa] md:bg-sky-500 hover:bg-sky-400 text-black md:text-white px-3 py-1.5 md:px-6 md:py-3 rounded-lg md:rounded-xl font-bold md:font-semibold text-xs md:text-base border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] md:shadow-lg transition md:border-0"
         >
           Tambahkan Review
         </button>

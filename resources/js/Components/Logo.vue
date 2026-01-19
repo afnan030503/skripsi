@@ -1,5 +1,5 @@
 <template>
-  <img src="/public/logoutara.png" alt="Utara" class="h-16 md:h-15 w-auto" />
+  <img src="/public/logoutara.png" alt="Utara" class="h-10 sm:h-12 md:h-16 w-auto" />
 </template>
 
 <script setup>

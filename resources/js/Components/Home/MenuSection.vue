@@ -232,23 +232,7 @@ defineEmits(['selectFoodSubcategory', 'selectDrinkSubcategory', 'selectFoodMenu'
       </div>
     </div>
 
-    <!-- DELIVERY CALL TO ACTION -->
-    <div class="bg-black py-12 px-6 text-center">
-        <h3 class="text-white text-lg md:text-xl font-medium mb-8">
-            Ngopi atau makan, bisa dari rumah. Yuk pesan sekarang!
-        </h3>
-        <div class="flex flex-wrap justify-center gap-6">
-            <a href="#" class="bg-white p-1 shadow-[4px_4px_0px_0px_rgba(255,0,0,1)] border-2 border-black transition-transform hover:-translate-y-1">
-                <img :src="`${$page.props.asset_url}gofood-logo.png`" alt="GoFood" class="h-10 md:h-12 px-4 py-2 object-contain">
-            </a>
-            <a href="#" class="bg-white p-1 shadow-[4px_4px_0px_0px_rgba(0,200,0,1)] border-2 border-black transition-transform hover:-translate-y-1">
-                <img :src="`${$page.props.asset_url}grabfood-logo.png`" alt="GrabFood" class="h-10 md:h-12 px-4 py-2 object-contain">
-            </a>
-            <a href="#" class="bg-white p-1 shadow-[4px_4px_0px_0px_rgba(255,100,0,1)] border-2 border-black transition-transform hover:-translate-y-1">
-                <img :src="`${$page.props.asset_url}shopeefood-logo.png`" alt="ShopeeFood" class="h-10 md:h-12 px-4 py-2 object-contain">
-            </a>
-        </div>
-    </div>
+
   </section>
 </template>
 

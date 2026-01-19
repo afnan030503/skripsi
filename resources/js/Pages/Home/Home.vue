@@ -144,6 +144,7 @@ onBeforeUnmount(() => window.removeEventListener('scroll', handleScroll))
         @selectDrinkMenu="m => state.selectedDrinkMenuId = m.id"
       />
 
+      <DeliverySection />
       <CommunitySection />
       <CustomerReviewSection />
       <LocationSection :logoUtara="state.logoUtara" />
