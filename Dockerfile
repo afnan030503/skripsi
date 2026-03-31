@@ -1,20 +1,20 @@
 FROM dunglas/frankenphp:latest-php8.2-bookworm
 
-# Install sistem dependensi
+# Install sistem dependensi mendasar
 RUN apt-get update && apt-get install -y \
     git curl libpng-dev libonig-dev libxml2-dev zip unzip npm nodejs dos2unix
 
-# Install PHP extensions yang dibutuhkan Laravel
-RUN install-php-extensions pdo_mysql gd bcmath zip intl opcache
+# Install SEMUANYA modul PHP yang dibutuhkan Laravel agar composer install tidak gagal
+RUN install-php-extensions pdo_mysql gd bcmath zip intl opcache mbstring xml curl ctype
 
 WORKDIR /app
 COPY . .
 
-# Set izin folder untuk Laravel
+# Set izin folder untuk Laravel agar bisa menulis log/cache
 RUN chown -R www-data:www-data storage bootstrap/cache
 RUN chmod -R 775 storage bootstrap/cache
 
-# Build aplikasi (Composer & NPM)
+# Jalankan instalasi dependensi & build frontend
 RUN composer install --no-interaction --optimize-autoloader --no-dev
 RUN npm install && npm run build
 
