@@ -1,22 +1,24 @@
 #!/bin/sh
 set -e
 
-# Sesuaikan port Apache sesuai port dari Railway
+# Port adjustment
 PORT=${PORT:-80}
 sed -i "s/80/$PORT/g" /etc/apache2/sites-available/000-default.conf /etc/apache2/ports.conf
 
-# Hapus cache lama (agar ENV segar terbaca dari Railway)
-php artisan config:clear
-php artisan cache:clear
-php artisan route:clear
-php artisan view:clear
-
-# Lakukan caching ulang pakai ENV Railway yang baru
-php artisan config:cache
-php artisan route:cache
-php artisan view:cache
-
-# Jalankan migrasi database
+# 1. Jalankan MIGRATION duluan! (Agar tabel terbuat dulu)
+# Gunakan || true agar server tidak mati kalau koneksi DB sedang sibuk atau lama dimulainya.
 php artisan migrate --force --no-interaction || true
 
+# 2. Sekarang baru hapus cache. Kalau gagal (karena tabel belum ada), biarkan saja (|| true).
+php artisan config:clear || true
+php artisan cache:clear || true
+php artisan route:clear || true
+php artisan view:clear || true
+
+# 3. Terakhir baru caching ulang agar ENV baru terbaca
+php artisan config:cache || true
+php artisan route:cache || true
+php artisan view:cache || true
+
+# Hand over to CMD (apache2-foreground)
 exec "$@"
