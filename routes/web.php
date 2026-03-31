@@ -216,3 +216,10 @@ Route::middleware(['auth', 'admin'])->group(function () {
  
 // MIDTRANS WEBHOOK
 Route::post('/midtrans/notification', [\App\Http\Controllers\MidtransWebhookController::class, 'handle']);
+Route::get('/debug-db', function () {
+    return [
+        'host' => env('DB_HOST'),
+        'database' => env('DB_DATABASE'),
+        'username' => env('DB_USERNAME'),
+    ];
+});
