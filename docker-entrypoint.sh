@@ -1,28 +1,20 @@
 #!/bin/sh
+set -e
 
-# 🔥 FIX APACHE MPM (WAJIB)
-a2dismod mpm_event || true
-a2dismod mpm_worker || true
-a2enmod mpm_prefork || true
-
+# Sesuaikan port Apache sesuai port dari Railway
 PORT=${PORT:-80}
 sed -i "s/80/$PORT/g" /etc/apache2/sites-available/000-default.conf /etc/apache2/ports.conf
 
-# 🔥 CLEAR CACHE (biar env Railway kebaca)
+# Hapus cache lama agar ENV baru dari Railway terbaca
 php artisan config:clear
-php artisan cache:clear || true
-php artisan route:clear
-php artisan view:clear
+php artisan cache:clear
 
-# 🔥 CACHE ULANG
+# Lakukan caching ulang
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
 
-# 🔥 STORAGE LINK
-php artisan storage:link || true
-
-# 🔥 MIGRATE (jangan bikin crash)
-php artisan migrate --force || true
+# Jalankan migrasi jika DB sudah siap
+php artisan migrate --force --no-interaction || true
 
 exec "$@"
