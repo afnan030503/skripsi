@@ -1,16 +1,21 @@
-#!/bin/bash
+#!/bin/sh
 
-# Default ke port 80 jika Railway tidak menetapkan port
 PORT=${PORT:-80}
 
-# Ubah settingan Apache agar menggunakan Port dari Railway
 sed -i "s/80/$PORT/g" /etc/apache2/sites-available/000-default.conf /etc/apache2/ports.conf
 
-# Bersihkan cache dan jalankan migrasi database
+# 🔥 WAJIB: hapus cache lama dulu
+php artisan config:clear
+php artisan cache:clear
+php artisan route:clear
+php artisan view:clear
+
+# 🔥 baru cache ulang
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
-php artisan migrate --force
 
-# Jalankan perintah utama Docker (seperti apache)
+# 🔥 jalankan migrate (jangan bikin container mati kalau gagal)
+php artisan migrate --force || true
+
 exec "$@"
