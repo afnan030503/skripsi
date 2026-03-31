@@ -1,16 +1,15 @@
 #!/bin/sh
 set -e
 
-# Sesuaikan port Apache sesuai port dari Railway
-PORT=${PORT:-80}
-sed -i "s/80/$PORT/g" /etc/apache2/sites-available/000-default.conf /etc/apache2/ports.conf
-
-# 1. Jalankan MIGRATION Database
+# 🔥 Langkah 1: Migrasi Database (Loker aman)
 php artisan migrate --force --no-interaction || true
 
-# 2. Caching Laravel agar ENV terbaru Railway terbaca
+# 🔥 Langkah 2: Caching Laravel dengan ENV Railway terbaru
 php artisan config:cache || true
 php artisan route:cache || true
 php artisan view:cache || true
+
+# 🔥 Langkah 3: Pastikan izin folder sekali lagi di runtime
+chown -R www-data:www-data storage bootstrap/cache || true
 
 exec "$@"

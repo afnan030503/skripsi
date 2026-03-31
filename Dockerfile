@@ -1,42 +1,31 @@
-FROM php:8.2-apache
+FROM dunglas/frankenphp:latest-php8.2-bookworm
 
 # Install sistem dependensi
 RUN apt-get update && apt-get install -y \
     git curl libpng-dev libonig-dev libxml2-dev zip unzip npm nodejs dos2unix
 
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+# Install PHP extensions yang dibutuhkan Laravel
+RUN install-php-extensions pdo_mysql gd bcmath zip intl opcache
 
-# Install PHP extensions
-RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
-
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
-WORKDIR /var/www/html
+WORKDIR /app
 COPY . .
 
-# Konfigurasi Apache
-ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
-RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
-RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
+# Set izin folder untuk Laravel
+RUN chown -R www-data:www-data storage bootstrap/cache
+RUN chmod -R 775 storage bootstrap/cache
 
-# HAPUS PAKSA KONFIGURASI MPM YANG MENGGANGGU
-RUN rm -f /etc/apache2/mods-enabled/mpm_event.load /etc/apache2/mods-enabled/mpm_event.conf
-RUN rm -f /etc/apache2/mods-enabled/mpm_worker.load /etc/apache2/mods-enabled/mpm_worker.conf
-RUN a2enmod rewrite
-
-# Install dependensi & build assets
+# Build aplikasi (Composer & NPM)
 RUN composer install --no-interaction --optimize-autoloader --no-dev
 RUN npm install && npm run build
 
-# Izin file untuk Apache
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
-RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
-
+# Entrypoint setup
 COPY docker-entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 RUN dos2unix /usr/local/bin/docker-entrypoint.sh
 
-EXPOSE 80
+# Environment FrankenPHP
+ENV SERVER_NAME=:80
+ENV FRANKENPHP_CONFIG="worker ./public/index.php"
 
 ENTRYPOINT ["docker-entrypoint.sh"]
-CMD ["apache2-foreground"]
+CMD ["frankenphp", "run", "--config", "/etc/caddy/Caddyfile"]
