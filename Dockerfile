@@ -25,7 +25,7 @@ RUN a2enmod rewrite
 RUN composer install --no-interaction --optimize-autoloader --no-dev
 RUN npm install && npm run build
 
-# PERBAIKAN IZIN FILE: Berikan akses ke www-data
+# Izin file untuk Apache
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
