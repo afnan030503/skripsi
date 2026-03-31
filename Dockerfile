@@ -13,18 +13,29 @@ WORKDIR /var/www/html
 COPY . .
 
 ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
+
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
 RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
-RUN a2enmod rewrite
+# 🔥 FIX APACHE (WAJIB)
+RUN a2enmod rewrite \
+    && a2dismod mpm_event \
+    && a2dismod mpm_worker \
+    && a2enmod mpm_prefork
 
+# Composer
 RUN composer install --no-interaction --optimize-autoloader --no-dev
 
-RUN npm install
-RUN npm run build
+# Build frontend
+RUN npm install && npm run build
 
+# Permission
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
+# Fix apache warning
+RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
+
+# Entry point
 COPY docker-entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 RUN dos2unix /usr/local/bin/docker-entrypoint.sh || true
