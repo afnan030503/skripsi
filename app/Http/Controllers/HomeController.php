@@ -18,7 +18,7 @@ class HomeController extends Controller
                     $query->orderBy('order');
                 },
                 'subcategories.menus' => function ($query) {
-                    $query->where('is_available', true)->orderBy('name');
+                    $query->orderBy('is_available', 'desc')->orderBy('name');
                 }
             ])->orderBy('order')->get();
 
@@ -43,6 +43,8 @@ class HomeController extends Controller
                                     'image' => $menu->image ? asset('storage/' . $menu->image) : null,
                                     'image_position' => $menu->image_position,
                                     'image_zoom' => (float)$menu->image_zoom,
+                                    'discount_percent' => (int)$menu->discount_percent,
+                                    'is_available' => (bool)$menu->is_available,
                                 ];
                             })->toArray()
                         ];

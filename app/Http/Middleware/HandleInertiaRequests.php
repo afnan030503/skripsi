@@ -33,7 +33,18 @@ class HandleInertiaRequests extends Middleware
             ...parent::share($request),
             'auth' => [
                 'user' => $request->user(),
+                'member_status' => $request->user() && $request->user()->phone_number 
+                    ? \App\Models\Member::where('phone', $request->user()->phone_number)->value('status') 
+                    : null,
             ],
+            'flash' => [
+                'success' => session('success'),
+                'error' => session('error'),
+                'payment_info' => session('payment_info'),
+                'snap_token' => session('snap_token'),
+            ],
+            'midtrans_client_key' => config('services.midtrans.client_key'),
+            'midtrans_is_production' => config('services.midtrans.is_production'),
             'asset_url' => asset(''),
         ];
     }

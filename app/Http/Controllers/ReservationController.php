@@ -16,11 +16,11 @@ class ReservationController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:50|regex:/^[^0-9]*$/',
             'email' => 'required|email',
-            'phone' => 'required|string',
+            'phone' => 'required|string|min:10|regex:/^[0-9]+$/',
             'date' => 'required|date|after:today',
-            'time' => 'required',
+            'time' => 'required|date_format:H:i',
             'guests' => 'required|integer|min:1|max:20',
             'notes' => 'nullable|string'
         ]);

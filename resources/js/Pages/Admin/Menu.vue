@@ -75,6 +75,18 @@
               </div>
 
               <div class="mb-4">
+                <label class="block font-semibold mb-1 text-gray-700">Diskon Member (%)</label>
+                <input
+                  v-model.number="foods.discount_percent"
+                  type="number"
+                  class="w-full border border-gray-300 p-3 rounded-lg focus:ring-emerald-500 focus:border-emerald-500"
+                  min="0"
+                  max="100"
+                  placeholder="0"
+                />
+              </div>
+
+              <div class="mb-4">
                 <label class="block font-semibold mb-1 text-gray-700">Gambar (Optional)</label>
                 <input
                   type="file"
@@ -91,6 +103,7 @@
                 <p class="font-bold text-gray-700 mb-1">Tips:</p>
                 <p>Klik pada foto di daftar bawah untuk mengatur posisi tampilan secara presisi.</p>
               </div>
+
             </div>
 
             <div class="mb-6">
@@ -142,7 +155,7 @@
                     v-if="food.image"
                     :src="food.image"
                     alt="Food Image"
-                    class="w-full h-full object-cover pointer-events-none transition-transform"
+                    :class="['w-full h-full object-cover pointer-events-none transition-transform', !food.is_available && 'grayscale opacity-60']"
                     :style="{ 
                       objectPosition: food.image_position || 'center',
                       transform: `scale(${food.image_zoom || 1})`
@@ -152,23 +165,44 @@
                     v-else
                     src="https://placehold.co/200x160/10b981/ffffff?text=FOOD"
                     alt="No Image"
-                    class="w-full h-full object-cover"
+                    :class="['w-full h-full object-cover', !food.is_available && 'grayscale opacity-60']"
                 />
                 <div class="absolute inset-0 bg-black/20 opacity-0 group-hover/img:opacity-100 flex items-center justify-center transition-opacity flex-col">
                   <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4"></path></svg>
                   <span class="text-white text-[10px] font-bold uppercase mt-1">Sesuaikan Posisi</span>
                 </div>
+                <!-- Badge status habis -->
+                <div v-if="!food.is_available" class="absolute top-2 left-2 bg-red-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-wide shadow-lg">
+                  Habis
+                </div>
               </div>
 
               <!-- Content -->
               <div class="p-4">
-                <h3 class="font-bold text-lg text-gray-800 line-clamp-2">{{ food.name }}</h3>
-                <p class="text-emerald-600 font-bold text-xl mt-2">Rp {{ food.price.toLocaleString('id-ID') }}</p>
+                <h3 :class="['font-bold text-lg line-clamp-2', food.is_available ? 'text-gray-800' : 'text-gray-400']">{{ food.name }}</h3>
+                <p :class="['font-bold text-xl mt-2', food.is_available ? 'text-emerald-600' : 'text-gray-400 line-through']">Rp {{ food.price.toLocaleString('id-ID') }}</p>
+                <div class="mt-1 flex gap-2 flex-wrap">
+                  <span v-if="food.discount_percent > 0" class="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full bg-rose-100 text-rose-600 border border-rose-200">
+                    OFF {{ food.discount_percent }}%
+                  </span>
+                  <span :class="['text-[10px] font-bold uppercase px-2 py-0.5 rounded-full border', food.is_available ? 'bg-emerald-50 text-emerald-600 border-emerald-200' : 'bg-red-50 text-red-500 border-red-200']">
+                    {{ food.is_available ? '✓ Tersedia' : '✗ Habis' }}
+                  </span>
+                </div>
                 <p class="text-sm text-gray-600 mt-3 line-clamp-3">{{ food.description || 'Tidak ada deskripsi.' }}</p>
               </div>
 
               <!-- Action Buttons -->
               <div class="absolute top-2 right-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <!-- Tombol Toggle Ketersediaan -->
+                <button
+                  @click="toggleFoodAvailability(food)"
+                  :class="['p-2 text-white rounded-lg transition shadow-lg', food.is_available ? 'bg-amber-500 hover:bg-amber-600' : 'bg-emerald-500 hover:bg-emerald-600']"
+                  :title="food.is_available ? 'Tandai Habis' : 'Tandai Tersedia'"
+                >
+                  <svg v-if="food.is_available" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path></svg>
+                  <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                </button>
                 <button
                   @click="editFood(food)"
                   class="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition shadow-lg"
@@ -243,6 +277,18 @@
               </div>
 
               <div class="mb-4">
+                <label class="block font-semibold mb-1 text-gray-700">Diskon Member (%)</label>
+                <input
+                  v-model.number="drinks.discount_percent"
+                  type="number"
+                  class="w-full border border-gray-300 p-3 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                  min="0"
+                  max="100"
+                  placeholder="0"
+                />
+              </div>
+
+              <div class="mb-4">
                 <label class="block font-semibold mb-1 text-gray-700">Gambar (Optional)</label>
                 <input
                   type="file"
@@ -259,6 +305,7 @@
                 <p class="font-bold text-gray-700 mb-1">Tips:</p>
                 <p>Klik pada foto di daftar bawah untuk mengatur posisi tampilan secara presisi.</p>
               </div>
+
             </div>
 
             <div class="mb-6">
@@ -310,7 +357,7 @@
                     v-if="drink.image"
                     :src="drink.image"
                     alt="Drink Image"
-                    class="w-full h-full object-cover pointer-events-none transition-transform"
+                    :class="['w-full h-full object-cover pointer-events-none transition-transform', !drink.is_available && 'grayscale opacity-60']"
                     :style="{ 
                       objectPosition: drink.image_position || 'center',
                       transform: `scale(${drink.image_zoom || 1})`
@@ -320,23 +367,44 @@
                     v-else
                     src="https://placehold.co/200x160/3b82f6/ffffff?text=DRINK"
                     alt="No Image"
-                    class="w-full h-full object-cover"
+                    :class="['w-full h-full object-cover', !drink.is_available && 'grayscale opacity-60']"
                 />
                 <div class="absolute inset-0 bg-black/20 opacity-0 group-hover/img:opacity-100 flex items-center justify-center transition-opacity flex-col">
                   <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4"></path></svg>
                   <span class="text-white text-[10px] font-bold uppercase mt-1">Sesuaikan Posisi</span>
                 </div>
+                <!-- Badge status habis -->
+                <div v-if="!drink.is_available" class="absolute top-2 left-2 bg-red-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-wide shadow-lg">
+                  Habis
+                </div>
               </div>
 
               <!-- Content -->
               <div class="p-4">
-                <h3 class="font-bold text-lg text-gray-800 line-clamp-2">{{ drink.name }}</h3>
-                <p class="text-blue-600 font-bold text-xl mt-2">Rp {{ drink.price.toLocaleString('id-ID') }}</p>
+                <h3 :class="['font-bold text-lg line-clamp-2', drink.is_available ? 'text-gray-800' : 'text-gray-400']">{{ drink.name }}</h3>
+                <p :class="['font-bold text-xl mt-2', drink.is_available ? 'text-blue-600' : 'text-gray-400 line-through']">Rp {{ drink.price.toLocaleString('id-ID') }}</p>
+                <div class="mt-1 flex gap-2 flex-wrap">
+                  <span v-if="drink.discount_percent > 0" class="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full bg-rose-100 text-rose-600 border border-rose-200">
+                    OFF {{ drink.discount_percent }}%
+                  </span>
+                  <span :class="['text-[10px] font-bold uppercase px-2 py-0.5 rounded-full border', drink.is_available ? 'bg-blue-50 text-blue-600 border-blue-200' : 'bg-red-50 text-red-500 border-red-200']">
+                    {{ drink.is_available ? '✓ Tersedia' : '✗ Habis' }}
+                  </span>
+                </div>
                 <p class="text-sm text-gray-600 mt-3 line-clamp-3">{{ drink.description || 'Tidak ada deskripsi.' }}</p>
               </div>
 
               <!-- Action Buttons -->
               <div class="absolute top-2 right-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <!-- Tombol Toggle Ketersediaan -->
+                <button
+                  @click="toggleDrinkAvailability(drink)"
+                  :class="['p-2 text-white rounded-lg transition shadow-lg', drink.is_available ? 'bg-amber-500 hover:bg-amber-600' : 'bg-emerald-500 hover:bg-emerald-600']"
+                  :title="drink.is_available ? 'Tandai Habis' : 'Tandai Tersedia'"
+                >
+                  <svg v-if="drink.is_available" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path></svg>
+                  <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                </button>
                 <button
                   @click="editDrink(drink)"
                   class="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition shadow-lg"
@@ -506,11 +574,11 @@ function notify(msg, type = 'success') {
 /* FOODS */
 const foodsForm = ref(false)
 const editingFoodId = ref(null)
-const foods = ref({ name: '', price: null, description: '', subcategory_id: '', image: null })
+const foods = ref({ name: '', price: null, discount_percent: 0, description: '', subcategory_id: '', image: null })
 
 function openFoodsForm() {
   editingFoodId.value = null
-  foods.value = { name: '', price: null, description: '', subcategory_id: '', image_position: 'center', image: null }
+  foods.value = { name: '', price: null, discount_percent: 0, description: '', subcategory_id: '', image_position: 'center', image: null }
   foodsForm.value = true
 }
 
@@ -528,6 +596,7 @@ function editFood(food) {
     subcategory_id: food.subcategory_id,
     image_position: food.image_position || 'center',
     image: null,
+    discount_percent: food.discount_percent || 0
   }
   foodsForm.value = true
 }
@@ -551,6 +620,7 @@ function submitFoods() {
   data.append('price', foods.value.price)
   data.append('description', foods.value.description || '')
   data.append('image_position', foods.value.image_position || 'center')
+  if (foods.value.discount_percent) data.append('discount_percent', foods.value.discount_percent)
   if (foods.value.image) data.append('image', foods.value.image)
   if (editingFoodId.value) data.append('_method', 'PUT')
 
@@ -564,14 +634,24 @@ function deleteFood(id) {
   if (confirm('Hapus?')) router.delete(`/admin/menu/${id}`, { onSuccess: () => router.reload() })
 }
 
+function toggleFoodAvailability(food) {
+  const action = food.is_available ? 'menandai habis' : 'mengaktifkan kembali'
+  if (confirm(`Yakin ingin ${action} menu "${food.name}"?`)) {
+    router.patch(`/admin/menu/${food.id}/toggle-availability`, {}, {
+      onSuccess: () => { notify(food.is_available ? '⛔ Menu ditandai Habis' : '✅ Menu kembali Tersedia'); router.reload() },
+      onError: () => notify('❌ Gagal mengubah status!', 'error')
+    })
+  }
+}
+
 /* DRINKS */
 const drinksForm = ref(false)
 const editingDrinkId = ref(null)
-const drinks = ref({ name: '', price: null, description: '', subcategory_id: '', image: null })
+const drinks = ref({ name: '', price: null, discount_percent: 0, description: '', subcategory_id: '', image: null })
 
 function openDrinksForm() {
   editingDrinkId.value = null
-  drinks.value = { name: '', price: null, description: '', subcategory_id: '', image_position: 'center', image: null }
+  drinks.value = { name: '', price: null, discount_percent: 0, description: '', subcategory_id: '', image_position: 'center', image: null }
   drinksForm.value = true
 }
 
@@ -589,6 +669,7 @@ function editDrink(drink) {
     subcategory_id: drink.subcategory_id,
     image_position: drink.image_position || 'center',
     image: null,
+    discount_percent: drink.discount_percent || 0
   }
   drinksForm.value = true
 }
@@ -608,6 +689,7 @@ function submitDrinks() {
   data.append('price', drinks.value.price)
   data.append('description', drinks.value.description || '')
   data.append('image_position', drinks.value.image_position || 'center')
+  if (drinks.value.discount_percent) data.append('discount_percent', drinks.value.discount_percent)
   if (drinks.value.image) data.append('image', drinks.value.image)
   if (editingDrinkId.value) data.append('_method', 'PUT')
 
@@ -619,6 +701,16 @@ function submitDrinks() {
 
 function deleteDrink(id) {
   if (confirm('Hapus?')) router.delete(`/admin/menu/${id}`, { onSuccess: () => router.reload() })
+}
+
+function toggleDrinkAvailability(drink) {
+  const action = drink.is_available ? 'menandai habis' : 'mengaktifkan kembali'
+  if (confirm(`Yakin ingin ${action} menu "${drink.name}"?`)) {
+    router.patch(`/admin/menu/${drink.id}/toggle-availability`, {}, {
+      onSuccess: () => { notify(drink.is_available ? '⛔ Menu ditandai Habis' : '✅ Menu kembali Tersedia'); router.reload() },
+      onError: () => notify('❌ Gagal mengubah status!', 'error')
+    })
+  }
 }
 
 function logout() { router.post('/logout') }
@@ -673,7 +765,7 @@ function savePosition() {
     price: menu.price,
     description: menu.description,
     image_position: positionStr,
-    image_zoom: zoom.value
+    image_zoom: zoom.value,
   }, {
     onSuccess: () => { 
       loading.value = false

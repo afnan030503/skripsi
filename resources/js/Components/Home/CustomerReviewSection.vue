@@ -78,6 +78,8 @@
             <label class="text-sm font-medium text-gray-700">Nama</label>
             <input
               v-model="form.name"
+              @input="(e) => { const val = e.target.value.replace(/[0-9]/g, ''); e.target.value = val; form.name = val; }"
+              maxlength="50"
               type="text"
               class="w-full mt-1 rounded-xl border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
               placeholder="Agung Prio Rismawan"

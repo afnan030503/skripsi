@@ -38,11 +38,11 @@ class ReviewController extends Controller
         \Illuminate\Support\Facades\Log::info('Review submission attempt', $request->all());
         try {
             $data = $request->validate([
-                'name' => ['required', 'string', 'max:150'],
+                'name' => ['required', 'string', 'max:50', 'regex:/^[^0-9]*$/'],
                 'title' => ['nullable', 'string', 'max:120'],
                 'rating' => ['required', 'numeric', 'min:1', 'max:5'],
                 'message' => ['required', 'string', 'max:1000'],
-                'avatar' => ['nullable', 'image', 'max:4096'],
+                'avatar' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:4096'],
             ]);
 
             if ($request->hasFile('avatar')) {

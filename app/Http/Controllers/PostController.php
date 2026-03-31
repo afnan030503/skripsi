@@ -37,7 +37,7 @@ class PostController extends Controller
             'title' => ['required', 'string', 'max:255'],
             'tag'   => ['nullable', 'string', 'max:255'],
             'category' => ['required', 'string', 'max:50'],
-            'color' => ['required', 'string', 'max:50'],
+            'color' => ['required', 'string', 'in:blue,orange,green,sky,rose,amber,emerald,indigo'],
             'image' => ['required', 'image', 'mimes:jpg,jpeg,png', 'max:4096'], // max 4MB
         ]);
 
@@ -108,7 +108,9 @@ class PostController extends Controller
             'title' => ['required', 'string', 'max:255'],
             'tag'   => ['nullable', 'string', 'max:255'],
             'category' => ['required', 'string', 'max:50'],
+            'color' => ['required', 'string', 'in:blue,orange,green,sky,rose,amber,emerald,indigo'],
             'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png', 'max:4096'],
+
         ]);
 
         if ($request->hasFile('image')) {

@@ -27,9 +27,10 @@ class SubcategoryController extends Controller
     {
         $request->validate([
             'category_id' => 'required|exists:categories,id',
-            'name'        => 'required|string|max:255',
-            'order'       => 'nullable|integer',
+            'name'        => 'required|string|max:255|unique:subcategories,name',
+            'order'       => 'nullable|integer|min:0',
         ]);
+
 
         Subcategory::create([
             'category_id' => $request->category_id,
@@ -49,15 +50,17 @@ class SubcategoryController extends Controller
         $subcategory = Subcategory::findOrFail($id);
 
         $request->validate([
-            'name'  => 'required|string|max:255',
-            'order' => 'nullable|integer',
+            'name'  => 'required|string|max:255|unique:subcategories,name,' . $id,
+            'order' => 'nullable|integer|min:0',
         ]);
+
 
         $subcategory->update([
             'name'  => $request->name,
             'slug'  => Str::slug($request->name),
             'order' => $request->order ?? 0,
         ]);
+
 
         return back()->with('success', 'Subcategory berhasil diperbarui!');
     }

@@ -13,16 +13,35 @@ class Menu extends Model
         'category_id',
         'subcategory_id', // penting ditambahkan
         'name',
+        'main_ingredient',
         'description',
         'price',
+        'discount_percent',
         'image',
         'image_position',
         'image_zoom',
-        'is_available'
+        'is_available',
+        'special_type',
     ];
+
+    protected $appends = ['image_url'];
+
+    public function getImageUrlAttribute()
+    {
+        if (!$this->image) {
+            return null;
+        }
+
+        if (str_starts_with($this->image, 'http')) {
+            return $this->image;
+        }
+
+        return asset('storage/' . $this->image);
+    }
 
     protected $casts = [
         'price' => 'decimal:2',
+        'discount_percent' => 'integer',
         'image_zoom' => 'float',
         'is_available' => 'boolean'
     ];
@@ -35,5 +54,10 @@ class Menu extends Model
     public function subcategory()
     {
         return $this->belongsTo(Subcategory::class);
+    }
+
+    public function orderItems()
+    {
+        return $this->hasMany(OrderItem::class);
     }
 }

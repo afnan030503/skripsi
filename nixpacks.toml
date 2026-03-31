@@ -1,0 +1,18 @@
+[providers]
+  [providers.php]
+  
+[phases.setup]
+  # Memastikan Node.js tersedia untuk mem-build Vite/Vue
+  nixPkgs = ["...", "nodejs"]
+
+[phases.build]
+  # Menjalankan instalasi dependensi dan nge-build file asset statis
+  cmds = [
+    "npm install",
+    "npm run build",
+    "composer install --optimize-autoloader --no-dev"
+  ]
+
+[start]
+  # Saat aplikasi mulai, lakukan migrasi database dan caching, lalu jalankan server Nginx bawaan Nixpacks
+  cmd = "php artisan migrate --force && php artisan config:cache && php artisan route:cache && php artisan view:cache && /assets/start.sh"

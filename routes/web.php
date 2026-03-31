@@ -21,6 +21,8 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\Menu;
+use App\Models\Order;
+use Carbon\Carbon;
 
 // ======================
 // PUBLIC ROUTES
@@ -54,39 +56,69 @@ Route::get('/reviews/google', [ReviewController::class, 'google']);
 Route::get('/community/photos', [CommunityPhotoController::class, 'getActive']);
 Route::get('/crew/photos', [CrewController::class, 'getActive']);
 Route::post('/members/search', [MemberController::class, 'search'])->name('members.search');
+// ======================
+// LOGIN & REGISTER
+// ======================
+require __DIR__.'/auth.php';
 
 // ======================
-// LOGIN
+// USER DASHBOARD & ORDERS (AUTH REQUIRED)
 // ======================
-Route::get('/login', fn() => Inertia::render('Auth/Login'))->name('login');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/dashboard', function () {
+        $foodsCount = Menu::where('category_id', 1)->count();
+        $drinksCount = Menu::where('category_id', 2)->count();
+        $totalSubcategories = \App\Models\Subcategory::count();
 
-Route::post('/login', function (Request $request) {
-    $credentials = $request->validate([
-        'email' => 'required|email',
-        'password' => 'required',
-    ]);
+        return Inertia::render('Dashboard', [
+            'foodsCount' => $foodsCount,
+            'drinksCount' => $drinksCount,
+            'totalSubcategories' => $totalSubcategories,
+        ]);
+    })->name('dashboard');
 
-    if (Auth::attempt($credentials)) {
-        $request->session()->regenerate();
-        return redirect()->route('admin.home');
-    }
+    Route::get('/orders', [\App\Http\Controllers\OrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/create', [\App\Http\Controllers\OrderController::class, 'create'])->name('orders.create');
+    Route::post('/orders', [\App\Http\Controllers\OrderController::class, 'store'])->name('orders.store');
+    Route::get('/specials', [\App\Http\Controllers\OrderController::class, 'specials'])->name('orders.specials');
 
-    return back()->with('error', 'Email atau password salah.');
+    Route::get('/profile', [\App\Http\Controllers\ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [\App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [\App\Http\Controllers\ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::post('/profile/apply-member', [\App\Http\Controllers\MemberController::class, 'apply'])->name('member.apply');
 });
 
 // ======================
 // ADMIN (AUTH REQUIRED)
 // ======================
-Route::middleware(['auth'])->group(function () {
-
+Route::middleware(['auth', 'admin'])->group(function () {
     // Dashboard
     Route::get('/admin', function () {
         $foodsCount = Menu::where('category_id', 1)->count();
         $drinksCount = Menu::where('category_id', 2)->count();
 
+        // Data Penjualan 6 Bulan Terakhir
+        $salesData = [];
+        for ($i = 5; $i >= 0; $i--) {
+            $month = Carbon::now()->subMonths($i);
+            $monthName = $month->translatedFormat('M'); // 'Jan', 'Feb', dst.
+            
+            $total = Order::whereIn('status', ['success', 'proses'])
+                ->whereYear('created_at', $month->year)
+                ->whereMonth('created_at', $month->month)
+                ->sum('total_price');
+
+            $salesData[] = [
+                'label' => $monthName,
+                'value' => (float)$total
+            ];
+        }
+
         return Inertia::render('Admin/HomeAdmin', [
             'foodsCount' => $foodsCount,
             'drinksCount' => $drinksCount,
+            'totalSubcategories' => \App\Models\Subcategory::count(),
+            'salesData' => $salesData,
         ]);
     })->name('admin.home');
 
@@ -99,8 +131,8 @@ Route::middleware(['auth'])->group(function () {
         };
 
         return Inertia::render('Admin/Menu', [
-            'foodsMenus' => Menu::where('category_id', 1)->get()->map($formatMenu),
-            'drinksMenus' => Menu::where('category_id', 2)->get()->map($formatMenu),
+            'foodsMenus' => Menu::where('category_id', 1)->orderBy('is_available', 'desc')->get()->map($formatMenu),
+            'drinksMenus' => Menu::where('category_id', 2)->orderBy('is_available', 'desc')->get()->map($formatMenu),
             'foodsSubcategories' => Subcategory::where('category_id', 1)->orderBy('order')->get(),
             'drinksSubcategories' => Subcategory::where('category_id', 2)->orderBy('order')->get(),
             'tab' => $tab,
@@ -111,6 +143,8 @@ Route::middleware(['auth'])->group(function () {
         ->name('admin.menu.store');
     Route::put('/admin/menu/{menu}', [MenuController::class, 'update'])
         ->name('admin.menu.update');
+    Route::patch('/admin/menu/{menu}/toggle-availability', [MenuController::class, 'toggleAvailability'])
+        ->name('admin.menu.toggle');
 
     Route::delete('/admin/menu/{menu}', [MenuController::class, 'destroy'])
         ->name('admin.menu.destroy');
@@ -158,6 +192,8 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/admin/members/{id}', [MemberController::class, 'update'])->name('admin.members.update');
     Route::post('/admin/members/{id}/redeem', [MemberController::class, 'redeem'])->name('admin.members.redeem');
     Route::delete('/admin/members/{id}', [MemberController::class, 'destroy'])->name('admin.members.destroy');
+    Route::patch('/admin/members/{id}/approve', [MemberController::class, 'approve'])->name('admin.members.approve');
+    Route::patch('/admin/members/{id}/reject', [MemberController::class, 'reject'])->name('admin.members.reject');
 
     // Blog Management
     Route::get('/admin/blogs', [\App\Http\Controllers\Admin\BlogController::class, 'index'])->name('admin.blogs.index');
@@ -171,27 +207,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/admin/reviews', [ReviewController::class, 'adminIndex'])->name('admin.reviews.index');
     Route::put('/admin/reviews/{review}', [ReviewController::class, 'updateStatus'])->name('admin.reviews.update');
     Route::delete('/admin/reviews/{review}', [ReviewController::class, 'destroy'])->name('admin.reviews.destroy');
+
+    // Order Management
+    Route::get('/admin/orders', [\App\Http\Controllers\Admin\OrderController::class, 'index'])->name('admin.orders.index');
+    Route::put('/admin/orders/{order}/status', [\App\Http\Controllers\Admin\OrderController::class, 'updateStatus'])->name('admin.orders.status');
+    Route::delete('/admin/orders/{order}', [\App\Http\Controllers\Admin\OrderController::class, 'destroy'])->name('admin.orders.destroy');
 });
-
-    // Community Posts
-    Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
-    Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
-
-    // Reviews
-    Route::get('/reviews', [ReviewController::class, 'index'])->name('reviews.index');
-    Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store');
-
-    // CSRF fetch for SPA usage
-    Route::get('/csrf-token', function () {
-        return response()->json(['csrf_token' => csrf_token()]);
-    });
-
-// ======================
-// LOGOUT
-// ======================
-Route::post('/logout', function (Request $request) {
-    Auth::logout();
-    $request->session()->invalidate();
-    $request->session()->regenerateToken();
-    return redirect()->route('login');
-})->name('logout');
+ 
+// MIDTRANS WEBHOOK
+Route::post('/midtrans/notification', [\App\Http\Controllers\MidtransWebhookController::class, 'handle']);

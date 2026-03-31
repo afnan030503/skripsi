@@ -1,4 +1,4 @@
-<template>
+ <template>
   <div class="flex h-screen bg-gray-100 font-sans overflow-hidden">
     <!-- SIDEBAR -->
     <AdminSidebar :isOpen="isSidebarOpen" @close="isSidebarOpen = false" />
@@ -128,13 +128,7 @@
 
             <!-- Actions -->
             <div class="mt-auto pt-4 border-t flex gap-2">
-              <!-- Edit Button -->
-              <button 
-                @click="openEditModal(post)"
-                class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg text-sm font-bold transition flex justify-center items-center gap-1"
-              >
-                ✏️ Edit
-              </button>
+
               
               <button 
                 v-if="post.status !== 'approved'"
@@ -168,102 +162,6 @@
       </div>
     </main>
 
-    <!-- EDIT MODAL -->
-    <div 
-      v-if="showEditModal" 
-      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
-      @click.self="closeEditModal"
-    >
-      <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6">
-        <div class="flex justify-between items-start mb-4 gap-4">
-          <h2 class="text-xl md:text-2xl font-bold text-gray-800 leading-tight">Edit Postingan</h2>
-          <button 
-            @click="closeEditModal"
-            class="text-gray-400 hover:text-gray-600 text-3xl shrink-0 -mt-1"
-          >
-            ✕
-          </button>
-        </div>
-
-        <form @submit.prevent="saveEdit">
-          <!-- Title/Deskripsi -->
-          <div class="mb-4">
-            <label class="block text-sm font-semibold text-gray-700 mb-2">
-              Deskripsi
-            </label>
-            <textarea 
-              v-model="editForm.title"
-              class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              rows="4"
-              required
-            ></textarea>
-          </div>
-
-          <!-- Category -->
-          <div class="mb-4">
-            <label class="block text-sm font-semibold text-gray-700 mb-2">
-              Kategori
-            </label>
-            <select 
-              v-model="editForm.category"
-              class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              required
-            >
-              <option value="Sambat">Sambat</option>
-              <option value="Romansa">Romansa</option>
-              <option value="Skripshit">Skripshit</option>
-            </select>
-          </div>
-
-           <!-- Tag/Tagar -->
-          <div class="mb-4">
-            <label class="block text-sm font-semibold text-gray-700 mb-2">
-              Tagar (tanpa #)
-            </label>
-            <input 
-              v-model="editForm.tag"
-              type="text"
-              class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="contoh: utara"
-            />
-          </div>
-
-          <!-- RE-UPLOAD PHOTO -->
-          <div class="mb-6">
-            <label class="block text-sm font-semibold text-gray-700 mb-2">
-              Ganti Foto (Opsional)
-            </label>
-            <input 
-              type="file"
-              @change="handleFileSelect"
-              accept="image/*"
-              class="w-full border border-gray-300 rounded-lg p-2 text-sm"
-            />
-            <div v-if="editPreview" class="mt-4 bg-gray-50 rounded-lg p-2 flex justify-center border border-dashed border-gray-300">
-               <img :src="editPreview" class="h-32 w-auto object-contain rounded shadow-sm"/>
-            </div>
-          </div>
-
-          <!-- Action Buttons -->
-          <div class="flex gap-3">
-            <button 
-              type="button"
-              @click="closeEditModal"
-              class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 px-4 rounded-lg font-bold transition"
-            >
-              Batal
-            </button>
-            <button 
-              type="submit"
-              :disabled="saving"
-              class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg font-bold transition disabled:opacity-50"
-            >
-              {{ saving ? 'Menyimpan...' : 'Simpan' }}
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -291,27 +189,7 @@ const filterStatus = ref('pending'); // Default show pending
 const filterCategory = ref('all');
 const processing = ref(null);
 
-// Edit modal state
-const showEditModal = ref(false);
-const editingPost = ref(null);
-const editForm = ref({
-  title: '',
-  tag: '',
-  category: '',
-  image: null
-});
-const editPreview = ref(null);
-const saving = ref(false);
 
-const handleFileSelect = (event) => {
-  const file = event.target.files[0];
-  if (file) {
-    editForm.value.image = file;
-    const reader = new FileReader();
-    reader.onload = (e) => editPreview.value = e.target.result;
-    reader.readAsDataURL(file);
-  }
-};
 
 // Client-side filtering
 const filteredPosts = computed(() => {
@@ -362,63 +240,5 @@ const rejectPost = async (post) => {
   }
 };
 
-// Edit functions
-const openEditModal = (post) => {
-  editingPost.value = post;
-  editForm.value = {
-    title: post.title,
-    tag: post.tag || '',
-    category: post.category,
-    image: null
-  };
-  editPreview.value = post.image_url;
-  showEditModal.value = true;
-};
 
-const closeEditModal = () => {
-  showEditModal.value = false;
-  editingPost.value = null;
-  editForm.value = { title: '', tag: '', category: '', image: null };
-  editPreview.value = null;
-};
-
-const saveEdit = async () => {
-  if (!editingPost.value) return;
-  
-  saving.value = true;
-  try {
-    const formData = new FormData();
-    formData.append('_method', 'PUT'); // For Laravel with FormData
-    formData.append('title', editForm.value.title);
-    formData.append('tag', editForm.value.tag);
-    formData.append('category', editForm.value.category);
-    if (editForm.value.image) {
-      formData.append('image', editForm.value.image);
-    }
-
-    const response = await axios.post(`/admin/posts/${editingPost.value.id}`, formData, {
-      headers: { 'Content-Type': 'multipart/form-data' }
-    });
-    
-    // Update local state
-    const index = localPosts.value.findIndex(p => p.id === editingPost.value.id);
-    if (index !== -1) {
-      localPosts.value[index].title = editForm.value.title;
-      localPosts.value[index].tag = editForm.value.tag;
-      localPosts.value[index].category = editForm.value.category;
-      if (response.data.post.image_url) {
-        localPosts.value[index].image_url = response.data.post.image_url;
-        localPosts.value[index].image = response.data.post.image;
-      }
-    }
-    
-    closeEditModal();
-    alert('Postingan berhasil diupdate!');
-  } catch (error) {
-    alert('Gagal mengupdate postingan');
-    console.error(error);
-  } finally {
-    saving.value = false;
-  }
-};
 </script>

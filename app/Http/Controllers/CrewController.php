@@ -28,9 +28,10 @@ class CrewController extends Controller
     {
         $validated = $request->validate([
             'image' => ['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
-            'name' => ['nullable', 'string', 'max:255'],
-            'position' => ['nullable', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:50', 'regex:/^[^0-9]*$/'],
+            'position' => ['required', 'string', 'max:255'],
         ]);
+
 
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('crews', 'public');
@@ -51,11 +52,12 @@ class CrewController extends Controller
         $crew = Crew::findOrFail($id);
 
         $validated = $request->validate([
-            'name' => ['nullable', 'string', 'max:255'],
-            'position' => ['nullable', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:50', 'regex:/^[^0-9]*$/'],
+            'position' => ['required', 'string', 'max:255'],
             'is_active' => ['nullable', 'boolean'],
             'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
         ]);
+
 
         if ($request->hasFile('image')) {
             // Delete old image if exists

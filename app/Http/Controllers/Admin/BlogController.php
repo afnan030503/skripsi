@@ -38,8 +38,9 @@ class BlogController extends Controller
     {
         $request->validate([
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'title' => 'required|string|max:255',
+            'title' => 'required|string|max:255|unique:blogs,title',
             'content' => 'required|string',
+
             'excerpt' => 'nullable|string',
         ]);
 
@@ -73,7 +74,7 @@ class BlogController extends Controller
             'published_at' => now(),
         ]);
 
-        return redirect()->back()->with('success', 'Blog berhasil ditambahkan');
+        return redirect('/admin/blogs')->with('success', 'Blog berhasil ditambahkan');
     }
 
     public function update(Request $request, $id)
@@ -81,10 +82,11 @@ class BlogController extends Controller
         $blog = Blog::findOrFail($id);
 
         $request->validate([
-            'title' => 'required|string|max:255',
+            'title' => 'required|string|max:255|unique:blogs,title,' . $id,
             'content' => 'required|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
+
 
         $data = [
             'title' => $request->title,
@@ -117,7 +119,7 @@ class BlogController extends Controller
 
         $blog->update($data);
 
-        return redirect()->back()->with('success', 'Blog berhasil diperbarui');
+        return redirect('/admin/blogs')->with('success', 'Blog berhasil diperbarui');
     }
 
     public function destroy($id)

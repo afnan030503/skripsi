@@ -211,6 +211,8 @@
             </label>
             <input 
               v-model="uploadForm.name"
+              @input="(e) => { const val = e.target.value.replace(/[0-9]/g, ''); e.target.value = val; uploadForm.name = val; }"
+              maxlength="50"
               type="text"
               class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               placeholder="contoh: Ahmad"
@@ -276,6 +278,8 @@
             </label>
             <input 
               v-model="editForm.name"
+              @input="(e) => { const val = e.target.value.replace(/[0-9]/g, ''); e.target.value = val; editForm.name = val; }"
+              maxlength="50"
               type="text"
               class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />

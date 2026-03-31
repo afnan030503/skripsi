@@ -37,8 +37,9 @@ class CommunityPhotoController extends Controller
         $validated = $request->validate([
             'image' => ['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
             'caption' => ['nullable', 'string', 'max:255'],
-            'order' => ['nullable', 'integer'],
+            'order' => ['nullable', 'integer', 'min:0'],
         ]);
+
 
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('community', 'public');
@@ -64,10 +65,11 @@ class CommunityPhotoController extends Controller
 
         $validated = $request->validate([
             'caption' => ['nullable', 'string', 'max:255'],
-            'order' => ['nullable', 'integer'],
+            'order' => ['nullable', 'integer', 'min:0'],
             'is_active' => ['nullable', 'boolean'],
             'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
         ]);
+
 
         if ($request->hasFile('image')) {
             // Delete old image

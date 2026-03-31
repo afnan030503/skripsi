@@ -154,11 +154,17 @@ const setActive = (section) => {
           </svg>
         </button>
 
-        <Link href="/login" class="hidden sm:inline-block px-4 py-2 rounded-full border border-gray-200 text-sm font-semibold hover:border-emerald-600 hover:text-emerald-700 transition">Login</Link>
-        <!-- Mobile: Blue button with border & shadow, Desktop: Green rounded button -->
-        <a href="https://wa.me/6281215246678?text=Halo%20Kopi%20Utara" target="_blank" class="px-2 py-1 bg-[#5ac8fa] text-black text-[10px] uppercase tracking-wide font-bold border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-0.5 transition-transform sm:px-4 sm:py-2 sm:bg-emerald-600 sm:text-white sm:text-sm sm:border-0 sm:shadow-none sm:rounded-full sm:hover:translate-y-0 sm:hover:bg-emerald-700 sm:transition md:px-5 md:text-base">
-          <span class="sm:hidden">Reservation</span>
-          <span class="hidden sm:inline">Reservasi</span>
+        <Link 
+          href="/login" 
+          class="hidden sm:inline-block px-4 py-2 rounded-full border border-gray-200 text-sm font-semibold hover:border-emerald-600 hover:text-emerald-700 transition"
+        >
+          Login
+        </Link>
+
+        <!-- Reservation Button -->
+        <a href="https://wa.me/6281215246678?text=Halo%20Kopi%20Utara" target="_blank" class="px-2 py-1 bg-[#5ac8fa] text-black text-[10px] uppercase tracking-wide font-bold border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-0.5 transition-transform sm:px-4 sm:py-2 sm:bg-[#5ac8fa] sm:text-black sm:text-sm sm:border-2 sm:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] sm:rounded-none sm:hover:translate-y-0.5 sm:transition md:px-5 md:text-base">
+          <span class="sm:hidden">Resv</span>
+          <span class="hidden sm:inline">Reservation</span>
         </a>
       </div>
     </div>
@@ -224,6 +230,16 @@ const setActive = (section) => {
             </div>
           </template>
         </nav>
+
+        <!-- Mobile Auth Button -->
+        <div class="px-8 py-6 border-t border-gray-100 flex flex-col gap-3">
+          <Link 
+            href="/login" 
+            class="w-full py-3 text-center rounded-full bg-emerald-600 text-white font-bold"
+          >
+            Login / Register
+          </Link>
+        </div>
 
         <!-- Mobile Footer -->
         <div class="p-8 text-center bg-transparent">

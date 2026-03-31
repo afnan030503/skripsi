@@ -61,6 +61,21 @@
           </Link>
         </li>
 
+        <!-- Kelola Pesanan -->
+        <li>
+          <Link
+            href="/admin/orders"
+            class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group"
+            :class="currentRoute.startsWith('/admin/orders')
+              ? 'bg-indigo-50 text-indigo-700 font-bold'
+              : 'hover:bg-slate-50 hover:text-slate-900'"
+          >
+            <svg class="w-5 h-5 transition-colors" :class="currentRoute.startsWith('/admin/orders') ? 'text-indigo-600' : 'text-slate-400 group-hover:text-slate-600'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+            </svg>
+            <span class="text-sm">Kelola Pesanan</span>
+          </Link>
+        </li>
+
         <!-- Kelola Menu (Dropdown) -->
         <li>
           <button

@@ -37,6 +37,7 @@ class MenuController extends Controller
                                     'image' => $menu->image ? asset('storage/' . $menu->image) : null,
                                     'image_position' => $menu->image_position,
                                     'image_zoom' => (float)$menu->image_zoom,
+                                    'discount_percent' => (int)$menu->discount_percent,
                                 ];
                             })->toArray()
                         ];
@@ -61,14 +62,18 @@ class MenuController extends Controller
             ]);
 
             $validated = $request->validate([
-                'category_id' => 'required|exists:categories,id',
-                'subcategory_id' => 'required|exists:subcategories,id',
-                'name' => 'required|string|max:255',
-                'price' => 'required|numeric|min:0',
-                'description' => 'nullable|string',
-                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:10240',
-                'image_position' => 'nullable|string|max:255',
-                'image_zoom' => 'nullable|numeric|min:0.1|max:5',
+                'category_id'     => 'required|exists:categories,id',
+                'subcategory_id'  => 'required|exists:subcategories,id',
+                'name'            => 'required|string|max:255|unique:menus,name',
+                'main_ingredient' => 'nullable|string|max:255',
+
+                'price'           => 'required|numeric|min:0',
+                'discount_percent'=> 'nullable|integer|min:0|max:100',
+                'description'     => 'nullable|string',
+                'image'           => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:10240',
+                'image_position'  => 'nullable|string|max:255',
+                'image_zoom'      => 'nullable|numeric|min:0.1|max:5',
+                'special_type'    => 'nullable|string|in:weekly,monthly',
             ]);
 
             // Validasi subcategory milik category
@@ -97,15 +102,18 @@ class MenuController extends Controller
             }
 
             $menu = Menu::create([
-                'category_id' => $validated['category_id'],
-                'subcategory_id' => $validated['subcategory_id'],
-                'name' => $validated['name'],
-                'price' => $validated['price'],
-                'description' => $validated['description'] ?? null,
-                'image' => $imagePath,
-                'image_position' => $validated['image_position'] ?? 'center',
-                'image_zoom' => $validated['image_zoom'] ?? 1.0,
-                'is_available' => true,
+                'category_id'     => $validated['category_id'],
+                'subcategory_id'  => $validated['subcategory_id'],
+                'name'            => $validated['name'],
+                'main_ingredient' => $validated['main_ingredient'] ?? null,
+                'price'           => $validated['price'],
+                'discount_percent'=> $validated['discount_percent'] ?? 0,
+                'description'     => $validated['description'] ?? null,
+                'image'           => $imagePath,
+                'image_position'  => $validated['image_position'] ?? 'center',
+                'image_zoom'      => $validated['image_zoom'] ?? 1.0,
+                'special_type'    => $validated['special_type'] ?? null,
+                'is_available'    => true,
             ]);
 
             \Log::info('Menu berhasil dibuat', ['menu_id' => $menu->id]);
@@ -135,14 +143,18 @@ class MenuController extends Controller
             ]);
 
             $validated = $request->validate([
-                'category_id' => 'required|exists:categories,id',
-                'subcategory_id' => 'required|exists:subcategories,id',
-                'name' => 'required|string|max:255',
-                'price' => 'required|numeric|min:0',
-                'description' => 'nullable|string',
-                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:10240',
-                'image_position' => 'nullable|string|max:255',
-                'image_zoom' => 'nullable|numeric|min:0.1|max:5',
+                'category_id'     => 'required|exists:categories,id',
+                'subcategory_id'  => 'required|exists:subcategories,id',
+                'name'            => 'required|string|max:255|unique:menus,name,' . $menu->id,
+                'main_ingredient' => 'nullable|string|max:255',
+
+                'price'           => 'required|numeric|min:0',
+                'discount_percent'=> 'nullable|integer|min:0|max:100',
+                'description'     => 'nullable|string',
+                'image'           => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:10240',
+                'image_position'  => 'nullable|string|max:255',
+                'image_zoom'      => 'nullable|numeric|min:0.1|max:5',
+                'special_type'    => 'nullable|string|in:weekly,monthly',
             ]);
 
             // Validasi subcategory milik category
@@ -156,13 +168,16 @@ class MenuController extends Controller
             }
 
             $data = [
-                'category_id' => $validated['category_id'],
-                'subcategory_id' => $validated['subcategory_id'],
-                'name' => $validated['name'],
-                'price' => $validated['price'],
-                'description' => $validated['description'] ?? null,
-                'image_position' => $validated['image_position'] ?? 'center',
-                'image_zoom' => $validated['image_zoom'] ?? 1.0,
+                'category_id'     => $validated['category_id'],
+                'subcategory_id'  => $validated['subcategory_id'],
+                'name'            => $validated['name'],
+                'main_ingredient' => $validated['main_ingredient'] ?? null,
+                'price'           => $validated['price'],
+                'discount_percent'=> $validated['discount_percent'] ?? 0,
+                'description'     => $validated['description'] ?? null,
+                'image_position'  => $validated['image_position'] ?? 'center',
+                'image_zoom'      => $validated['image_zoom'] ?? 1.0,
+                'special_type'    => $validated['special_type'] ?? null,
             ];
 
             if ($request->hasFile('image')) {
@@ -209,6 +224,15 @@ class MenuController extends Controller
             \Log::error('Delete error: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Gagal menghapus menu');
         }
+    }
+
+    // Toggle ketersediaan menu (Tersedia / Habis)
+    public function toggleAvailability(Menu $menu)
+    {
+        $menu->update(['is_available' => !$menu->is_available]);
+
+        $status = $menu->is_available ? 'tersedia' : 'habis';
+        return redirect()->back()->with('success', "Menu '{$menu->name}' sekarang {$status}.");
     }
    public function adminMenuPage()
 {

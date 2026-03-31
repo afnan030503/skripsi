@@ -36,8 +36,14 @@ return [
     ],
 
     'google' => [
-    'place_id' => env('GOOGLE_PLACE_ID'),
-    'places_api_key' => env('GOOGLE_PLACES_API_KEY'),
-],
+        'place_id' => env('GOOGLE_PLACE_ID'),
+        'places_api_key' => env('GOOGLE_PLACES_API_KEY'),
+    ],
+    
+    'midtrans' => [
+        'server_key' => env('MIDTRANS_SERVER_KEY'),
+        'client_key' => env('MIDTRANS_CLIENT_KEY'),
+        'is_production' => env('MIDTRANS_IS_PRODUCTION', false),
+    ],
 
 ];

@@ -46,6 +46,22 @@
           <div class="absolute bottom-0 left-0 -mb-10 -ml-10 w-40 h-40 bg-black opacity-10 rounded-full blur-2xl"></div>
         </div>
 
+        <!-- SALES CHART -->
+        <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm mb-8">
+          <div class="flex justify-between items-center mb-6">
+            <div>
+              <h3 class="font-bold text-slate-800 text-lg">Grafik Penjualan</h3>
+              <p class="text-xs text-slate-500 font-medium">Data pendapatan 6 bulan terakhir</p>
+            </div>
+            <div class="p-2 bg-emerald-50 rounded-lg">
+              <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+            </div>
+          </div>
+          <div class="h-[300px] w-full relative">
+            <canvas ref="salesChartRef"></canvas>
+          </div>
+        </div>
+
         <!-- STATS GRID -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           
@@ -172,19 +188,24 @@
             <h3 class="text-3xl font-bold text-slate-800 mb-1">Promo & Royalti</h3>
             <p class="text-sm text-slate-500 font-medium">Kelola Poin & Member</p>
           </div>
-
         </div>
 
-        <!-- RECENT ACTIVITY (Full Width now) -->
+
+
+        <!-- RECENT ACTIVITY (Existing) -->
         <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6 mb-8">
           <h3 class="font-bold text-slate-800 mb-4">Aktivitas Terbaru</h3>
           <div class="space-y-4">
             <div class="flex items-center gap-4 p-3 bg-slate-50 rounded-lg">
               <div class="w-2 h-2 rounded-full bg-green-500"></div>
-              <p class="text-sm text-slate-600">System admin panel updated.</p>
+              <p class="text-sm text-slate-600">Statistik penjualan telah diperbarui secara real-time.</p>
               <span class="ml-auto text-xs text-slate-400">Baru saja</span>
             </div>
-            <!-- More items can be added here -->
+            <div v-if="props.foodsCount > 0" class="flex items-center gap-4 p-3 bg-white rounded-lg border border-slate-100">
+              <div class="w-2 h-2 rounded-full bg-blue-500"></div>
+              <p class="text-sm text-slate-600">Total {{ props.foodsCount }} menu makanan terdaftar di sistem.</p>
+              <span class="ml-auto text-xs text-slate-400">System</span>
+            </div>
           </div>
         </div>
 
@@ -194,21 +215,88 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { Link, usePage, router } from '@inertiajs/vue3'
 import AdminSidebar from "@/Layouts/AdminSidebar.vue";
+import Chart from 'chart.js/auto';
 
 const isSidebarOpen = ref(false);
+const salesChartRef = ref(null);
 
 const props = defineProps({
   foodsCount: {type: Number,default: 0},
   drinksCount: {type: Number,default: 0},
-  totalSubcategories: { type: Number, default: 0 }
+  totalSubcategories: { type: Number, default: 0 },
+  salesData: { type: Array, default: () => [] }
 })
-
-const page = usePage()
 
 const navigateTo = (url) => {
   router.visit(url)
 }
+
+onMounted(() => {
+  if (salesChartRef.value) {
+    const ctx = salesChartRef.value.getContext('2d');
+    
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: props.salesData.map(d => d.label),
+        datasets: [{
+          label: 'Total Penjualan (Rp)',
+          data: props.salesData.map(d => d.value),
+          borderColor: '#10b981', // Tailwind emerald-500
+          backgroundColor: 'rgba(16, 185, 129, 0.1)',
+          fill: true,
+          tension: 0.4,
+          borderWidth: 3,
+          pointBackgroundColor: '#fff',
+          pointBorderColor: '#10b981',
+          pointBorderWidth: 2,
+          pointRadius: 4,
+          pointHoverRadius: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: false
+          },
+          tooltip: {
+            mode: 'index',
+            intersect: false,
+            backgroundColor: '#1e293b',
+            titleFont: { weight: 'bold' },
+            padding: 12,
+            callbacks: {
+              label: function(context) {
+                let label = context.dataset.label || '';
+                if (label) {
+                  label += ': ';
+                }
+                if (context.parsed.y !== null) {
+                  label += new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(context.parsed.y);
+                }
+                return label;
+              }
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            display: false // Sembunyikan garis y untuk tampilan minimalis jika mau, atau set true
+          },
+          x: {
+            grid: {
+              display: false
+            }
+          }
+        }
+      }
+    });
+  }
+})
 </script>

@@ -15,8 +15,21 @@ return Application::configure(basePath: dirname(__DIR__))
             \App\Http\Middleware\HandleInertiaRequests::class,
             \Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class,
         ]);
+ 
+        $middleware->validateCsrfTokens(except: [
+            '/midtrans/notification',
+        ]);
 
-        //
+        $middleware->alias([
+            'admin' => \App\Http\Middleware\AdminMiddleware::class,
+        ]);
+
+        $middleware->redirectUsersTo(function () {
+            if (auth()->check() && auth()->user()->isAdmin()) {
+                return route('admin.home');
+            }
+            return route('dashboard');
+        });
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

@@ -23,15 +23,17 @@
 
         <div class="flex flex-col md:flex-row items-stretch md:items-center gap-3 justify-center">
           <button
-            @click="showModal = true"
+            @click="handleBuatAkun"
             class="bg-black text-white px-6 py-3 rounded-md font-semibold shadow hover:bg-gray-900 transition"
           >
-            Buat Akun
+            Buat Akun / Login
           </button>
           <div class="flex items-center bg-black/80 text-white rounded-md shadow overflow-hidden w-full md:w-auto">
             <input
               v-model="searchPhone"
+              @input="(e) => { const val = e.target.value.replace(/[^0-9]/g, ''); e.target.value = val; searchPhone = val; }"
               type="tel"
+              maxlength="20"
               placeholder="Masukkan Nomor handphone"
               class="flex-1 bg-transparent placeholder-gray-400 px-4 py-3 outline-none text-xs md:text-sm md:min-w-[340px]"
               @keyup.enter="searchMember"
@@ -221,76 +223,25 @@
       </div>
     </section>
 
-    <!-- Modal Popup -->
-    <Transition name="modal">
-      <div 
-        v-if="showModal" 
-        class="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-md p-4"
-        @click.self="showModal = false"
-      >
-        <div class="bg-white rounded-3xl shadow-2xl max-w-lg w-full relative overflow-hidden">
-          <!-- Close Button -->
-          <button 
-            @click="showModal = false"
-            class="absolute top-5 right-5 z-10 text-gray-500 hover:text-gray-800 transition-colors duration-200 bg-white/80 backdrop-blur-sm rounded-full p-2 hover:bg-gray-100"
-          >
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
 
-          <!-- Modal Content -->
-          <div class="p-10 text-center">
-            <!-- Header Title -->
-            <h3 class="text-2xl font-black text-gray-900 mb-6">Mau buat akun?</h3>
-            
-            <!-- Image Mas Aziz with decorative background -->
-            <div class="mb-6 flex justify-center relative">
-              <div class="absolute inset-0 bg-gradient-to-br from-blue-100 to-emerald-100 rounded-full blur-3xl opacity-30 scale-75"></div>
-              <img 
-                :src="masAzizPng" 
-                alt="Mas Aziz" 
-                class="w-56 h-auto object-contain relative z-10 drop-shadow-2xl"
-              />
-            </div>
-
-            <!-- Main Title -->
-            <h4 class="text-3xl font-black text-gray-900 mb-4 leading-tight">
-              Mau buat akun?
-            </h4>
-            
-            <!-- Description Text -->
-            <p class="text-gray-700 text-lg mb-8 leading-relaxed max-w-sm mx-auto font-medium">
-              Bilang ke mas barista nya ya, mau buat membership!
-            </p>
-
-            <!-- Button with gradient -->
-            <button 
-              @click="showModal = false"
-              class="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-bold text-base px-10 py-3 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
-            >
-              Mengerti
-            </button>
-          </div>
-        </div>
-      </div>
-    </Transition>
   </div>
 </template>
 
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
-import { Link } from '@inertiajs/vue3';
+import { Link, usePage } from '@inertiajs/vue3';
 import axios from 'axios';
 import { Header } from '@/Components';
+
+const page = usePage();
+const user = computed(() => page.props.auth?.user);
 
 // Asset paths
 const utaraJpg = '/utara.jpg';
 const logoUtaraPng = '/logoutara.png';
 const masAzizPng = '/Masaziz.png';
 
-// State untuk modal
-const showModal = ref(false);
+// State untuk navbar mobile
 const isMobileMenuOpen = ref(false);
 const scrolled = ref(false);
 
@@ -368,6 +319,14 @@ const openTiktok = () => {
 
 const openMaps = () => {
   window.open('https://maps.google.com/?q=Utara+Coffee', '_blank');
+};
+
+const handleBuatAkun = () => {
+  if (!user.value) {
+    window.location.href = route('login');
+  } else {
+    window.location.href = route('profile.edit');
+  }
 };
 </script>
 

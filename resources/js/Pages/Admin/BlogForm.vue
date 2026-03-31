@@ -113,6 +113,7 @@ const form = useForm({
   image: null,
 });
 
+
 // Load CKEditor from CDN
 const loadScript = (src) => {
     return new Promise((resolve, reject) => {
@@ -155,7 +156,14 @@ onMounted(async () => {
 
 onBeforeUnmount(() => {
     if (editorInstance.value) {
-        editorInstance.value.destroy();
+        try {
+            const destroyPromise = editorInstance.value.destroy();
+            if (destroyPromise && typeof destroyPromise.catch === 'function') {
+                destroyPromise.catch(e => console.log('CKEditor destroy clean-up:', e));
+            }
+        } catch (e) {
+            console.log('CKEditor destroy clean-up:', e);
+        }
     }
 });
 

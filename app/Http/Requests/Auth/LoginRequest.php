@@ -41,11 +41,17 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
+        if (! \App\Models\User::where('email', $this->email)->exists()) {
+            throw ValidationException::withMessages([
+                'email' => 'Akun tidak ditemukan.',
+            ]);
+        }
+
         if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
-                'email' => trans('auth.failed'),
+                'email' => 'Email atau password salah.',
             ]);
         }
 

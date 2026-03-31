@@ -19,6 +19,7 @@ const user = usePage().props.auth.user;
 const form = useForm({
     name: user.name,
     email: user.email,
+    phone_number: user.phone_number,
 });
 </script>
 
@@ -46,6 +47,13 @@ const form = useForm({
                     type="text"
                     class="mt-1 block w-full"
                     v-model="form.name"
+                    @input="() => { 
+                        const val = form.name.replace(/[0-9]/g, '');
+                        form.name = val;
+                        const el = document.getElementById('name');
+                        if(el && el.value !== val) el.value = val;
+                    }"
+                    maxlength="50"
                     required
                     autofocus
                     autocomplete="name"
@@ -67,6 +75,28 @@ const form = useForm({
                 />
 
                 <InputError class="mt-2" :message="form.errors.email" />
+            </div>
+
+            <div>
+                <InputLabel for="phone_number" value="No. WhatsApp" />
+
+                <TextInput
+                    id="phone_number"
+                    type="text"
+                    class="mt-1 block w-full"
+                    v-model="form.phone_number"
+                    @input="() => {
+                        const val = form.phone_number.replace(/[^0-9]/g, '');
+                        form.phone_number = val;
+                        const el = document.getElementById('phone_number');
+                        if(el && el.value !== val) el.value = val;
+                    }"
+                    maxlength="20"
+                    required
+                    placeholder="08xxxxxxxxxx"
+                />
+
+                <InputError class="mt-2" :message="form.errors.phone_number" />
             </div>
 
             <div v-if="mustVerifyEmail && user.email_verified_at === null">
