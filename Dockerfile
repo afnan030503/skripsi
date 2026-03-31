@@ -1,46 +1,25 @@
-FROM php:8.2-apache
+#!/bin/sh
 
-RUN apt-get update && apt-get install -y \
-    git curl libpng-dev libonig-dev libxml2-dev zip unzip npm nodejs dos2unix
+a2dismod mpm_event || true
+a2dismod mpm_worker || true
+a2enmod mpm_prefork || true
 
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+PORT=${PORT:-80}
+sed -i "s/80/$PORT/g" /etc/apache2/sites-available/000-default.conf /etc/apache2/ports.conf
 
-RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
+php artisan config:clear
+php artisan cache:clear || true
+php artisan route:clear
+php artisan view:clear
 
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
 
-WORKDIR /var/www/html
-COPY . .
+php artisan storage:link || true
 
-ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
+sleep 10
 
-RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
-RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
+php artisan migrate --force || true
 
-# 🔥 FIX APACHE (WAJIB)
-RUN a2enmod rewrite \
-    && a2dismod mpm_event \
-    && a2dismod mpm_worker \
-    && a2enmod mpm_prefork
-
-# Composer
-RUN composer install --no-interaction --optimize-autoloader --no-dev
-
-# Build frontend
-RUN npm install && npm run build
-
-# Permission
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
-
-# Fix apache warning
-RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
-
-# Entry point
-COPY docker-entrypoint.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
-RUN dos2unix /usr/local/bin/docker-entrypoint.sh || true
-
-EXPOSE 80
-
-ENTRYPOINT ["docker-entrypoint.sh"]
-CMD ["apache2-foreground"]
+exec "$@"
