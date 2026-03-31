@@ -4,8 +4,11 @@ FROM dunglas/frankenphp:latest-php8.2-bookworm
 RUN apt-get update && apt-get install -y \
     git curl libpng-dev libonig-dev libxml2-dev zip unzip npm nodejs dos2unix
 
-# Install SEMUANYA modul PHP yang dibutuhkan Laravel agar composer install tidak gagal
+# Install SEMUANYA modul PHP yang dibutuhkan Laravel
 RUN install-php-extensions pdo_mysql gd bcmath zip intl opcache mbstring xml curl ctype
+
+# COPY COMPOSER (Penting agar perintah composer install terbaca)
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /app
 COPY . .
