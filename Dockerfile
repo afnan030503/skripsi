@@ -19,6 +19,8 @@ ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
 RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
+# FIX: Matikan mpm_event agar tidak bentrok dengan mpm_prefork bawaan PHP
+RUN a2dismod mpm_event || true
 RUN a2enmod rewrite
 
 # Install dependensi & build assets
