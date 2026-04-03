@@ -23,8 +23,10 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 RUN docker-php-ext-configure intl
 RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd intl zip
 
+# Fix Apache MPM (WAJIB)
 RUN a2dismod mpm_event || true
 RUN a2dismod mpm_worker || true
+RUN a2dismod mpm_prefork || true
 RUN a2enmod mpm_prefork
 RUN a2enmod rewrite
 
