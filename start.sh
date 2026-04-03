@@ -1,13 +1,15 @@
 #!/bin/bash
 
-# Configuration caching
+echo "Clearing & caching config..."
+
+php artisan config:clear
+php artisan cache:clear
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
 
-# Run migrations (only safe if you want it to run on every deploy, uncomment if needed)
+echo "Running migration..."
 php artisan migrate --force
 
-# Start Apache in foreground
 echo "Starting Apache..."
 apache2-foreground

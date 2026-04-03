@@ -8,10 +8,11 @@ RUN apt-get update && apt-get install -y \
     libonig-dev \
     libxml2-dev \
     libzip-dev \
+    libicu-dev \
     zip \
     unzip
 
-# 🔥 INSTALL NODE 20 (INI YANG PENTING)
+# 🔥 INSTALL NODE 20
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs
 
@@ -19,6 +20,7 @@ RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install PHP extensions
+RUN docker-php-ext-configure intl
 RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd intl zip
 
 # Enable Apache mod_rewrite
@@ -36,9 +38,9 @@ COPY . /var/www/html
 # Install PHP dependencies
 RUN composer install --no-interaction --no-dev --optimize-autoloader
 
-# 🔥 FIX NPM ERROR (WAJIB)
+# 🔥 FIX NPM (WAJIB)
 RUN rm -rf node_modules package-lock.json
-RUN npm install
+RUN npm install --legacy-peer-deps
 RUN npm run build
 
 # Set Laravel public folder
@@ -50,7 +52,7 @@ RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Start script
+# Copy start script
 COPY start.sh /usr/local/bin/start
 RUN chmod +x /usr/local/bin/start
 
