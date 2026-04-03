@@ -25,6 +25,8 @@ RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd intl zip
 
 # Enable Apache mod_rewrite
 RUN a2enmod rewrite
+RUN a2dismod mpm_event
+RUN a2enmod mpm_prefork
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
