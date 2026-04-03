@@ -9,9 +9,11 @@ RUN apt-get update && apt-get install -y \
     libxml2-dev \
     libzip-dev \
     zip \
-    unzip \
-    nodejs \
-    npm
+    unzip
+
+# 🔥 INSTALL NODE 20 (INI YANG PENTING)
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y nodejs
 
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -28,17 +30,18 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Set working directory
 WORKDIR /var/www/html
 
-# Copy existing application directory contents
+# Copy project
 COPY . /var/www/html
 
 # Install PHP dependencies
 RUN composer install --no-interaction --no-dev --optimize-autoloader
 
-# Install Node dependencies and build frontend assets
+# 🔥 FIX NPM ERROR (WAJIB)
+RUN rm -rf node_modules package-lock.json
 RUN npm install
 RUN npm run build
 
-# Change DocumentRoot to public folder for Laravel
+# Set Laravel public folder
 ENV APACHE_DOCUMENT_ROOT /var/www/html/public
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
 RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
@@ -47,9 +50,8 @@ RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Create start script
+# Start script
 COPY start.sh /usr/local/bin/start
 RUN chmod +x /usr/local/bin/start
 
-# Run start script
 CMD ["/usr/local/bin/start"]
