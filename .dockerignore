@@ -13,3 +13,6 @@ Thumbs.db
 /public/build
 composer.lock
 package-lock.json
+.env
+node_modules
+vendor
