@@ -1,34 +1,55 @@
-FROM dunglas/frankenphp:latest-php8.2-bookworm
+FROM php:8.2-apache
 
-# Install sistem dependensi mendasar
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
-    git curl libpng-dev libonig-dev libxml2-dev zip unzip npm nodejs dos2unix
+    git \
+    curl \
+    libpng-dev \
+    libonig-dev \
+    libxml2-dev \
+    libzip-dev \
+    zip \
+    unzip \
+    nodejs \
+    npm
 
-# Install SEMUANYA modul PHP yang dibutuhkan Laravel
-RUN install-php-extensions pdo_mysql gd bcmath zip intl opcache mbstring xml curl ctype
+# Clear cache
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# COPY COMPOSER (Penting agar perintah composer install terbaca)
+# Install PHP extensions
+RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd intl zip
+
+# Enable Apache mod_rewrite
+RUN a2enmod rewrite
+
+# Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-WORKDIR /app
-COPY . .
+# Set working directory
+WORKDIR /var/www/html
 
-# Set izin folder untuk Laravel agar bisa menulis log/cache
-RUN chown -R www-data:www-data storage bootstrap/cache
-RUN chmod -R 775 storage bootstrap/cache
+# Copy existing application directory contents
+COPY . /var/www/html
 
-# Jalankan instalasi dependensi & build frontend
-RUN composer install --no-interaction --optimize-autoloader --no-dev
-RUN npm install && npm run build
+# Install PHP dependencies
+RUN composer install --no-interaction --no-dev --optimize-autoloader
 
-# Entrypoint setup
-COPY docker-entrypoint.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
-RUN dos2unix /usr/local/bin/docker-entrypoint.sh
+# Install Node dependencies and build frontend assets
+RUN npm install
+RUN npm run build
 
-# Environment FrankenPHP
-ENV SERVER_NAME=:80
-ENV FRANKENPHP_CONFIG="worker ./public/index.php"
+# Change DocumentRoot to public folder for Laravel
+ENV APACHE_DOCUMENT_ROOT /var/www/html/public
+RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
+RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
-ENTRYPOINT ["docker-entrypoint.sh"]
-CMD ["frankenphp", "run", "--config", "/etc/caddy/Caddyfile"]
+# Fix permissions
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+
+# Create start script
+COPY start.sh /usr/local/bin/start
+RUN chmod +x /usr/local/bin/start
+
+# Run start script
+CMD ["/usr/local/bin/start"]

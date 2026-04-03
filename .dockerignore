@@ -1,0 +1,15 @@
+node_modules
+/vendor
+/storage/*.key
+.env
+.idea
+.vscode
+*.bak
+*.swp
+.DS_Store
+Thumbs.db
+/public/hot
+/public/storage
+/public/build
+composer.lock
+package-lock.json
