@@ -23,10 +23,10 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 RUN docker-php-ext-configure intl
 RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd intl zip
 
-# Enable Apache mod_rewrite
-RUN a2enmod rewrite
-RUN a2dismod mpm_event
+RUN a2dismod mpm_event || true
+RUN a2dismod mpm_worker || true
 RUN a2enmod mpm_prefork
+RUN a2enmod rewrite
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
