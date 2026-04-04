@@ -11,7 +11,6 @@ Thumbs.db
 /public/hot
 /public/storage
 /public/build
-package-lock.json
 .env
 node_modules
 vendor
