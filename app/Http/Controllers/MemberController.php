@@ -32,6 +32,7 @@ class MemberController extends Controller
                 'member_status' => $memberData ? $memberData->status : null,
                 'member_id' => $memberData ? $memberData->id : null,
                 'points' => $memberData ? $memberData->points : 0,
+                'registration_source' => $memberData ? $memberData->registration_source : null,
             ];
         });
 
@@ -56,6 +57,7 @@ class MemberController extends Controller
         ]);
 
         $validated['status'] = 'approved';
+        $validated['registration_source'] = 'admin';
         $member = Member::create($validated);
 
         return response()->json([
@@ -167,7 +169,8 @@ class MemberController extends Controller
             'name' => $user->name,
             'phone' => $user->phone_number,
             'points' => 0,
-            'status' => 'pending'
+            'status' => 'pending',
+            'registration_source' => 'user_request'
         ]);
 
         return redirect()->back()->with('success', 'Pengajuan member berhasil dikirim. Menunggu persetujuan admin.');

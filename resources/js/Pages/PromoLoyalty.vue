@@ -251,6 +251,10 @@ const handleScroll = () => {
 
 onMounted(() => {
   window.addEventListener('scroll', handleScroll);
+  if (user.value && user.value.phone_number) {
+    searchPhone.value = user.value.phone_number;
+    searchMember();
+  }
 });
 
 onBeforeUnmount(() => {
