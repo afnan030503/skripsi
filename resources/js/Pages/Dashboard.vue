@@ -1,6 +1,10 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, Link } from '@inertiajs/vue3';
+import { Head, Link, usePage } from '@inertiajs/vue3';
+import { computed } from 'vue';
+
+const page = usePage();
+const user = computed(() => page.props.auth.user);
 
 const props = defineProps({
   foodsCount: { type: Number, default: 0 },
@@ -23,7 +27,7 @@ const props = defineProps({
         <div class="bg-emerald-600 rounded-[2rem] md:rounded-[3rem] p-8 md:p-12 text-white shadow-2xl shadow-emerald-200 mb-8 md:mb-12 relative overflow-hidden group">
           <div class="relative z-10">
             <span class="inline-block px-4 py-1.5 bg-emerald-500/50 backdrop-blur-md rounded-full text-[10px] font-black uppercase tracking-[0.2em] mb-4 border border-emerald-400/30">Welcome Back</span>
-            <h2 class="text-3xl md:text-5xl font-black mb-4 leading-tight">Selamat Datang,<br class="sm:hidden" /> <span class="text-emerald-200">{{ user.name.split(' ')[0] }}!</span> 👋</h2>
+            <h2 class="text-3xl md:text-5xl font-black mb-4 leading-tight">Selamat Datang,<br class="sm:hidden" /> <span class="text-emerald-200">{{ user?.name?.split(' ')[0] }}!</span> 👋</h2>
             <p class="text-emerald-50 text-sm md:text-xl max-w-xl font-medium leading-relaxed opacity-90">
               Mau pesan kopi atau camilan apa hari ini? Nikmati layanan terbaik dari Utara Coffee dengan menu pilihan spesial.
             </p>

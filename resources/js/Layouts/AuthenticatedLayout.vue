@@ -1,10 +1,10 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { Link, usePage, router } from '@inertiajs/vue3';
 
 const isSidebarOpen = ref(false);
 const page = usePage();
-const user = page.props.auth.user;
+const user = computed(() => page.props.auth.user);
 
 const logout = () => {
     router.post(route('logout'));
@@ -126,11 +126,11 @@ const logout = () => {
 
                 <div class="flex items-center gap-3 md:gap-4 shrink-0">
                     <div class="text-right hidden sm:block" v-if="user">
-                        <p class="text-sm font-black text-slate-800 leading-none">{{ user.name }}</p>
+                        <p class="text-sm font-black text-slate-800 leading-none">{{ user?.name }}</p>
                         <p class="text-[10px] text-emerald-600 font-bold uppercase tracking-tighter mt-1">Customer Member</p>
                     </div>
                     <div class="w-10 h-10 md:w-11 md:h-11 rounded-2xl bg-emerald-100 flex items-center justify-center text-emerald-700 font-black border-2 border-white shadow-lg shadow-emerald-100 ring-1 ring-emerald-50" v-if="user">
-                        {{ user.name.charAt(0).toUpperCase() }}
+                        {{ user?.name?.charAt(0).toUpperCase() }}
                     </div>
                 </div>
             </header>
