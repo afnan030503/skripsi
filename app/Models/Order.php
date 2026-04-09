@@ -18,6 +18,7 @@ class Order extends Model
         'cancel_reason',
         'snap_token',
         'midtrans_id',
+        'midtrans_order_id',
     ];
 
     public function user()

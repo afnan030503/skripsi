@@ -2,7 +2,7 @@
   <transition name="sidebar">
     <aside 
       v-if="showSidebar"
-      class="fixed lg:static inset-y-0 left-0 z-50 w-64 bg-white text-slate-600 flex flex-col h-screen font-sans border-r border-slate-200 shadow-2xl lg:shadow-none transition-transform duration-300"
+      class="fixed lg:static inset-y-0 left-0 z-50 w-64 bg-white text-slate-600 flex flex-col h-screen lg:h-screen h-[100dvh] font-sans border-r border-slate-200 shadow-2xl lg:shadow-none transition-transform duration-300"
       :class="isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'"
     >
       <!-- HEADER -->

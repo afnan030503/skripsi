@@ -22,6 +22,7 @@ class Menu extends Model
         'image_zoom',
         'is_available',
         'special_type',
+        'stock',
     ];
 
     protected $appends = ['image_url'];
@@ -43,7 +44,8 @@ class Menu extends Model
         'price' => 'decimal:2',
         'discount_percent' => 'integer',
         'image_zoom' => 'float',
-        'is_available' => 'boolean'
+        'is_available' => 'boolean',
+        'stock' => 'integer',
     ];
 
     public function category()

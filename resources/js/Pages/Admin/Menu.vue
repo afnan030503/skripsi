@@ -21,18 +21,36 @@
             <p class="text-xs md:text-sm text-gray-500 hidden sm:block">Selamat datang di {{ currentTitle }}</p>
           </div>
         </div>
+
+        <!-- LOGOUT MOBILE -->
+        <button 
+          @click="logout"
+          class="lg:hidden flex items-center gap-1.5 px-3 py-1.5 bg-rose-50 text-rose-600 border border-rose-100 rounded-lg text-[10px] font-black uppercase hover:bg-rose-100 transition-colors shadow-sm"
+        >
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+          Out
+        </button>
       </header>
 
       <div class="px-4 md:px-8 pb-8">
 
       <!-- FOODS SECTION -->
       <div v-if="tab === 'foods'">
-        <button
-          @click="openFoodsForm"
-          class="px-5 py-2 mb-6 bg-emerald-600 text-white font-semibold rounded-lg hover:bg-emerald-700 transition duration-150 shadow-md"
-        >
-          + Tambah Menu Foods
-        </button>
+        <div class="flex flex-wrap gap-2 mb-6">
+          <button
+            @click="openFoodsForm"
+            class="px-5 py-2 bg-emerald-600 text-white font-black rounded-lg hover:bg-emerald-700 transition duration-150 shadow-md uppercase text-xs"
+          >
+            + Tambah Menu Foods
+          </button>
+          <button
+            @click="resetAllStocks"
+            class="px-5 py-2 bg-indigo-600 text-white font-black rounded-lg hover:bg-indigo-700 transition duration-150 shadow-md uppercase text-xs flex items-center gap-2"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+            Reset Semua Stok ke 50
+          </button>
+        </div>
 
         <!-- Form Tambah/Edit Foods -->
         <div v-if="foodsForm" class="bg-white p-6 rounded-xl shadow-xl mb-8 border border-emerald-200">
@@ -99,9 +117,16 @@
                 </p>
               </div>
 
-              <div class="mb-4 text-xs text-gray-500 flex flex-col justify-center">
-                <p class="font-bold text-gray-700 mb-1">Tips:</p>
-                <p>Klik pada foto di daftar bawah untuk mengatur posisi tampilan secara presisi.</p>
+              <div class="mb-4">
+                <label class="block font-semibold mb-1 text-gray-700">Stok Menu</label>
+                <input
+                  v-model.number="foods.stock"
+                  type="number"
+                  class="w-full border border-gray-300 p-3 rounded-lg focus:ring-emerald-500 focus:border-emerald-500"
+                  required
+                  min="0"
+                  placeholder="0"
+                />
               </div>
 
             </div>
@@ -155,7 +180,7 @@
                     v-if="food.image"
                     :src="food.image"
                     alt="Food Image"
-                    :class="['w-full h-full object-cover pointer-events-none transition-transform', !food.is_available && 'grayscale opacity-60']"
+                    :class="['w-full h-full object-cover pointer-events-none transition-transform', food.stock <= 0 && 'grayscale opacity-60']"
                     :style="{ 
                       objectPosition: food.image_position || 'center',
                       transform: `scale(${food.image_zoom || 1})`
@@ -165,44 +190,32 @@
                     v-else
                     src="https://placehold.co/200x160/10b981/ffffff?text=FOOD"
                     alt="No Image"
-                    :class="['w-full h-full object-cover', !food.is_available && 'grayscale opacity-60']"
+                    :class="['w-full h-full object-cover', food.stock <= 0 && 'grayscale opacity-60']"
                 />
                 <div class="absolute inset-0 bg-black/20 opacity-0 group-hover/img:opacity-100 flex items-center justify-center transition-opacity flex-col">
                   <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4"></path></svg>
                   <span class="text-white text-[10px] font-bold uppercase mt-1">Sesuaikan Posisi</span>
                 </div>
-                <!-- Badge status habis -->
-                <div v-if="!food.is_available" class="absolute top-2 left-2 bg-red-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-wide shadow-lg">
-                  Habis
-                </div>
+                <!-- Badge status habis (Dihapus karena sudah ada info stok) -->
               </div>
 
               <!-- Content -->
               <div class="p-4">
-                <h3 :class="['font-bold text-lg line-clamp-2', food.is_available ? 'text-gray-800' : 'text-gray-400']">{{ food.name }}</h3>
-                <p :class="['font-bold text-xl mt-2', food.is_available ? 'text-emerald-600' : 'text-gray-400 line-through']">Rp {{ food.price.toLocaleString('id-ID') }}</p>
+                <h3 :class="['font-bold text-lg line-clamp-2', food.stock > 0 ? 'text-gray-800' : 'text-gray-400']">{{ food.name }}</h3>
+                <p :class="['font-bold text-xl mt-2', food.stock > 0 ? 'text-emerald-600' : 'text-gray-400 line-through']">Rp {{ food.price.toLocaleString('id-ID') }}</p>
                 <div class="mt-1 flex gap-2 flex-wrap">
                   <span v-if="food.discount_percent > 0" class="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full bg-rose-100 text-rose-600 border border-rose-200">
                     OFF {{ food.discount_percent }}%
                   </span>
-                  <span :class="['text-[10px] font-bold uppercase px-2 py-0.5 rounded-full border', food.is_available ? 'bg-emerald-50 text-emerald-600 border-emerald-200' : 'bg-red-50 text-red-500 border-red-200']">
-                    {{ food.is_available ? '✓ Tersedia' : '✗ Habis' }}
+                  <span :class="['text-[10px] font-bold uppercase px-2 py-0.5 rounded-full border', food.stock > 0 ? 'bg-emerald-50 text-emerald-600 border-emerald-200' : 'bg-red-50 text-red-500 border-red-200']">
+                    {{ food.stock > 0 ? `Stok: ${food.stock}` : 'Habis' }}
                   </span>
                 </div>
                 <p class="text-sm text-gray-600 mt-3 line-clamp-3">{{ food.description || 'Tidak ada deskripsi.' }}</p>
               </div>
 
               <!-- Action Buttons -->
-              <div class="absolute top-2 right-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <!-- Tombol Toggle Ketersediaan -->
-                <button
-                  @click="toggleFoodAvailability(food)"
-                  :class="['p-2 text-white rounded-lg transition shadow-lg', food.is_available ? 'bg-amber-500 hover:bg-amber-600' : 'bg-emerald-500 hover:bg-emerald-600']"
-                  :title="food.is_available ? 'Tandai Habis' : 'Tandai Tersedia'"
-                >
-                  <svg v-if="food.is_available" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path></svg>
-                  <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                </button>
+              <div class="absolute top-2 right-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20">
                 <button
                   @click="editFood(food)"
                   class="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition shadow-lg"
@@ -229,12 +242,21 @@
 
       <!-- DRINKS SECTION -->
       <div v-if="tab === 'drinks'">
-        <button
-          @click="openDrinksForm"
-          class="px-5 py-2 mb-6 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-150 shadow-md"
-        >
-          + Tambah Menu Drinks
-        </button>
+        <div class="flex flex-wrap gap-2 mb-6">
+          <button
+            @click="openDrinksForm"
+            class="px-5 py-2 bg-blue-600 text-white font-black rounded-lg hover:bg-blue-700 transition duration-150 shadow-md uppercase text-xs"
+          >
+            + Tambah Menu Drinks
+          </button>
+          <button
+            @click="resetAllStocks"
+            class="px-5 py-2 bg-indigo-600 text-white font-black rounded-lg hover:bg-indigo-700 transition duration-150 shadow-md uppercase text-xs flex items-center gap-2"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+            Reset Semua Stok ke 50
+          </button>
+        </div>
 
         <!-- Form Tambah/Edit Drinks -->
         <div v-if="drinksForm" class="bg-white p-6 rounded-xl shadow-xl mb-8 border border-blue-200">
@@ -301,9 +323,16 @@
                 </p>
               </div>
 
-              <div class="mb-4 text-xs text-gray-500 flex flex-col justify-center">
-                <p class="font-bold text-gray-700 mb-1">Tips:</p>
-                <p>Klik pada foto di daftar bawah untuk mengatur posisi tampilan secara presisi.</p>
+              <div class="mb-4">
+                <label class="block font-semibold mb-1 text-gray-700">Stok Menu</label>
+                <input
+                  v-model.number="drinks.stock"
+                  type="number"
+                  class="w-full border border-gray-300 p-3 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                  required
+                  min="0"
+                  placeholder="0"
+                />
               </div>
 
             </div>
@@ -357,7 +386,7 @@
                     v-if="drink.image"
                     :src="drink.image"
                     alt="Drink Image"
-                    :class="['w-full h-full object-cover pointer-events-none transition-transform', !drink.is_available && 'grayscale opacity-60']"
+                    :class="['w-full h-full object-cover pointer-events-none transition-transform', drink.stock <= 0 && 'grayscale opacity-60']"
                     :style="{ 
                       objectPosition: drink.image_position || 'center',
                       transform: `scale(${drink.image_zoom || 1})`
@@ -367,44 +396,32 @@
                     v-else
                     src="https://placehold.co/200x160/3b82f6/ffffff?text=DRINK"
                     alt="No Image"
-                    :class="['w-full h-full object-cover', !drink.is_available && 'grayscale opacity-60']"
+                    :class="['w-full h-full object-cover', drink.stock <= 0 && 'grayscale opacity-60']"
                 />
                 <div class="absolute inset-0 bg-black/20 opacity-0 group-hover/img:opacity-100 flex items-center justify-center transition-opacity flex-col">
                   <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4"></path></svg>
                   <span class="text-white text-[10px] font-bold uppercase mt-1">Sesuaikan Posisi</span>
                 </div>
-                <!-- Badge status habis -->
-                <div v-if="!drink.is_available" class="absolute top-2 left-2 bg-red-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-wide shadow-lg">
-                  Habis
-                </div>
+                <!-- Badge status habis (Dihapus karena sudah ada info stok) -->
               </div>
 
               <!-- Content -->
               <div class="p-4">
-                <h3 :class="['font-bold text-lg line-clamp-2', drink.is_available ? 'text-gray-800' : 'text-gray-400']">{{ drink.name }}</h3>
-                <p :class="['font-bold text-xl mt-2', drink.is_available ? 'text-blue-600' : 'text-gray-400 line-through']">Rp {{ drink.price.toLocaleString('id-ID') }}</p>
+                <h3 :class="['font-bold text-lg line-clamp-2', drink.stock > 0 ? 'text-gray-800' : 'text-gray-400']">{{ drink.name }}</h3>
+                <p :class="['font-bold text-xl mt-2', drink.stock > 0 ? 'text-blue-600' : 'text-gray-400 line-through']">Rp {{ drink.price.toLocaleString('id-ID') }}</p>
                 <div class="mt-1 flex gap-2 flex-wrap">
                   <span v-if="drink.discount_percent > 0" class="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full bg-rose-100 text-rose-600 border border-rose-200">
                     OFF {{ drink.discount_percent }}%
                   </span>
-                  <span :class="['text-[10px] font-bold uppercase px-2 py-0.5 rounded-full border', drink.is_available ? 'bg-blue-50 text-blue-600 border-blue-200' : 'bg-red-50 text-red-500 border-red-200']">
-                    {{ drink.is_available ? '✓ Tersedia' : '✗ Habis' }}
+                  <span :class="['text-[10px] font-bold uppercase px-2 py-0.5 rounded-full border', drink.stock > 0 ? 'bg-blue-50 text-blue-600 border-blue-200' : 'bg-red-50 text-red-500 border-red-200']">
+                    {{ drink.stock > 0 ? `Stok: ${drink.stock}` : 'Habis' }}
                   </span>
                 </div>
                 <p class="text-sm text-gray-600 mt-3 line-clamp-3">{{ drink.description || 'Tidak ada deskripsi.' }}</p>
               </div>
 
               <!-- Action Buttons -->
-              <div class="absolute top-2 right-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <!-- Tombol Toggle Ketersediaan -->
-                <button
-                  @click="toggleDrinkAvailability(drink)"
-                  :class="['p-2 text-white rounded-lg transition shadow-lg', drink.is_available ? 'bg-amber-500 hover:bg-amber-600' : 'bg-emerald-500 hover:bg-emerald-600']"
-                  :title="drink.is_available ? 'Tandai Habis' : 'Tandai Tersedia'"
-                >
-                  <svg v-if="drink.is_available" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path></svg>
-                  <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                </button>
+              <div class="absolute top-2 right-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20">
                 <button
                   @click="editDrink(drink)"
                   class="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition shadow-lg"
@@ -578,7 +595,7 @@ const foods = ref({ name: '', price: null, discount_percent: 0, description: '',
 
 function openFoodsForm() {
   editingFoodId.value = null
-  foods.value = { name: '', price: null, discount_percent: 0, description: '', subcategory_id: '', image_position: 'center', image: null }
+  foods.value = { name: '', price: null, discount_percent: 0, stock: 50, description: '', subcategory_id: '', image_position: 'center', image: null }
   foodsForm.value = true
 }
 
@@ -596,7 +613,8 @@ function editFood(food) {
     subcategory_id: food.subcategory_id,
     image_position: food.image_position || 'center',
     image: null,
-    discount_percent: food.discount_percent || 0
+    discount_percent: food.discount_percent || 0,
+    stock: food.stock || 0
   }
   foodsForm.value = true
 }
@@ -617,16 +635,21 @@ function submitFoods() {
   data.append('name', foods.value.name)
   data.append('category_id', 1)
   data.append('subcategory_id', foods.value.subcategory_id)
-  data.append('price', foods.value.price)
+  data.append('price', Number(foods.value.price))
   data.append('description', foods.value.description || '')
   data.append('image_position', foods.value.image_position || 'center')
-  if (foods.value.discount_percent) data.append('discount_percent', foods.value.discount_percent)
+  data.append('stock', parseInt(foods.value.stock) || 0)
+  if (foods.value.discount_percent !== null) data.append('discount_percent', parseInt(foods.value.discount_percent) || 0)
   if (foods.value.image) data.append('image', foods.value.image)
   if (editingFoodId.value) data.append('_method', 'PUT')
 
   router.post(editingFoodId.value ? `/admin/menu/${editingFoodId.value}` : '/admin/menu/store', data, {
     onSuccess: () => { loading.value = false; notify('Sukses!'); closeFoodsForm(); router.reload() },
-    onError: () => { loading.value = false; notify('Gagal!', 'error') }
+    onError: (errors) => { 
+      loading.value = false; 
+      const firstError = Object.values(errors)[0];
+      notify('❌ ' + (firstError || 'Gagal!'), 'error');
+    }
   })
 }
 
@@ -635,13 +658,10 @@ function deleteFood(id) {
 }
 
 function toggleFoodAvailability(food) {
-  const action = food.is_available ? 'menandai habis' : 'mengaktifkan kembali'
-  if (confirm(`Yakin ingin ${action} menu "${food.name}"?`)) {
-    router.patch(`/admin/menu/${food.id}/toggle-availability`, {}, {
-      onSuccess: () => { notify(food.is_available ? '⛔ Menu ditandai Habis' : '✅ Menu kembali Tersedia'); router.reload() },
-      onError: () => notify('❌ Gagal mengubah status!', 'error')
-    })
-  }
+  router.patch(`/admin/menu/${food.id}/toggle-availability`, {}, {
+    onSuccess: () => { notify(food.stock > 0 ? '⛔ Menu ditandai Habis' : '✅ Stok Menu diisi 50'); router.reload() },
+    onError: () => notify('❌ Gagal mengubah status!', 'error')
+  })
 }
 
 /* DRINKS */
@@ -651,7 +671,7 @@ const drinks = ref({ name: '', price: null, discount_percent: 0, description: ''
 
 function openDrinksForm() {
   editingDrinkId.value = null
-  drinks.value = { name: '', price: null, discount_percent: 0, description: '', subcategory_id: '', image_position: 'center', image: null }
+  drinks.value = { name: '', price: null, discount_percent: 0, stock: 50, description: '', subcategory_id: '', image_position: 'center', image: null }
   drinksForm.value = true
 }
 
@@ -669,7 +689,8 @@ function editDrink(drink) {
     subcategory_id: drink.subcategory_id,
     image_position: drink.image_position || 'center',
     image: null,
-    discount_percent: drink.discount_percent || 0
+    discount_percent: drink.discount_percent || 0,
+    stock: drink.stock || 0
   }
   drinksForm.value = true
 }
@@ -686,16 +707,21 @@ function submitDrinks() {
   data.append('name', drinks.value.name)
   data.append('category_id', 2)
   data.append('subcategory_id', drinks.value.subcategory_id)
-  data.append('price', drinks.value.price)
+  data.append('price', Number(drinks.value.price))
   data.append('description', drinks.value.description || '')
   data.append('image_position', drinks.value.image_position || 'center')
-  if (drinks.value.discount_percent) data.append('discount_percent', drinks.value.discount_percent)
+  data.append('stock', parseInt(drinks.value.stock) || 0)
+  if (drinks.value.discount_percent !== null) data.append('discount_percent', parseInt(drinks.value.discount_percent) || 0)
   if (drinks.value.image) data.append('image', drinks.value.image)
   if (editingDrinkId.value) data.append('_method', 'PUT')
 
   router.post(editingDrinkId.value ? `/admin/menu/${editingDrinkId.value}` : '/admin/menu/store', data, {
     onSuccess: () => { loading.value = false; notify('Sukses!'); closeDrinksForm(); router.reload() },
-    onError: () => { loading.value = false; notify('Gagal!', 'error') }
+    onError: (errors) => { 
+      loading.value = false; 
+      const firstError = Object.values(errors)[0];
+      notify('❌ ' + (firstError || 'Gagal!'), 'error');
+    }
   })
 }
 
@@ -704,16 +730,30 @@ function deleteDrink(id) {
 }
 
 function toggleDrinkAvailability(drink) {
-  const action = drink.is_available ? 'menandai habis' : 'mengaktifkan kembali'
-  if (confirm(`Yakin ingin ${action} menu "${drink.name}"?`)) {
-    router.patch(`/admin/menu/${drink.id}/toggle-availability`, {}, {
-      onSuccess: () => { notify(drink.is_available ? '⛔ Menu ditandai Habis' : '✅ Menu kembali Tersedia'); router.reload() },
-      onError: () => notify('❌ Gagal mengubah status!', 'error')
-    })
-  }
+  router.patch(`/admin/menu/${drink.id}/toggle-availability`, {}, {
+    onSuccess: () => { notify(drink.stock > 0 ? '⛔ Menu ditandai Habis' : '✅ Stok Menu diisi 50'); router.reload() },
+    onError: () => notify('❌ Gagal mengubah status!', 'error')
+  })
 }
 
 function logout() { router.post('/logout') }
+
+function resetAllStocks() {
+  if (confirm('Yakin ingin meriset SEMUA stok makanan & minuman menjadi 50 sekaligus?')) {
+    loading.value = true
+    router.post('/admin/menu/reset-all', {}, {
+      onSuccess: () => {
+        loading.value = false
+        notify('✅ Semua menu berhasil diisi ulang menjadi 50!')
+        router.reload()
+      },
+      onError: () => {
+        loading.value = false
+        notify('❌ Gagal meriset stok!', 'error')
+      }
+    })
+  }
+}
 
 /* IMAGE ADJUST LOGIC */
 function openAdjustModal(item) {

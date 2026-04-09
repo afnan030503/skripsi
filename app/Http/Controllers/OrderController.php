@@ -33,9 +33,9 @@ class OrderController extends Controller
             ? \App\Models\Member::where('phone', $user->phone_number)->where('status', 'approved')->exists() 
             : false;
 
-        $menus = Menu::orderBy('is_available', 'desc')->get()->map(function ($menu) use ($isMember) {
-            // Jika bukan member, diskon dianggap 0
-            $discountPercent = $isMember && $menu->is_available ? (int)$menu->discount_percent : 0;
+        $menus = Menu::orderBy('stock', 'desc')->get()->map(function ($menu) use ($isMember) {
+            // Jika bukan member, diskon dianggap 0. Sekarang pakai logika stok > 0.
+            $discountPercent = $isMember && $menu->stock > 0 ? (int)$menu->discount_percent : 0;
             $originalPrice   = (float)$menu->price;
             $discountedPrice = $discountPercent > 0
                 ? round($originalPrice * (1 - $discountPercent / 100))
@@ -53,7 +53,8 @@ class OrderController extends Controller
                 'image_position'   => $menu->image_position,
                 'image_zoom'       => (float)$menu->image_zoom,
                 'special_type'     => $menu->special_type,
-                'is_available'     => (bool)$menu->is_available,
+                'stock'            => (int)$menu->stock, // KIRIM DATA STOK KE USER
+                'is_available'     => (int)$menu->stock > 0,
             ];
         });
 
@@ -82,7 +83,15 @@ class OrderController extends Controller
             : false;
 
         foreach ($request->items as $item) {
-            $menu = Menu::where('id', $item['id'])->where('is_available', true)->firstOrFail();
+            $menu = Menu::where('id', $item['id'])->firstOrFail();
+
+            if ($menu->stock <= 0) {
+                return redirect()->back()->with('error', "Stok menu '{$menu->name}' sudah habis!");
+            }
+
+            if ($menu->stock < $item['quantity']) {
+                return redirect()->back()->with('error', "Stok menu '{$menu->name}' tidak cukup! (Sisa: {$menu->stock})");
+            }
 
             // Hitung harga setelah diskon di sisi server (hanya jika Member)
             $price = (float) $menu->price;
@@ -99,6 +108,12 @@ class OrderController extends Controller
                 'quantity' => $item['quantity'],
                 'price' => $finalItemPrice,
             ];
+
+            // Decrement Stock
+            $menu->decrement('stock', $item['quantity']);
+            if ($menu->stock < 0) {
+                $menu->update(['stock' => 0]);
+            }
         }
 
         $order = Order::create([
@@ -122,9 +137,10 @@ class OrderController extends Controller
                 Config::$isSanitized = true;
                 Config::$is3ds = true;
 
+                $midtransOrderId = 'UTARA-' . $order->id . '-' . time();
                 $params = [
                     'transaction_details' => [
-                        'order_id' => 'UTARA-' . $order->id . '-' . time(),
+                        'order_id' => $midtransOrderId,
                         'gross_amount' => (int)$calculatedTotal,
                     ],
                     'customer_details' => [
@@ -135,7 +151,10 @@ class OrderController extends Controller
                 ];
 
                 $snapToken = Snap::getSnapToken($params);
-                $order->update(['snap_token' => $snapToken]);
+                $order->update([
+                    'snap_token' => $snapToken,
+                    'midtrans_order_id' => $midtransOrderId
+                ]);
                 
             } catch (\Exception $e) {
                 \Log::error('Midtrans Snap Error: ' . $e->getMessage());

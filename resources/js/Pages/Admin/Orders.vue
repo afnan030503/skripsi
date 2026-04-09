@@ -71,6 +71,15 @@ const getStatusClass = (status) => {
                     </button>
                     <h1 class="text-xl md:text-3xl font-bold text-gray-800">Kelola Pesanan</h1>
                 </div>
+
+                <!-- LOGOUT MOBILE -->
+                <button 
+                  @click="router.post('/logout')"
+                  class="lg:hidden flex items-center gap-1.5 px-3 py-1.5 bg-rose-50 text-rose-600 border border-rose-100 rounded-lg text-[10px] font-black uppercase hover:bg-rose-100 transition-colors shadow-sm"
+                >
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                  Out
+                </button>
             </header>
 
             <div class="px-4 md:px-8 pb-8">
@@ -115,16 +124,15 @@ const getStatusClass = (status) => {
                                         </span>
                                     </td>
                                     <td class="px-6 py-4">
-                                        <select 
-                                            :value="order.status" 
-                                            @change="onStatusChange(order.id, $event.target.value)"
-                                            class="text-xs rounded-full px-3 py-1 border-0 font-bold focus:ring-2"
+                                        <span 
+                                            class="text-xs rounded-full px-3 py-1 font-bold border-0 shadow-sm"
                                             :class="getStatusClass(order.status)"
                                         >
-                                            <option value="proses">Proses</option>
-                                            <option value="success">Success</option>
-                                            <option value="cancel">Cancel</option>
-                                        </select>
+                                            <template v-if="order.status === 'proses'">Menunggu Pembayaran</template>
+                                            <template v-else-if="order.status === 'success'">Lunas (Sukses)</template>
+                                            <template v-else-if="order.status === 'cancel'">Dibatalkan</template>
+                                            <template v-else>{{ order.status }}</template>
+                                        </span>
                                     </td>
                                     <td class="px-6 py-4">
                                         <button @click="deleteOrder(order.id)" class="text-red-500 hover:text-red-700 transition p-2">

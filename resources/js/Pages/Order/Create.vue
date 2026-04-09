@@ -128,7 +128,7 @@ const submit = () => {
                             :key="menu.id"
                             :class="[
                                 'group rounded-[2rem] border transition-all duration-500 overflow-hidden flex flex-col',
-                                menu.is_available
+                                menu.stock > 0
                                     ? 'bg-white border-slate-100 hover:border-emerald-200 hover:shadow-2xl hover:shadow-emerald-100/50'
                                     : 'bg-slate-50 border-slate-200 opacity-70 cursor-not-allowed'
                             ]"
@@ -139,34 +139,39 @@ const submit = () => {
                                     :src="menu.image_url || 'https://placehold.co/600x400/f8fafc/cbd5e1?text=' + menu.name" 
                                     :class="[
                                         'w-full h-full object-cover transition-transform duration-700',
-                                        menu.is_available ? 'group-hover:scale-110' : 'grayscale scale-105'
+                                        menu.stock > 0 ? 'group-hover:scale-110' : 'grayscale scale-105'
                                     ]"
                                     :style="{ 
                                         objectPosition: menu.image_position || 'center',
-                                        transform: menu.is_available ? `scale(${menu.image_zoom || 1})` : undefined
+                                        transform: menu.stock > 0 ? `scale(${menu.image_zoom || 1})` : undefined
                                     }"
                                     alt="Menu Image"
                                 />
 
                                 <!-- Badge Diskon -->
-                                <div v-if="menu.is_available && menu.discount_percent > 0" class="absolute top-4 left-4">
+                                <div v-if="menu.stock > 0 && menu.discount_percent > 0" class="absolute top-4 left-4">
                                     <span class="bg-rose-500 text-white text-[10px] font-black px-3 py-1.5 rounded-full shadow-lg shadow-rose-500/40 uppercase tracking-tighter">
                                         🔥 {{ menu.discount_percent }}% OFF
                                     </span>
                                 </div>
 
-                                <!-- Overlay & Badge HABIS -->
-                                <div v-if="!menu.is_available" class="absolute inset-0 bg-slate-900/40 flex items-center justify-center">
+                                <!-- Overlay & Badge HABIS / STOK -->
+                                <div v-if="menu.stock <= 0" class="absolute inset-0 bg-slate-900/40 flex items-center justify-center">
                                     <div class="bg-white/90 backdrop-blur-sm px-5 py-2.5 rounded-2xl shadow-xl border border-slate-200">
                                         <p class="text-slate-700 font-black text-[10px] tracking-widest uppercase flex items-center gap-2">
                                             😔 Habis
                                         </p>
                                     </div>
                                 </div>
+                                <div v-else-if="menu.stock <= 10" class="absolute top-4 right-4 group-hover:scale-110 transition-transform duration-500">
+                                    <span class="bg-amber-100/90 backdrop-blur-md text-amber-700 text-[9px] font-black px-3 py-1.5 rounded-full border border-amber-200 shadow-sm uppercase tracking-tighter">
+                                        ⏳ Stok: {{ menu.stock }}
+                                    </span>
+                                </div>
 
                                 <!-- Tombol tambah deskop -->
                                 <button 
-                                    v-if="menu.is_available"
+                                    v-if="menu.stock > 0"
                                     @click="addToCart(menu)" 
                                     class="absolute bottom-4 right-4 w-12 h-12 rounded-2xl bg-emerald-600 text-white hidden md:flex items-center justify-center hover:bg-emerald-700 active:scale-90 transition-all shadow-xl shadow-emerald-200 translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100"
                                 >
@@ -177,22 +182,22 @@ const submit = () => {
                             <!-- Content -->
                             <div class="p-5 md:p-6 flex-1 flex flex-col">
                                 <div class="mb-4">
-                                    <h4 :class="['font-black text-base md:text-lg leading-tight transition-colors', menu.is_available ? 'text-slate-800 group-hover:text-emerald-700' : 'text-slate-400']">{{ menu.name }}</h4>
+                                    <h4 :class="['font-black text-base md:text-lg leading-tight transition-colors', menu.stock > 0 ? 'text-slate-800 group-hover:text-emerald-700' : 'text-slate-400']">{{ menu.name }}</h4>
                                     <p class="text-[10px] md:text-xs text-slate-400 mt-1.5 line-clamp-2 leading-relaxed font-medium" v-if="menu.description">{{ menu.description }}</p>
                                 </div>
                                 <div class="mt-auto flex justify-between items-center">
-                                    <div v-if="menu.is_available && menu.discount_percent > 0">
+                                    <div v-if="menu.stock > 0 && menu.discount_percent > 0">
                                         <div class="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-2">
                                             <span class="text-lg md:text-xl font-black text-emerald-600">Rp {{ Number(menu.discounted_price).toLocaleString('id-ID') }}</span>
                                             <span class="text-[10px] font-bold text-slate-300 line-through">Rp {{ Number(menu.price).toLocaleString('id-ID') }}</span>
                                         </div>
                                     </div>
-                                    <span v-else-if="menu.is_available" class="text-lg md:text-xl font-black text-emerald-600">Rp {{ Number(menu.price).toLocaleString('id-ID') }}</span>
+                                    <span v-else-if="menu.stock > 0" class="text-lg md:text-xl font-black text-emerald-600">Rp {{ Number(menu.price).toLocaleString('id-ID') }}</span>
                                     <span v-else class="text-sm font-bold text-slate-400 line-through">Rp {{ Number(menu.price).toLocaleString('id-ID') }}</span>
                                     
                                     <!-- Tombol tambah mobile -->
                                     <button 
-                                        v-if="menu.is_available"
+                                        v-if="menu.stock > 0"
                                         @click="addToCart(menu)" 
                                         class="md:hidden w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center active:bg-emerald-600 active:text-white transition-colors"
                                     >

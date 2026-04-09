@@ -146,6 +146,9 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::patch('/admin/menu/{menu}/toggle-availability', [MenuController::class, 'toggleAvailability'])
         ->name('admin.menu.toggle');
 
+    Route::post('/admin/menu/reset-all', [\App\Http\Controllers\Admin\MenuResetController::class, 'resetAll'])
+        ->name('admin.menu.reset-all');
+
     Route::delete('/admin/menu/{menu}', [MenuController::class, 'destroy'])
         ->name('admin.menu.destroy');
     // ============================

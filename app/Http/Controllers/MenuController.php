@@ -74,6 +74,7 @@ class MenuController extends Controller
                 'image_position'  => 'nullable|string|max:255',
                 'image_zoom'      => 'nullable|numeric|min:0.1|max:5',
                 'special_type'    => 'nullable|string|in:weekly,monthly',
+                'stock'           => 'required|integer|min:0',
             ]);
 
             // Validasi subcategory milik category
@@ -113,7 +114,8 @@ class MenuController extends Controller
                 'image_position'  => $validated['image_position'] ?? 'center',
                 'image_zoom'      => $validated['image_zoom'] ?? 1.0,
                 'special_type'    => $validated['special_type'] ?? null,
-                'is_available'    => true,
+                'stock'           => $validated['stock'] ?? 0,
+                'is_available'    => true, // Tetap true karena tidak ada fitur non-aktif
             ]);
 
             \Log::info('Menu berhasil dibuat', ['menu_id' => $menu->id]);
@@ -155,6 +157,7 @@ class MenuController extends Controller
                 'image_position'  => 'nullable|string|max:255',
                 'image_zoom'      => 'nullable|numeric|min:0.1|max:5',
                 'special_type'    => 'nullable|string|in:weekly,monthly',
+                'stock'           => 'required|integer|min:0',
             ]);
 
             // Validasi subcategory milik category
@@ -178,6 +181,8 @@ class MenuController extends Controller
                 'image_position'  => $validated['image_position'] ?? 'center',
                 'image_zoom'      => $validated['image_zoom'] ?? 1.0,
                 'special_type'    => $validated['special_type'] ?? null,
+                'stock'           => $validated['stock'] ?? 0,
+                'is_available'    => true, // Tetap true
             ];
 
             if ($request->hasFile('image')) {
@@ -229,10 +234,15 @@ class MenuController extends Controller
     // Toggle ketersediaan menu (Tersedia / Habis)
     public function toggleAvailability(Menu $menu)
     {
-        $menu->update(['is_available' => !$menu->is_available]);
-
-        $status = $menu->is_available ? 'tersedia' : 'habis';
-        return redirect()->back()->with('success', "Menu '{$menu->name}' sekarang {$status}.");
+        $newStock = $menu->stock > 0 ? 0 : 50;
+        
+        $menu->update([
+            'stock' => $newStock,
+            'is_available' => true // Fitur non-aktif dihapus
+        ]);
+    
+        $status = $newStock > 0 ? 'stok terisi 50' : 'stok habis';
+        return redirect()->back()->with('success', "Stok menu '{$menu->name}' sekarang {$status}.");
     }
    public function adminMenuPage()
 {
